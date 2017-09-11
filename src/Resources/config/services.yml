@@ -1,0 +1,51 @@
+services:
+    huh.head.tag_manager:
+      class: HeimrichHannot\HeadBundle\Manager\TagManager
+    huh.head.tag.base:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Base
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.title:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Title
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.meta_date:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\MetaDate
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.meta_language:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\MetaLanguage
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.meta_charset:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\MetaCharset
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.meta_title:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\MetaTitle
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.meta_description:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\MetaDescription
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.meta_keywords:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\MetaKeywords
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.meta_robots:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\MetaRobots
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.og_title:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\OG\OGTitle
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.og_type:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\OG\OGType
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.og_url:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\OG\OGUrl
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.og_description:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\OG\OGDescription
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.og_image:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\OG\OGImage
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.og_locale:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\OG\OGLocale
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.og_site_name:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\OG\OGSiteName
+      arguments: ['@huh.head.tag_manager']

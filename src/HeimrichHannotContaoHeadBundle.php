@@ -10,7 +10,7 @@
 
 namespace HeimrichHannot\HeadBundle;
 
-use HeimrichHannot\NewsBundle\DependencyInjection\HeimrichHannotContaoHeadExtension;
+use HeimrichHannot\HeadBundle\DependencyInjection\HeimrichHannotContaoHeadExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
