@@ -49,3 +49,40 @@ services:
     huh.head.tag.og_site_name:
       class: HeimrichHannot\HeadBundle\Tag\Simple\OG\OGSiteName
       arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_card:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterCard
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_site:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterSite
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_creator:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterCreator
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_title:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterTitle
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_description:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterDescription
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_image:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterImage
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_image_alt:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterImageAlt
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_player:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterPlayer
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_player_width:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterPlayerWidth
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_player_height:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterPlayerHeight
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_player_stream:
+      class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterPlayerStream
+      arguments: ['@huh.head.tag_manager']
+    huh.head.tag.twitter_player_stream_content_type:
+          class: HeimrichHannot\HeadBundle\Tag\Simple\Twitter\TwitterPlayerStreamContentType
+          arguments: ['@huh.head.tag_manager']
+
