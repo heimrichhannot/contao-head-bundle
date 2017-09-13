@@ -9,7 +9,7 @@ namespace HeimrichHannot\HeadBundle\Tag\Meta\Twitter;
 
 use HeimrichHannot\HeadBundle\Head\AbstractMetaTag;
 
-class TwitterPlayerStream extends AbstractMetaTag
+class TwitterPlayerStreamContentType extends AbstractMetaTag
 {
     /**
      * The tag name
