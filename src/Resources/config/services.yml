@@ -91,3 +91,6 @@ services:
     huh.head.tag.link_next:
       class: HeimrichHannot\HeadBundle\Tag\Link\LinkNext
       arguments: ['@huh.head.tag_manager']
+    huh.head.tag.link_canonical:
+      class: HeimrichHannot\HeadBundle\Tag\Link\LinkCanonical
+      arguments: ['@huh.head.tag_manager']

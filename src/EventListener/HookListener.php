@@ -8,6 +8,8 @@
 namespace HeimrichHannot\HeadBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use HeimrichHannot\Haste\Util\Url;
+use Symfony\Component\HttpFoundation\Request;
 
 class HookListener
 {
@@ -48,14 +50,16 @@ class HookListener
      */
     public function getPageLayout(\PageModel $page, \LayoutModel $layout, \PageRegular $pageRegular)
     {
+        /**
+         * @var $objPage \Contao\PageModel
+         */
         global $objPage;
 
         \System::getContainer()->get('huh.head.tag.meta_charset')->setContent(\Config::get('characterSet'));
         \System::getContainer()->get('huh.head.tag.base')->setContent(\Environment::get('base'));
 
         // Fall back to the default title tag
-        if ($layout->titleTag == '')
-        {
+        if ($layout->titleTag == '') {
             $layout->titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
         }
 
@@ -64,5 +68,15 @@ class HookListener
         \System::getContainer()->get('huh.head.tag.meta_language')->setContent(\System::getContainer()->get('translator')->getLocale());
         \System::getContainer()->get('huh.head.tag.meta_description')->setContent(str_replace(["\n", "\r", '"'], [' ', '', ''], $objPage->description));
         \System::getContainer()->get('huh.head.tag.meta_robots')->setContent($objPage->robots ?: 'index,follow');
+
+        $path = Request::createFromGlobals()->getPathInfo(); // path without query string
+        $url = \Contao\Environment::get('url') . $path;
+
+        // if path is id, take absolute url from current page
+        if (is_numeric(ltrim($path, '/'))) {
+            $url = $objPage->getAbsoluteUrl();
+        }
+
+        \System::getContainer()->get('huh.head.tag.link_canonical')->setContent($url);
     }
 }
