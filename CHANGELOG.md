@@ -1,11 +1,6 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.0.2
-
-### Fixed
-- `TwitterPlayerStream` duplicate class usage error
-
 ## 1.0.1
 
 ### Changed
