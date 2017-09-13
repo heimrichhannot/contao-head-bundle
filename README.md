@@ -63,6 +63,8 @@ Each meta tags is registered as a symfony service. Get the service and set the c
 | `<meta name="twitter:player:height" content="300">` | `\System::getContainer()->get('huh.head.tag.twitter_player_height')->setContent('300')`  |
 | `<meta name="twitter:player:stream" content="http://heimrich-hannot.de/my-video.mp4">` | `\System::getContainer()->get('huh.head.tag.twitter_player_stream')->setContent('http://heimrich-hannot.de/my-video.mp4')`  |
 | `<meta name="twitter:player:stream:content_type" content="video/mp4">` | `\System::getContainer()->get('huh.head.tag.twitter_player_stream_content_type')->setContent('video/mp4')`  |
+| `<link rel="prev" href="http://heimrich-hannot.de/list?page_n199=1">` | `\System::getContainer()->get('huh.head.tag.link_prev')->setContent('http://heimrich-hannot.de/list?page_n199=1')`  |
+| `<link rel="next" href="http://heimrich-hannot.de/list?page_n199=3">` | `\System::getContainer()->get('huh.head.tag.link_next')->setContent('http://heimrich-hannot.de/list?page_n199=3')`  |
 
 The name of the `twitter:site` @username can be provided within root contao page `tl_page`.
 
