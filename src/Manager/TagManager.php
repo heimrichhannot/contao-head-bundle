@@ -35,7 +35,7 @@ class TagManager
                 continue;
             }
 
-            $tags[] = $tag->generate();
+            $tags[] = \Contao\StringUtil::stripInsertTags(\Contao\Controller::replaceInsertTags($tag->generate()));
         }
 
         return $tags;

@@ -63,7 +63,7 @@ class HookListener
             $layout->titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
         }
 
-        \System::getContainer()->get('huh.head.tag.title')->setContent(\StringUtil::stripInsertTags(\Controller::replaceInsertTags($layout->titleTag)));
+        \System::getContainer()->get('huh.head.tag.title')->setContent($layout->titleTag);
 
         \System::getContainer()->get('huh.head.tag.meta_language')->setContent(\System::getContainer()->get('translator')->getLocale());
         \System::getContainer()->get('huh.head.tag.meta_description')->setContent(str_replace(["\n", "\r", '"'], [' ', '', ''], $objPage->description));
