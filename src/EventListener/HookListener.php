@@ -60,7 +60,15 @@ class HookListener
 
         // Fall back to the default title tag
         if ($layout->titleTag == '') {
-            $layout->titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
+            $objFirstPage = \PageModel::findFirstPublishedByPid($objPage->rootId);
+            $strTitle     = '{{page::rootPageTitle}}';
+
+            // add pageTitle only if not first page / front page)
+            if ($objFirstPage === null || $objFirstPage->id != $objPage->id) {
+                $strTitle = '{{page::pageTitle}} - ' . $strTitle;
+            }
+
+            $layout->titleTag = $strTitle;
         }
 
         \System::getContainer()->get('huh.head.tag.title')->setContent($layout->titleTag);
@@ -70,7 +78,7 @@ class HookListener
         \System::getContainer()->get('huh.head.tag.meta_robots')->setContent($objPage->robots ?: 'index,follow');
 
         $path = Request::createFromGlobals()->getPathInfo(); // path without query string
-        $url = \Contao\Environment::get('url') . $path;
+        $url  = \Contao\Environment::get('url') . $path;
 
         // if path is id, take absolute url from current page
         if (is_numeric(ltrim($path, '/'))) {

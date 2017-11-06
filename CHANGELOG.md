@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.0.4
+- remove pageTitle on first page/ front page inside root
+
 ## 1.0.3
 
 ### Added
