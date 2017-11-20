@@ -24,7 +24,11 @@ class PluginTest extends TestCase
 {
     public function testInstantiation()
     {
-        static::assertInstanceOf(Plugin::class, new Plugin());
+                static::assertInstanceOf(Plugin::class, new Plugin());
+
+
+
+
     }
 
     public function testGetBundles()
