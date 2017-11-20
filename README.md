@@ -1,11 +1,5 @@
 #Contao <head> bundle
 
-![](https://img.shields.io/packagist/v/heimrichhannot/contao-head-bundle.svg)
-![](https://img.shields.io/packagist/l/heimrichhannot/contao-head-bundle.svg)
-![](https://img.shields.io/packagist/dt/heimrichhannot/contao-head-bundle.svg)
-[![](https://img.shields.io/travis/heimrichhannot/contao-head-bundle/master.svg)](https://travis-ci.org/heimrichhannot/contao-head-bundle/)
-[![](https://img.shields.io/coveralls/heimrichhannot/contao-head-bundle/master.svg)](https://coveralls.io/github/heimrichhannot/contao-head-bundle)
-
 This module contains enhancements for the contao frontend page <head> section. It provides a [service for each tag](##Available Tags) and gives better overwrite control.
 
 ##Usage
