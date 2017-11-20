@@ -6,6 +6,12 @@ php:
 
 sudo: false
 
+notifications:
+  email:
+    - digitales@heimrich-hannot.de
+  on_success: never # default: change
+  on_failure: always # default: always
+
 before_script:
   - travis_wait composer install --no-interaction
 
