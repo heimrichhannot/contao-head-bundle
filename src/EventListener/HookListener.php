@@ -1,8 +1,9 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2017 Heimrich & Hannot GmbH
- * @author Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ *
+ * @license LGPL-3.0+
  */
 
 namespace HeimrichHannot\HeadBundle\EventListener;
@@ -13,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class HookListener
 {
-
     /**
      * @var ContaoFrameworkInterface
      */
@@ -30,9 +30,9 @@ class HookListener
     }
 
     /**
-     * Modify the page object
+     * Modify the page object.
      *
-     * @param \PageModel $page
+     * @param \PageModel   $page
      * @param \LayoutModel $layout
      * @param \PageRegular $pageRegular
      */
@@ -42,15 +42,15 @@ class HookListener
     }
 
     /**
-     * Modify the page layout
+     * Modify the page layout.
      *
-     * @param \PageModel $page
+     * @param \PageModel   $page
      * @param \LayoutModel $layout
      * @param \PageRegular $pageRegular
      */
     public function getPageLayout(\PageModel $page, \LayoutModel $layout, \PageRegular $pageRegular)
     {
-        /**
+        /*
          * @var $objPage \Contao\PageModel
          */
         global $objPage;
@@ -59,13 +59,13 @@ class HookListener
         \System::getContainer()->get('huh.head.tag.base')->setContent(\Environment::get('base'));
 
         // Fall back to the default title tag
-        if ($layout->titleTag == '') {
+        if ('' === $layout->titleTag) {
             $objFirstPage = \PageModel::findFirstPublishedByPid($objPage->rootId);
-            $strTitle     = '{{page::rootPageTitle}}';
+            $strTitle = '{{page::rootPageTitle}}';
 
             // add pageTitle only if not first page / front page)
-            if ($objFirstPage === null || $objFirstPage->id != $objPage->id) {
-                $strTitle = '{{page::pageTitle}} - ' . $strTitle;
+            if (null === $objFirstPage || $objFirstPage->id !== $objPage->id) {
+                $strTitle = '{{page::pageTitle}} - '.$strTitle;
             }
 
             $layout->titleTag = $strTitle;
@@ -78,7 +78,7 @@ class HookListener
         \System::getContainer()->get('huh.head.tag.meta_robots')->setContent($objPage->robots ?: 'index,follow');
 
         $path = Request::createFromGlobals()->getPathInfo(); // path without query string
-        $url  = \Contao\Environment::get('url') . $path;
+        $url = \Contao\Environment::get('url').$path;
 
         // if path is id, take absolute url from current page
         if (is_numeric(ltrim($path, '/'))) {
