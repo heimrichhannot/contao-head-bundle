@@ -1,5 +1,12 @@
 <?php
 
+/*
+ *
+ * Copyright (c) 2017 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0+
+ */
+
 namespace HeimrichHannot\HeadBundle\Test\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -11,8 +18,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test the plugin class
- * Class PluginTest
- * @package HeimrichHannot\HeadBundle\Test\ContaoManager
+ * Class PluginTest.
  */
 class PluginTest extends TestCase
 {
