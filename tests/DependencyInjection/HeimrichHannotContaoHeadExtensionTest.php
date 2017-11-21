@@ -1,13 +1,16 @@
 <?php
 
+/*
+ * Copyright (c) 2017 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0+
+ */
+
 namespace Contao\CalendarBundle\Tests\DependencyInjection;
 
-use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use HeimrichHannot\HeadBundle\DependencyInjection\HeimrichHannotContaoHeadExtension;
 use HeimrichHannot\HeadBundle\EventListener\HookListener;
-use HeimrichHannot\HeadBundle\Manager\TagManager;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
@@ -44,13 +47,13 @@ class HeimrichHannotContaoHeadExtensionTest extends TestCase
     /**
      * Tests the huh.head.listener.hooks service.
      */
-//    public function testRegistersTheHookListener()
-//    {
-//        $this->assertTrue($this->container->has('huh.head.listener.hooks'));
-//
-//        $definition = $this->container->getDefinition('huh.head.listener.hooks');
-//
-//        $this->assertSame(HookListener::class, $definition->getClass());
-//        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-//    }
+    public function testRegistersTheHookListener()
+    {
+        $this->assertTrue($this->container->has('huh.head.listener.hooks'));
+
+        $definition = $this->container->getDefinition('huh.head.listener.hooks');
+
+        $this->assertSame(HookListener::class, $definition->getClass());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+    }
 }
