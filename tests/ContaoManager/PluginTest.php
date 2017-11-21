@@ -30,7 +30,7 @@ class PluginTest extends TestCase
     }
 
     /**
-     * Tests the bundle contao invocation
+     * Tests the bundle contao invocation.
      */
     public function testGetBundles()
     {
