@@ -21,11 +21,17 @@ use PHPUnit\Framework\TestCase;
  */
 class PluginTest extends TestCase
 {
+    /**
+     * Tests the object instantiation.
+     */
     public function testInstantiation()
     {
         static::assertInstanceOf(Plugin::class, new Plugin());
     }
 
+    /**
+     * Tests the bundle contao invocation
+     */
     public function testGetBundles()
     {
         $plugin = new Plugin();
