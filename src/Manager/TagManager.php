@@ -1,12 +1,12 @@
 <?php
-
-/*
+/**
  * Copyright (c) 2017 Heimrich & Hannot GmbH
- *
- * @license LGPL-3.0+
+ * @author Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
+ * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
 namespace HeimrichHannot\HeadBundle\Manager;
+
 
 use HeimrichHannot\HeadBundle\Head\TagInterface;
 
@@ -23,8 +23,7 @@ class TagManager
     }
 
     /**
-     * Get the generated tags as array.
-     *
+     * Get the generated tags as array
      * @return array
      */
     public function getTags()

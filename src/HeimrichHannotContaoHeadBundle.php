@@ -1,9 +1,11 @@
 <?php
-
-/*
+/**
+ * Contao Open Source CMS
+ *
  * Copyright (c) 2017 Heimrich & Hannot GmbH
  *
- * @license LGPL-3.0+
+ * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
+ * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
 namespace HeimrichHannot\HeadBundle;
@@ -27,6 +29,7 @@ class HeimrichHannotContaoHeadBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
     }
+
 
     /**
      * {@inheritdoc}

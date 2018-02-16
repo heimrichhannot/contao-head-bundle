@@ -1,41 +1,37 @@
 <?php
-
-/*
+/**
  * Copyright (c) 2017 Heimrich & Hannot GmbH
- *
- * @license LGPL-3.0+
+ * @author Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
+ * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
 namespace HeimrichHannot\HeadBundle\Head;
+
 
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 
 abstract class AbstractTag implements TagInterface
 {
     /**
-     * The tag type.
-     *
+     * The tag type
      * @var string
      */
     protected static $tag;
 
     /**
-     * The tag.
-     *
+     * The tag
      * @var string
      */
     protected static $key;
 
     /**
-     * The tag name.
-     *
+     * The tag name
      * @var string
      */
     protected static $name;
 
     /**
-     * The tag value.
-     *
+     * The tag value
      * @var string
      */
     protected $content;
@@ -46,8 +42,7 @@ abstract class AbstractTag implements TagInterface
     protected $manager;
 
     /**
-     * initialize the object.
-     *
+     * initialize the object
      * @param TagManager $manager
      */
     public function __construct(TagManager $manager)
@@ -57,8 +52,7 @@ abstract class AbstractTag implements TagInterface
     }
 
     /**
-     * The tag content value.
-     *
+     * The tag content value
      * @param string
      */
     public function setContent($content)
@@ -67,18 +61,16 @@ abstract class AbstractTag implements TagInterface
     }
 
     /**
-     * Check if content is set.
-     *
+     * Check if content is set
      * @return bool
      */
     public function hasContent()
     {
-        return '' !== $this->getContent();
+        return $this->getContent() != '';
     }
 
     /**
-     * Get the tag content value.
-     *
+     * Get the tag content value
      * @return string
      */
     public function getContent()
@@ -86,9 +78,9 @@ abstract class AbstractTag implements TagInterface
         return $this->content;
     }
 
+
     /**
-     * Generate the tag output.
-     *
+     * Generate the tag output
      * @return string
      */
     abstract public function generate();

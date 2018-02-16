@@ -4,93 +4,124 @@ services:
     huh.head.tag.base:
       class: HeimrichHannot\HeadBundle\Tag\Misc\Base
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.title:
       class: HeimrichHannot\HeadBundle\Tag\Misc\Title
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.meta_date:
       class: HeimrichHannot\HeadBundle\Tag\Meta\MetaDate
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.meta_language:
       class: HeimrichHannot\HeadBundle\Tag\Meta\MetaLanguage
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.meta_charset:
       class: HeimrichHannot\HeadBundle\Tag\Meta\MetaCharset
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.meta_title:
       class: HeimrichHannot\HeadBundle\Tag\Meta\MetaTitle
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.meta_description:
       class: HeimrichHannot\HeadBundle\Tag\Meta\MetaDescription
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.meta_keywords:
       class: HeimrichHannot\HeadBundle\Tag\Meta\MetaKeywords
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.meta_robots:
       class: HeimrichHannot\HeadBundle\Tag\Meta\MetaRobots
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.og_title:
       class: HeimrichHannot\HeadBundle\Tag\Meta\OG\OGTitle
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.og_type:
       class: HeimrichHannot\HeadBundle\Tag\Meta\OG\OGType
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.og_url:
       class: HeimrichHannot\HeadBundle\Tag\Meta\OG\OGUrl
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.og_description:
       class: HeimrichHannot\HeadBundle\Tag\Meta\OG\OGDescription
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.og_image:
       class: HeimrichHannot\HeadBundle\Tag\Meta\OG\OGImage
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.og_locale:
       class: HeimrichHannot\HeadBundle\Tag\Meta\OG\OGLocale
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.og_site_name:
       class: HeimrichHannot\HeadBundle\Tag\Meta\OG\OGSiteName
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_card:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterCard
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_site:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterSite
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_creator:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterCreator
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_title:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterTitle
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_description:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterDescription
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_image:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterImage
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_image_alt:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterImageAlt
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_player:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterPlayer
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_player_width:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterPlayerWidth
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_player_height:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterPlayerHeight
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_player_stream:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterPlayerStream
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.twitter_player_stream_content_type:
       class: HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterPlayerStreamContentType
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.link_prev:
       class: HeimrichHannot\HeadBundle\Tag\Link\LinkPrev
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.link_next:
       class: HeimrichHannot\HeadBundle\Tag\Link\LinkNext
       arguments: ['@huh.head.tag_manager']
+      public: true
     huh.head.tag.link_canonical:
       class: HeimrichHannot\HeadBundle\Tag\Link\LinkCanonical
       arguments: ['@huh.head.tag_manager']
+      public: true

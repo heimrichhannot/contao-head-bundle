@@ -1,5 +1,7 @@
 services:
     huh.head.listener.hooks:
       class: HeimrichHannot\HeadBundle\EventListener\HookListener
+      public: true
       arguments:
         - "@contao.framework"
+        - "@huh.head.tag_manager"
