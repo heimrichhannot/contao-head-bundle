@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - symfony 4 support, make services `public` where required, otherwise used dependency injection
+- php `5.6` and `7.2` support
 
 ## [1.0.4] - 2017-11-06
 

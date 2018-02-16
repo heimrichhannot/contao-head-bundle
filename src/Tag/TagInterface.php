@@ -1,35 +1,39 @@
 <?php
-/**
- * Copyright (c) 2017 Heimrich & Hannot GmbH
- * @author Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+
+/*
+ * Copyright (c) 2018 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0+
  */
 
 namespace HeimrichHannot\HeadBundle\Head;
 
-
 interface TagInterface
 {
     /**
-     * Generate the head tag
+     * Generate the head tag.
+     *
      * @return string
      */
     public function generate();
 
     /**
-     * Set the tag content value
+     * Set the tag content value.
+     *
      * @param string
      */
     public function setContent($content);
 
     /**
-     * Get the tag content value
+     * Get the tag content value.
+     *
      * @return string
      */
     public function getContent();
 
     /**
-     * Check if content is set
+     * Check if content is set.
+     *
      * @return bool
      */
     public function hasContent();

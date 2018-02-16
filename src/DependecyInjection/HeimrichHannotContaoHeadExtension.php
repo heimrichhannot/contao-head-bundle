@@ -1,11 +1,17 @@
 <?php
 
+/*
+ * Copyright (c) 2018 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0+
+ */
+
 namespace HeimrichHannot\HeadBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class HeimrichHannotContaoHeadExtension extends Extension
 {

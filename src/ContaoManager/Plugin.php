@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Copyright (c) 2018 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0+
+ */
+
 namespace HeimrichHannot\HeadBundle\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -21,7 +27,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
     {
         return [
             BundleConfig::create(HeimrichHannotContaoHeadBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class])
+                ->setLoadAfter([ContaoCoreBundle::class]),
         ];
     }
 
@@ -29,16 +35,14 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
      * Returns a collection of routes for this bundle.
      *
      * @param LoaderResolverInterface $resolver
-     * @param KernelInterface $kernel
+     * @param KernelInterface         $kernel
      *
      * @return null|RouteCollection
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
         return $resolver
-            ->resolve(__DIR__ . '/../Resources/config/routing.yml')
-            ->load(__DIR__ . '/../Resources/config/routing.yml');
+            ->resolve(__DIR__.'/../Resources/config/routing.yml')
+            ->load(__DIR__.'/../Resources/config/routing.yml');
     }
-
-
 }
