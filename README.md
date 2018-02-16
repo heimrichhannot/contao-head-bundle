@@ -1,15 +1,8 @@
-# Contao <head> bundle
-
-![](https://img.shields.io/packagist/v/heimrichhannot/contao-head-bundle.svg)
-![](https://img.shields.io/packagist/l/heimrichhannot/contao-head-bundle.svg)
-![](https://img.shields.io/packagist/dt/heimrichhannot/contao-head-bundle.svg)
-[![](https://img.shields.io/travis/heimrichhannot/contao-head-bundle/master.svg)](https://travis-ci.org/heimrichhannot/contao-head-bundle/)
-[![](https://img.shields.io/coveralls/heimrichhannot/contao-head-bundle/master.svg)](https://coveralls.io/github/heimrichhannot/contao-head-bundle)
-
+#Contao <head> bundle
 
 This module contains enhancements for the contao frontend page <head> section. It provides a [service for each tag](##Available Tags) and gives better overwrite control.
 
-## Usage
+##Usage
 
 Add the meta information to your `fe_page.html5` template and make sure, that you remove robots:
 
@@ -32,13 +25,13 @@ as they are already shipped within `$this->meta`.
 
 Each meta tags is registered as a symfony service. Get the service and set the content, thats it.
 
-### Example `<meta name="date">`
+###Example `<meta name="date">`
 
 ```
 \System::getContainer()->get('huh.head.tag.meta_date')->setContent(\Date::parse('c', time()));
 ```
 
-## Available Tags
+##Available Tags
 
 | tag | setter |
 |----:|--------|
@@ -87,6 +80,7 @@ In your bundle `services.yml` register your tag:
 services:
     huh.head.tag.meta_custom:
       class: HeimrichHannot\HeadBundle\Tag\Simple\MetaCustom
+      public: true
       arguments: ['@huh.head.tag_manager']
 ```
 
