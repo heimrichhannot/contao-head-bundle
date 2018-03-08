@@ -26,8 +26,6 @@ class HeimrichHannotContaoHeadExtensionTest extends TestCase
      */
     protected function setUp()
     {
-        parent::setUp();
-
         $this->container = new ContainerBuilder(new ParameterBag(['kernel.debug' => false]));
 
         $extension = new HeimrichHannotContaoHeadExtension();

@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\HeadBundle\Tests;
 
+use HeimrichHannot\HeadBundle\DependencyInjection\HeimrichHannotContaoHeadExtension;
 use HeimrichHannot\HeadBundle\HeimrichHannotContaoHeadBundle;
 use PHPUnit\Framework\TestCase;
 
@@ -21,5 +22,17 @@ class HeimrichHannotContaoHeadBundleTest extends TestCase
         $bundle = new HeimrichHannotContaoHeadBundle();
 
         $this->assertInstanceOf(HeimrichHannotContaoHeadBundle::class, $bundle);
+    }
+
+    /**
+     * test the return of extension.
+     */
+    public function testGetContainerExtension()
+    {
+        $bundle = new HeimrichHannotContaoHeadBundle();
+
+        $extension = $bundle->getContainerExtension();
+
+        $this->assertInstanceOf(HeimrichHannotContaoHeadExtension::class, $extension);
     }
 }

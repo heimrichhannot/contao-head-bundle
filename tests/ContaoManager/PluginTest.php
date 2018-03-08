@@ -11,15 +11,15 @@ namespace HeimrichHannot\HeadBundle\Test\ContaoManager;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
+use Contao\TestCase\ContaoTestCase;
 use HeimrichHannot\HeadBundle\ContaoManager\Plugin;
 use HeimrichHannot\HeadBundle\HeimrichHannotContaoHeadBundle;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Test the plugin class
  * Class PluginTest.
  */
-class PluginTest extends TestCase
+class PluginTest extends ContaoTestCase
 {
     /**
      * Tests the object instantiation.

@@ -8,6 +8,8 @@
 
 namespace HeimrichHannot\HeadBundle\Manager;
 
+use Contao\Controller;
+use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Head\TagInterface;
 
 class TagManager
@@ -36,7 +38,7 @@ class TagManager
                 continue;
             }
 
-            $tags[] = \Contao\StringUtil::stripInsertTags(\Contao\Controller::replaceInsertTags($tag->generate()));
+            $tags[] = StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->generate()));
         }
 
         return $tags;

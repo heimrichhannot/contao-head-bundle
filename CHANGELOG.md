@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.6] - 2018-03-08
+
+### Added
+- tests
+
 ## [1.0.5] - 2018-02-16
 
 ### Added
