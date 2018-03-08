@@ -14,7 +14,7 @@
         <ini name="display_startup_errors" value="1"/>
         <ini name="intl.default_locale" value="en" />
         <ini name="intl.error_level" value="0" />
-        <server name="SERVER_NAME" value="http://localhost" />
+        <server name="SERVER_NAME" value="localhost" />
         <server name="SERVER_PORT" value="80" />
         <server name='HTTP_HOST' value='localhost' />
     </php>

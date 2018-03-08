@@ -11,6 +11,7 @@ namespace HeimrichHannot\HeadBundle\Tests;
 use HeimrichHannot\HeadBundle\DependencyInjection\HeimrichHannotContaoHeadExtension;
 use HeimrichHannot\HeadBundle\HeimrichHannotContaoHeadBundle;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class HeimrichHannotContaoHeadBundleTest extends TestCase
 {
@@ -20,6 +21,19 @@ class HeimrichHannotContaoHeadBundleTest extends TestCase
     public function testCanBeInstantiated()
     {
         $bundle = new HeimrichHannotContaoHeadBundle();
+
+        $this->assertInstanceOf(HeimrichHannotContaoHeadBundle::class, $bundle);
+    }
+
+    /**
+     * test build of bundle.
+     */
+    public function testBuild()
+    {
+        $container = new ContainerBuilder();
+        $bundle = new HeimrichHannotContaoHeadBundle();
+
+        $bundle->build($container);
 
         $this->assertInstanceOf(HeimrichHannotContaoHeadBundle::class, $bundle);
     }

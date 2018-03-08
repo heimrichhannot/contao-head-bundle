@@ -64,6 +64,15 @@ class TagManagerTest extends ContaoTestCase
         $this->assertNotEmpty($tags);
         $this->assertCount(1, $tags);
         $this->assertArrayNotHasKey(get_class($tag), $tags);
+
+        $tag = $this->createMock(TagInterface::class);
+        $tag->method('hasContent')->willReturn(false);
+
+        $tagManager->registerTag($tag);
+
+        $tags = $tagManager->getTags();
+
+        $this->assertEmpty($tags);
     }
 
     /**

@@ -95,7 +95,7 @@ class HookListenerTest extends ContaoTestCase
      */
     public function testGetPageLayout()
     {
-        $layout = $this->getLayoutModel();
+        $layout = $this->getLayoutModel('title');
 
         $GLOBALS['objPage'] = $this->getPageModel();
 
@@ -126,11 +126,13 @@ class HookListenerTest extends ContaoTestCase
     }
 
     /**
+     * @param string $title
+     *
      * @return \LayoutModel
      */
-    public function getLayoutModel()
+    public function getLayoutModel(string $title)
     {
-        return $this->mockClassWithProperties(LayoutModel::class, ['titleTag' => 'title']);
+        return $this->mockClassWithProperties(LayoutModel::class, ['titleTag' => $title]);
     }
 
     /**
