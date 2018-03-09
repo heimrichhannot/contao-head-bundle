@@ -9,6 +9,7 @@
 namespace HeimrichHannot\HeadBundle\Test\EventListener;
 
 use Contao\Config;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Environment;
 use Contao\LayoutModel;
@@ -16,6 +17,7 @@ use Contao\PageModel;
 use Contao\PageRegular;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Doctrine\DBAL\Connection;
 use HeimrichHannot\HeadBundle\EventListener\HookListener;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\HeadBundle\Tag\Link\LinkCanonical;
@@ -25,8 +27,6 @@ use HeimrichHannot\HeadBundle\Tag\Meta\MetaLanguage;
 use HeimrichHannot\HeadBundle\Tag\Meta\MetaRobots;
 use HeimrichHannot\HeadBundle\Tag\Misc\Base;
 use HeimrichHannot\HeadBundle\Tag\Misc\Title;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\Translator;
 
@@ -50,14 +50,27 @@ class HookListenerTest extends ContaoTestCase
         parent::setUp();
 
         if (!defined('TL_ROOT')) {
-            define('TL_ROOT', '/src');
+            define('TL_ROOT', __DIR__);
         }
 
-        $this->framework = $this->mockContaoFramework();
+        $container = $this->mockContainer();
+
+        $database = $this->createMock(Connection::class);
+        $container->set('database_connection', $database);
+
+        $requestStack = $this->createRequestStackMock();
+        $container->set('request_stack', $requestStack);
+
+        $adapter = $this->getAdapter();
+        $this->framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        $container->set('contao.framework', $this->framework);
+        $container->set('contao.resource_finder', new ResourceFinder([]));
+        $container->set('translator', new Translator('de'));
+
         $this->tagManager = $this->createMock(TagManager::class);
         $this->tagManager->method('getTags')->willReturn(['value1', 'value2', 'value3']);
 
-        $container = new ContainerBuilder(new ParameterBag(['kernel.cache_dir' => false]));
         $container->set('huh.head.tag.meta_charset', new MetaCharset($this->tagManager));
         $container->set('huh.head.tag.base', new Base($this->tagManager));
         $container->set('huh.head.tag.title', new Title($this->tagManager));
@@ -65,9 +78,6 @@ class HookListenerTest extends ContaoTestCase
         $container->set('huh.head.tag.meta_description', new MetaDescription($this->tagManager));
         $container->set('huh.head.tag.meta_robots', new MetaRobots($this->tagManager));
         $container->set('huh.head.tag.link_canonical', new LinkCanonical($this->tagManager));
-
-        $container->set('request_stack', new RequestStack());
-        $container->set('translator', new Translator('de'));
 
         System::setContainer($container);
     }
@@ -82,10 +92,14 @@ class HookListenerTest extends ContaoTestCase
 
     public function testGeneratePage()
     {
+        $page = $this->getPageModel();
+
+        $layout = $this->getLayoutModel();
+
         $pageRegular = $this->getPageRegularModel();
 
         $listener = new HookListener($this->framework, $this->tagManager);
-        $listener->generatePage($pageRegular);
+        $listener->generatePage($page, $layout, $pageRegular);
 
         $this->assertSame('value1'.PHP_EOL.'value2'.PHP_EOL.'value3', $pageRegular->Template->meta);
     }
@@ -95,12 +109,15 @@ class HookListenerTest extends ContaoTestCase
      */
     public function testGetPageLayout()
     {
+        $page = $this->getPageModel();
+
         $layout = $this->getLayoutModel('title');
+        $pageRegular = $this->getPageRegularModel();
 
         $GLOBALS['objPage'] = $this->getPageModel();
 
         $listener = new HookListener($this->framework, $this->tagManager);
-        $listener->getPageLayout($layout);
+        $listener->getPageLayout($page, $layout, $pageRegular);
 
         $container = System::getContainer();
 
@@ -111,6 +128,30 @@ class HookListenerTest extends ContaoTestCase
         $this->assertSame('description', $container->get('huh.head.tag.meta_description')->getContent());
         $this->assertSame('index,follow', $container->get('huh.head.tag.meta_robots')->getContent());
         $this->assertSame('http://localhost/', $container->get('huh.head.tag.link_canonical')->getContent());
+
+        $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        $adapter->method('findFirstPublishedByPid')->willReturn(null);
+        $this->framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $container->set('contao.framework', $this->framework);
+        System::setContainer($container);
+
+        $layout = $this->getLayoutModel('');
+        $listener = new HookListener($this->framework, $this->tagManager);
+        $listener->getPageLayout($page, $layout, $pageRegular);
+
+        $this->assertNotEmpty($container->get('huh.head.tag.title')->getContent());
+        $this->assertSame('{{page::pageTitle}} - {{page::rootPageTitle}}', $container->get('huh.head.tag.title')->getContent());
+
+        $adapter = $this->getAdapter();
+        $this->framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $container->set('contao.framework', $this->framework);
+        System::setContainer($container);
+
+        $listener = new HookListener($this->framework, $this->tagManager);
+        $listener->getPageLayout($page, $layout, $pageRegular);
+
+        $this->assertNotEmpty($container->get('huh.head.tag.title')->getContent());
+        $this->assertSame('{{page::rootPageTitle}}', $container->get('huh.head.tag.title')->getContent());
     }
 
     /**
@@ -128,11 +169,11 @@ class HookListenerTest extends ContaoTestCase
     /**
      * @param string $title
      *
-     * @return \LayoutModel
+     * @return LayoutModel
      */
-    public function getLayoutModel(string $title)
+    public function getLayoutModel(string $title = '')
     {
-        return $this->mockClassWithProperties(LayoutModel::class, ['titleTag' => $title]);
+        return $this->mockClassWithProperties(LayoutModel::class, ['id' => 1, 'titleTag' => $title]);
     }
 
     /**
@@ -140,9 +181,28 @@ class HookListenerTest extends ContaoTestCase
      */
     public function getPageModel()
     {
-        $page = $this->mockClassWithProperties(PageModel::class, ['description' => 'description']);
+        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 1, 'description' => 'description']);
         $page->method('getAbsoluteUrl')->willReturn('localhost');
 
         return $page;
+    }
+
+    public function createRequestStackMock()
+    {
+        $requestStack = new RequestStack();
+        $request = new \Symfony\Component\HttpFoundation\Request();
+        $request->attributes->set('_contao_referer_id', 'foobar');
+        $requestStack->push($request);
+
+        return $requestStack;
+    }
+
+    public function getAdapter()
+    {
+        $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 1, 'titleTag' => 'rootPage']);
+        $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        $adapter->method('findFirstPublishedByPid')->willReturn($rootPage);
+
+        return $adapter;
     }
 }

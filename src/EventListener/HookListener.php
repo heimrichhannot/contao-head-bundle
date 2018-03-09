@@ -37,16 +37,16 @@ class HookListener
      */
     public function __construct(ContaoFrameworkInterface $framework, TagManager $tagManager)
     {
-        $this->framework  = $framework;
+        $this->framework = $framework;
         $this->tagManager = $tagManager;
     }
 
     /**
      * Modify the page object.
-     * @param PageModel $page
+     *
+     * @param PageModel   $page
      * @param LayoutModel $layout
      * @param PageRegular $pageRegular
-     *
      */
     public function generatePage(PageModel $page, LayoutModel $layout, PageRegular $pageRegular)
     {
@@ -56,7 +56,7 @@ class HookListener
     /**
      * Modify the page layout.
      *
-     * @param PageModel $page
+     * @param PageModel   $page
      * @param LayoutModel $layout
      * @param PageRegular $pageRegular
      */
@@ -66,31 +66,33 @@ class HookListener
          * @var $objPage \Contao\PageModel
          */
         global $objPage;
+        $titleTag = $layout->titleTag;
 
         System::getContainer()->get('huh.head.tag.meta_charset')->setContent(Config::get('characterSet'));
         System::getContainer()->get('huh.head.tag.base')->setContent(Environment::get('base'));
 
         // Fall back to the default title tag
-        if ('' === $layout->titleTag) {
-            $objFirstPage = PageModel::findFirstPublishedByPid($objPage->rootId);
-            $strTitle     = '{{page::rootPageTitle}}';
+        if ('' === $titleTag) {
+            $objFirstPage = $this->framework->getAdapter(PageModel::class)->findFirstPublishedByPid($objPage->rootId);
+
+            $strTitle = '{{page::rootPageTitle}}';
 
             // add pageTitle only if not first page / front page)
             if (null === $objFirstPage || $objFirstPage->id !== $objPage->id) {
-                $strTitle = '{{page::pageTitle}} - ' . $strTitle;
+                $strTitle = '{{page::pageTitle}} - '.$strTitle;
             }
 
-            $layout->titleTag = $strTitle;
+            $titleTag = $strTitle;
         }
 
-        System::getContainer()->get('huh.head.tag.title')->setContent($layout->titleTag);
+        System::getContainer()->get('huh.head.tag.title')->setContent($titleTag);
 
         System::getContainer()->get('huh.head.tag.meta_language')->setContent(System::getContainer()->get('translator')->getLocale());
         System::getContainer()->get('huh.head.tag.meta_description')->setContent(str_replace(["\n", "\r", '"'], [' ', '', ''], $objPage->description));
         System::getContainer()->get('huh.head.tag.meta_robots')->setContent($objPage->robots ?: 'index,follow');
 
         $path = Request::createFromGlobals()->getPathInfo(); // path without query string
-        $url  = Environment::get('url') . $path;
+        $url = Environment::get('url').$path;
 
         // if path is id, take absolute url from current page
         if (is_numeric(ltrim($path, '/'))) {
