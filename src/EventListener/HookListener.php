@@ -37,16 +37,18 @@ class HookListener
      */
     public function __construct(ContaoFrameworkInterface $framework, TagManager $tagManager)
     {
-        $this->framework = $framework;
+        $this->framework  = $framework;
         $this->tagManager = $tagManager;
     }
 
     /**
      * Modify the page object.
-     *
+     * @param PageModel $page
+     * @param LayoutModel $layout
      * @param PageRegular $pageRegular
+     *
      */
-    public function generatePage(PageRegular $pageRegular)
+    public function generatePage(PageModel $page, LayoutModel $layout, PageRegular $pageRegular)
     {
         $pageRegular->Template->meta = implode("\n", $this->tagManager->getTags());
     }
@@ -54,9 +56,11 @@ class HookListener
     /**
      * Modify the page layout.
      *
+     * @param PageModel $page
      * @param LayoutModel $layout
+     * @param PageRegular $pageRegular
      */
-    public function getPageLayout(LayoutModel $layout)
+    public function getPageLayout(PageModel $page, LayoutModel $layout, PageRegular $pageRegular)
     {
         /*
          * @var $objPage \Contao\PageModel
@@ -69,11 +73,11 @@ class HookListener
         // Fall back to the default title tag
         if ('' === $layout->titleTag) {
             $objFirstPage = PageModel::findFirstPublishedByPid($objPage->rootId);
-            $strTitle = '{{page::rootPageTitle}}';
+            $strTitle     = '{{page::rootPageTitle}}';
 
             // add pageTitle only if not first page / front page)
             if (null === $objFirstPage || $objFirstPage->id !== $objPage->id) {
-                $strTitle = '{{page::pageTitle}} - '.$strTitle;
+                $strTitle = '{{page::pageTitle}} - ' . $strTitle;
             }
 
             $layout->titleTag = $strTitle;
@@ -86,7 +90,7 @@ class HookListener
         System::getContainer()->get('huh.head.tag.meta_robots')->setContent($objPage->robots ?: 'index,follow');
 
         $path = Request::createFromGlobals()->getPathInfo(); // path without query string
-        $url = Environment::get('url').$path;
+        $url  = Environment::get('url') . $path;
 
         // if path is id, take absolute url from current page
         if (is_numeric(ltrim($path, '/'))) {
