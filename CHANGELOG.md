@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2018-03-12
+
+### Added
+- dependency to heimrichhannot/contao-utils-bundle 2.0
+
 ## [1.0.10] - 2018-03-12
 
 ### Added

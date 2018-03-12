@@ -81,7 +81,7 @@ class HookListener
             $title = '{{page::rootPageTitle}}';
 
             // add pageTitle only if not first page / front page)
-            if (null === $firstPage || $firstPage->id !== $objPage->id) {
+            if (null === $firstPage || $firstPage->id !== $objPage->id || isset($_GET['auto_item'])) {
                 $title = '{{page::pageTitle}} - '.$title;
             }
 
