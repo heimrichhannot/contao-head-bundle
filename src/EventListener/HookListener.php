@@ -3,7 +3,7 @@
 /*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\HeadBundle\EventListener;
@@ -66,30 +66,38 @@ class HookListener
          * @var $objPage \Contao\PageModel
          */
         global $objPage;
+
         $titleTag = $layout->titleTag;
 
         System::getContainer()->get('huh.head.tag.meta_charset')->setContent(Config::get('characterSet'));
         System::getContainer()->get('huh.head.tag.base')->setContent(Environment::get('base'));
 
-        // Fall back to the default title tag
-        if ('' === $titleTag) {
-            $objFirstPage = $this->framework->getAdapter(PageModel::class)->findFirstPublishedByPid($objPage->rootId);
+        // prepare data
+        $description = str_replace(["\n", "\r", '"'], [' ', '', ''], $objPage->description);
 
-            $strTitle = '{{page::rootPageTitle}}';
+        if ('' === $titleTag) {
+            $firstPage = $this->framework->getAdapter(PageModel::class)->findFirstPublishedByPid($objPage->rootId);
+
+            $title = '{{page::rootPageTitle}}';
 
             // add pageTitle only if not first page / front page)
-            if (null === $objFirstPage || $objFirstPage->id !== $objPage->id) {
-                $strTitle = '{{page::pageTitle}} - '.$strTitle;
+            if (null === $firstPage || $firstPage->id !== $objPage->id) {
+                $title = '{{page::pageTitle}} - '.$title;
             }
 
-            $titleTag = $strTitle;
+            $titleTag = $title;
         }
 
-        System::getContainer()->get('huh.head.tag.title')->setContent($titleTag);
+        // image
+        $image = null;
 
-        System::getContainer()->get('huh.head.tag.meta_language')->setContent(System::getContainer()->get('translator')->getLocale());
-        System::getContainer()->get('huh.head.tag.meta_description')->setContent(str_replace(["\n", "\r", '"'], [' ', '', ''], $objPage->description));
-        System::getContainer()->get('huh.head.tag.meta_robots')->setContent($objPage->robots ?: 'index,follow');
+        if (null !== ($rootPage = $this->framework->getAdapter(PageModel::class)->findByPk($objPage->rootId ?: $objPage->id))) {
+            if ($rootPage->addHeadDefaultImage && $rootPage->headDefaultImage) {
+                if ($imageTmp = System::getContainer()->get('huh.utils.file')->getPathFromUuid($rootPage->headDefaultImage)) {
+                    $image = Environment::get('url').'/'.$imageTmp;
+                }
+            }
+        }
 
         $path = Request::createFromGlobals()->getPathInfo(); // path without query string
         $url = Environment::get('url').$path;
@@ -99,6 +107,33 @@ class HookListener
             $url = $objPage->getAbsoluteUrl();
         }
 
+        // title tag
+        System::getContainer()->get('huh.head.tag.title')->setContent($titleTag);
+
+        // default meta data
+        System::getContainer()->get('huh.head.tag.meta_language')->setContent(System::getContainer()->get('translator')->getLocale());
+        System::getContainer()->get('huh.head.tag.meta_description')->setContent($description);
+        System::getContainer()->get('huh.head.tag.meta_robots')->setContent($objPage->robots ?: 'index,follow');
+
+        // default twitter card
+        System::getContainer()->get('huh.head.tag.twitter_card')->setContent('summary');
+        System::getContainer()->get('huh.head.tag.twitter_title')->setContent($titleTag);
+        System::getContainer()->get('huh.head.tag.twitter_description')->setContent($description);
+
+        if ($image) {
+            System::getContainer()->get('huh.head.tag.twitter_image')->setContent($image);
+        }
+
+        // default open graph data
+        System::getContainer()->get('huh.head.tag.og_title')->setContent($titleTag);
+        System::getContainer()->get('huh.head.tag.og_description')->setContent($description);
+        System::getContainer()->get('huh.head.tag.og_url')->setContent($url);
+
+        if ($image) {
+            System::getContainer()->get('huh.head.tag.og_image')->setContent($image);
+        }
+
+        // canonical
         System::getContainer()->get('huh.head.tag.link_canonical')->setContent($url);
     }
 }

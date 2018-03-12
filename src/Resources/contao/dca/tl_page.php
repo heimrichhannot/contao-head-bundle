@@ -5,19 +5,39 @@
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
-$dc = &$GLOBALS['TL_DCA']['tl_page'];
+$dca = &$GLOBALS['TL_DCA']['tl_page'];
 
 /**
  * palettes
  */
-$dc['palettes']['root'] = str_replace(';{sitemap_legend', ';{twitter_legend},twitterSite;{sitemap_legend', $dc['palettes']['root']);
+$dca['palettes']['root'] = str_replace(';{sitemap_legend', ';{head_legend},addHeadDefaultImage;{head_twitter_legend},twitterSite;{sitemap_legend', $dca['palettes']['root']);
+
+/**
+ * Subpalettes
+ */
+$dca['palettes']['__selector__'][] = 'addHeadDefaultImage';
+$dca['subpalettes']['addHeadDefaultImage'] = 'headDefaultImage';
 
 /**
  * fields
  */
 
 $fields = [
-    'twitterSite' => [
+    'addHeadDefaultImage' => [
+        'label'     => &$GLOBALS['TL_LANG']['tl_page']['addHeadDefaultImage'],
+        'exclude'   => true,
+        'inputType' => 'checkbox',
+        'eval'      => ['submitOnChange' => true],
+        'sql'       => "char(1) NOT NULL default ''"
+    ],
+    'headDefaultImage'    => [
+        'label'     => &$GLOBALS['TL_LANG']['tl_page']['headDefaultImage'],
+        'exclude'   => true,
+        'inputType' => 'fileTree',
+        'eval'      => ['fieldType' => 'radio', 'filesOnly' => true, 'extensions' => 'jpg,jpeg,png', 'mandatory' => true],
+        'sql'       => "binary(16) NULL"
+    ],
+    'twitterSite'         => [
         'label'     => &$GLOBALS['TL_LANG']['tl_page']['twitterSite'],
         'inputType' => 'text',
         'exclude'   => true,
@@ -26,4 +46,4 @@ $fields = [
     ],
 ];
 
-$dc['fields'] = array_merge($dc['fields'], $fields);
+$dca['fields'] = array_merge($dca['fields'], $fields);

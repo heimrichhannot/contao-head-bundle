@@ -3,7 +3,7 @@
 /*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\HeadBundle\Test\EventListener;
@@ -25,8 +25,16 @@ use HeimrichHannot\HeadBundle\Tag\Meta\MetaCharset;
 use HeimrichHannot\HeadBundle\Tag\Meta\MetaDescription;
 use HeimrichHannot\HeadBundle\Tag\Meta\MetaLanguage;
 use HeimrichHannot\HeadBundle\Tag\Meta\MetaRobots;
+use HeimrichHannot\HeadBundle\Tag\Meta\OG\OGDescription;
+use HeimrichHannot\HeadBundle\Tag\Meta\OG\OGImage;
+use HeimrichHannot\HeadBundle\Tag\Meta\OG\OGTitle;
+use HeimrichHannot\HeadBundle\Tag\Meta\OG\OGUrl;
+use HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterCard;
+use HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterImage;
+use HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterTitle;
 use HeimrichHannot\HeadBundle\Tag\Misc\Base;
 use HeimrichHannot\HeadBundle\Tag\Misc\Title;
+use HeimrichHannot\UtilsBundle\File\FileUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\Translator;
 
@@ -78,6 +86,19 @@ class HookListenerTest extends ContaoTestCase
         $container->set('huh.head.tag.meta_description', new MetaDescription($this->tagManager));
         $container->set('huh.head.tag.meta_robots', new MetaRobots($this->tagManager));
         $container->set('huh.head.tag.link_canonical', new LinkCanonical($this->tagManager));
+        $container->set('huh.head.tag.twitter_card', new TwitterCard($this->tagManager));
+        $container->set('huh.head.tag.twitter_title', new TwitterTitle($this->tagManager));
+        $container->set('huh.head.tag.twitter_description', new TwitterTitle($this->tagManager));
+        $container->set('huh.head.tag.twitter_image', new TwitterImage($this->tagManager));
+        $container->set('huh.head.tag.og_title', new OGTitle($this->tagManager));
+        $container->set('huh.head.tag.og_description', new OGDescription($this->tagManager));
+        $container->set('huh.head.tag.og_url', new OGUrl($this->tagManager));
+        $container->set('huh.head.tag.og_image', new OGImage($this->tagManager));
+
+        $fileUtil = $this->createConfiguredMock(FileUtil::class, [
+            'getPathFromUuid' => 'files/images/myImage.png',
+        ]);
+        $container->set('huh.utils.file', $fileUtil);
 
         System::setContainer($container);
     }
@@ -129,8 +150,9 @@ class HookListenerTest extends ContaoTestCase
         $this->assertSame('index,follow', $container->get('huh.head.tag.meta_robots')->getContent());
         $this->assertSame('http://localhost/', $container->get('huh.head.tag.link_canonical')->getContent());
 
-        $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        $adapter = $this->mockAdapter(['findFirstPublishedByPid', 'findByPk']);
         $adapter->method('findFirstPublishedByPid')->willReturn(null);
+        $adapter->method('findByPk')->willReturn(null);
         $this->framework = $this->mockContaoFramework([PageModel::class => $adapter]);
         $container->set('contao.framework', $this->framework);
         System::setContainer($container);
@@ -199,9 +221,19 @@ class HookListenerTest extends ContaoTestCase
 
     public function getAdapter()
     {
-        $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 1, 'titleTag' => 'rootPage']);
-        $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        $rootPage = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 1,
+                'titleTag' => 'rootPage',
+                'addHeadDefaultImage' => true,
+                'headDefaultImage' => 'myImage',
+            ]
+        );
+
+        $adapter = $this->mockAdapter(['findFirstPublishedByPid', 'findByPk']);
         $adapter->method('findFirstPublishedByPid')->willReturn($rootPage);
+        $adapter->method('findByPk')->willReturn($rootPage);
 
         return $adapter;
     }

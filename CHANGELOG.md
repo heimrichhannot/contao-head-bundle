@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.10] - 2018-03-12
+
+### Added
+- facebook (OG) and twitter default meta data
+- default image for facebook and twitter meta data
+
+### Changed
+- restored contao 4.5.* in travis.yml
+
+### Removed
+- PHP 5.6 from allowed php versions
+
 ## [1.0.9] - 2018-03-12
 
 ### Changed
