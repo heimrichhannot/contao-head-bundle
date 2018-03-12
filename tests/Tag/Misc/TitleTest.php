@@ -8,16 +8,20 @@
 
 namespace HeimrichHannot\HeadBundle\Test\Tag\Misc;
 
+use Contao\TestCase\ContaoTestCase;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\HeadBundle\Tag\Misc\Title;
 
-class TitleTest
+class TitleTest extends ContaoTestCase
 {
+    /**
+     * test tag generation.
+     */
     public function testGenerate()
     {
         $manager = new TagManager();
         $tag = new Title($manager);
 
-        $this->assertSame('<title>'.$this->getContent().'</title>', $tag->generate());
+        $this->assertSame('<title>'.$tag->getContent().'</title>', $tag->generate());
     }
 }

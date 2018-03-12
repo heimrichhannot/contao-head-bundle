@@ -14,6 +14,9 @@ use HeimrichHannot\HeadBundle\Tag\Misc\Base;
 
 class BaseTest extends ContaoTestCase
 {
+    /**
+     * test tag generation.
+     */
     public function testGenerate()
     {
         $manager = new TagManager();

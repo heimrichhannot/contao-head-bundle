@@ -1,8 +1,33 @@
 language: php
-php:
-- 7.1
-- 7.2
+git:
+  depth: 1
+cache:
+  directories:
+  - "$HOME/.composer/cache"
 sudo: false
+env:
+  global:
+  - COMPOSER_ALLOW_XDEBUG=0
+matrix:
+  include:
+    - php: 7.1
+      env: CONTAO_VERSION='4.4.*'
+    - php: 7.2
+      env: CONTAO_VERSION='4.4.*'
+    - php: 7.1
+      env: CONTAO_VERSION='4.5.*'
+    - php: 7.2
+      env: CONTAO_VERSION='4.5.*'
+    - php: 7.2
+      env: COVERAGE=1 CONTAO_VERSION='4.5.*'
+  allow_failures:
+    - env: COVERAGE=1 DEFAULT=0
+  fast_finish: true
+before_install:
+- if [[ "$COVERAGE" != "1" ]]; then phpenv config-rm xdebug.ini || true; fi
+install:
+- composer require contao/core-bundle:${CONTAO_VERSION}
+- if [[ "$UPDATEDOC" = "1" ]]; then wget -O sami.phar http://get.sensiolabs.org/sami.phar; fi
 notifications:
   email:
     recipients:
@@ -13,9 +38,10 @@ notifications:
     rooms:
       secure: B9jYn80qPKJtGlkemP+wUIA9pSw+gnt9A+9BkStxxCroZ/wq10JSqWLcXCf/sT/1+SqgMBF/fQKUTLFuC6U1YYLCVFvkZaVMlvAYpYG0beq/yIfi0IPyTo9HsiGDAHooKW674DeblumuNxoAiEA61Pd4XaVINqkd6UK7izcGx6/Of366vGMt7cLduJAKPgxGpvQwykaOC3appxXP8i4cAWDu94+4eQRARDI3u0+1VAyF92BGb+zS4E4cv3hs6VcRAFZEbUjHWOTVoaAOp2Kh3S/A0y2YCISM8T2y/JJLBQ4mwa7EXucZ4GGhEU+hlbvXRINQwGXBPeiBoxEKFEYov4p4ILDOgxGGSLmOiJzN+Wa69bJEfcsJe6SPz/wpx8W6ScRy3yAd8nxgKgSdvhZIrjGOILcUrZ8aj2UOxcb5m4J7NVgd1iLeol61ru6C4EbTlhZNG3Fmwrw6kWQG1z4H9Cn8oRhNoJvPzrFlPjOLxUL09vJphNPSxtGkPERf7dqSqqfonMOHs9DQzg6BAjgbDi+GxqAoNBCHnZ5yI8BigHY1DCgVGt7wFzI95D/S9ogMi5f+h2Hre5/+u7r1tqugjd5IH2fL06KmmnZDlyyVxNfmKPXwQYy7fcHhvsV2Om8nwsHs6k+EVvmmRAvVgkdcF0i8343HhHckxa2sW/i5I3M=
 before_script:
-- travis_wait composer install --no-interaction
+  - travis_wait composer install --no-interaction
 script:
-- mkdir -p build/logs
-- php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - if [[ "$COVERAGE" = "1" ]]; then travis_retry mkdir -p build/logs; fi
+  - if [[ "$COVERAGE" = "1" ]]; then travis_retry php vendor/bin/phpunit --coverage-clover build/logs/clover.xml || true; fi
+  - if [[ "$UPDATEDOC" = "1" ]]; then travis_retry php sami.phar update ./docs/config/SamiDocConfig.php || true; fi
 after_script:
-- php vendor/bin/coveralls
+  - if [[ "$COVERAGE" = "1" ]]; then travis_retry php vendor/bin/php-coveralls -v; fi
