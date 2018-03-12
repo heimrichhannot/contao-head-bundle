@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.9] - 2018-03-12
+
+### Changed
+- excluded contao 4.5.* from travis.yml
+
+## [1.0.8] - 2018-03-08
+
+### Added
+- new tag
+
 ## [1.0.7] - 2018-03-08
 
 ### Added
