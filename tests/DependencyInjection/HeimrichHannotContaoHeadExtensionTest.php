@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CalendarBundle\Tests\DependencyInjection;
+namespace HeimrichHannot\HeadBundle\Tests\DependencyInjection;
 
 use HeimrichHannot\HeadBundle\DependencyInjection\HeimrichHannotContaoHeadExtension;
 use HeimrichHannot\HeadBundle\EventListener\HookListener;

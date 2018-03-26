@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2018-03-26
+
+### Changed
+- load after `heimrichhannot/contao-modal`
+
+### Added
+- CompilerPass added to provide container parameter `huh.head.tags` that contains all available tag services 
+
 ## [1.1.1] - 2018-03-12
 
 ### Added

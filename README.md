@@ -31,9 +31,23 @@ Each meta tags is registered as a symfony service. Get the service and set the c
 
 ```
 \System::getContainer()->get('huh.head.tag.meta_date')->setContent(\Date::parse('c', time()));
-```
+```src
+   tests
+   .gitignore
+   .php_cs
+   .travis.yml
+   CHANGELOG.md
+   composer.json
+   phpunit.xml.dist
+   README.md
 
 ##Available Tags
+
+The container parameter `huh.head.tags` contains a list of all available tag services from the list below. 
+
+```
+\Contao\System::getContainer()->getParameter(`huh.head.tags`)
+```  
 
 | tag | setter |
 |----:|--------|

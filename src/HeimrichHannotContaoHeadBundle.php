@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\HeadBundle;
 
+use HeimrichHannot\HeadBundle\DependencyInjection\Compiler\HeadServicePass;
 use HeimrichHannot\HeadBundle\DependencyInjection\HeimrichHannotContaoHeadExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -26,6 +27,7 @@ class HeimrichHannotContaoHeadBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
+        $container->addCompilerPass(new HeadServicePass());
     }
 
     /**

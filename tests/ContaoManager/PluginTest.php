@@ -48,7 +48,7 @@ class PluginTest extends ContaoTestCase
         static::assertCount(1, $bundles);
         static::assertInstanceOf(BundleConfig::class, $bundles[0]);
         static::assertEquals(HeimrichHannotContaoHeadBundle::class, $bundles[0]->getName());
-        static::assertEquals([ContaoCoreBundle::class], $bundles[0]->getLoadAfter());
+        static::assertEquals([ContaoCoreBundle::class, 'modal'], $bundles[0]->getLoadAfter());
     }
 
     public function testGetRouteCollection()
