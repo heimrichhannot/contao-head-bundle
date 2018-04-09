@@ -8,6 +8,8 @@
 
 namespace HeimrichHannot\HeadBundle\Tag\Meta\OG;
 
+use Contao\Controller;
+use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Head\AbstractMetaTag;
 
 class OGDescription extends AbstractMetaTag
@@ -25,4 +27,20 @@ class OGDescription extends AbstractMetaTag
      * @var string
      */
     protected static $name = 'og:description';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generate()
+    {
+        $content = parent::getContent();
+
+        $content = StringUtil::decodeEntities($content);
+        $content = Controller::replaceInsertTags($content, false);
+        $content = strip_tags($content);
+        $content = str_replace("\n", ' ', $content);
+        $content = \StringUtil::substr($content, 320);
+
+        return sprintf('<%s %s="%s" content="%s">', static::$tag, static::$key, static::$name, $content);
+    }
 }

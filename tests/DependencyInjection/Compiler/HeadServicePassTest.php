@@ -1,9 +1,9 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @author Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\HeadBundle\Tests\DependencyInjection\Compiler;
@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class HeadServicePassTest extends ContaoTestCase
 {
-
     /**
      * Tests the object instantiation.
      */
@@ -28,7 +27,7 @@ class HeadServicePassTest extends ContaoTestCase
     }
 
     /**
-     * Test process()
+     * Test process().
      */
     public function testProcess()
     {
@@ -44,6 +43,6 @@ class HeadServicePassTest extends ContaoTestCase
         $compiler = new HeadServicePass();
         $compiler->process($container);
 
-        $this->assertEquals(['huh.head.tag.title'], $container->getParameter('huh.head.tags'));
+        $this->assertSame(['huh.head.tag.title'], $container->getParameter('huh.head.tags'));
     }
 }

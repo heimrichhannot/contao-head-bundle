@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2018-04-09
+
+### Changed
+- `TwitterDescription` and `OGDescription` should not contain html tags, and truncated length to max `320` characters 
+
+
 ## [1.1.2] - 2018-03-26
 
 ### Changed

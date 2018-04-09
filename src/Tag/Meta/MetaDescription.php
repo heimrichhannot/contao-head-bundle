@@ -22,7 +22,7 @@ class MetaDescription extends AbstractMetaTag
     protected static $name = 'description';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generate()
     {

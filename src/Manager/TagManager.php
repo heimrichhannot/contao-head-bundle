@@ -10,7 +10,6 @@ namespace HeimrichHannot\HeadBundle\Manager;
 
 use Contao\Controller;
 use Contao\StringUtil;
-use Contao\System;
 use HeimrichHannot\HeadBundle\Head\TagInterface;
 
 class TagManager
