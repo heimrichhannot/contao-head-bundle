@@ -61,9 +61,9 @@ abstract class AbstractTag implements TagInterface
      *
      * @param string
      */
-    public function setContent($content)
+    public function setContent($content, $escape = true)
     {
-        $this->content = $content;
+        $this->content = $escape ? addslashes($content) : $content;
     }
 
     /**
