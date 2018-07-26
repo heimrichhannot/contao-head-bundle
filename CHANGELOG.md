@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.5] - 2018-07-26
+
+### Fixed
+- add the complete url with params
+
 ## [1.1.4] - 2018-07-16
 
 ### Fixed
