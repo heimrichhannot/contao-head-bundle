@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.6] - 2018-07-26
+
+### Fixed
+- just add selected get params to canonical url
+
 ## [1.1.5] - 2018-07-26
 
 ### Fixed

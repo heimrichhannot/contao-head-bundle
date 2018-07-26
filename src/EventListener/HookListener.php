@@ -16,6 +16,7 @@ use Contao\PageModel;
 use Contao\PageRegular;
 use Contao\System;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
+use Symfony\Component\HttpFoundation\Request;
 
 class HookListener
 {
@@ -98,8 +99,17 @@ class HookListener
             }
         }
 
-        // get the complete url
-        $url = System::getContainer()->get('huh.utils.url')->getCurrentUrl([]);
+        $path = Request::createFromGlobals()->getPathInfo(); // path without query string
+        $url = Environment::get('url').$path;
+
+        // if path is id, take absolute url from current page
+        if (is_numeric(ltrim($path, '/'))) {
+            $url = $objPage->getAbsoluteUrl();
+        }
+
+        if (System::getContainer()->get('huh.request')->hasGet('full')) {
+            $url = System::getContainer()->get('huh.utils.url')->getCurrentUrl([]);
+        }
 
         // title tag
         System::getContainer()->get('huh.head.tag.title')->setContent($titleTag);
