@@ -8,14 +8,31 @@
 
 namespace HeimrichHannot\HeadBundle\Tag\Meta;
 
-use HeimrichHannot\HeadBundle\Head\AbstractMetaTag;
+use HeimrichHannot\HeadBundle\Head\AbstractTag;
 
-class MetaCharset extends AbstractMetaTag
+class MetaCharset extends AbstractTag
 {
     /**
-     * The tag name.
+     * The tag type.
      *
      * @var string
      */
-    protected static $name = 'charset';
+    protected static $tag = 'meta';
+
+    /**
+     * The tag.
+     *
+     * @var string
+     */
+    protected static $key = 'charset';
+
+    /**
+     * Generate the tag output.
+     *
+     * @return string
+     */
+    public function generate()
+    {
+        return sprintf('<%s %s="%s">', static::$tag, static::$key, $this->getContent());
+    }
 }

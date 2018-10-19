@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.7] - 2018-10-19
+
+### Fixed
+- charset meta tag -> now contains the correct syntax
+
 ## [1.1.6] - 2018-07-26
 
 ### Fixed

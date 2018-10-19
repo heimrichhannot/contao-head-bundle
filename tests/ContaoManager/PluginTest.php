@@ -53,7 +53,7 @@ class PluginTest extends ContaoTestCase
 
     public function testGetRouteCollection()
     {
-        define('TL_ROOT', 'src');
+        \define('TL_ROOT', 'src');
 
         $plugin = new Plugin();
 

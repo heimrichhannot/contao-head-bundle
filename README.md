@@ -55,7 +55,7 @@ The container parameter `huh.head.tags` contains a list of all available tag ser
 | `<title>My site title</title>` | `\System::getContainer()->get('huh.head.tag.title')->setContent('My site title')`  |
 | `<meta name="date" content="2017-07-28T11:31:00+02:00">` | `\System::getContainer()->get('huh.head.tag.title')->setContent(\Date::parse('c', time()))`  |
 | `<meta name="language" content="de">` | `\System::getContainer()->get('huh.head.tag.meta_language')->setContent(\System::getContainer()->get('translator')->getLocale())` |
-| `<meta name="charset" content="utf-8">` | `\System::getContainer()->get('huh.head.tag.meta_charset')->setContent(\Config::get('characterSet'))`  |
+| `<meta charset="utf-8">` | `\System::getContainer()->get('huh.head.tag.meta_charset')->setContent(\Config::get('characterSet'))`  |
 | `<meta name="meta_title" content="My site title">` | `\System::getContainer()->get('huh.head.tag.meta_title')->setContent('My site title')`  |
 | `<meta name="meta_description" content="My site description">` | `\System::getContainer()->get('huh.head.tag.meta_title')->setContent('My site title')`  |
 | `<meta name="meta_keywords" content="keyword1, keyword2">` | `\System::getContainer()->get('huh.head.tag.meta_keywords')->setContent('keyword1, keyword2')`  |

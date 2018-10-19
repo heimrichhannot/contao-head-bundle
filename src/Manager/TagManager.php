@@ -21,7 +21,7 @@ class TagManager
 
     public function registerTag(TagInterface $tag)
     {
-        $this->tags[get_class($tag)] = $tag;
+        $this->tags[\get_class($tag)] = $tag;
     }
 
     /**

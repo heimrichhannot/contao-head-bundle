@@ -57,8 +57,8 @@ class HookListenerTest extends ContaoTestCase
     {
         parent::setUp();
 
-        if (!defined('TL_ROOT')) {
-            define('TL_ROOT', __DIR__);
+        if (!\defined('TL_ROOT')) {
+            \define('TL_ROOT', __DIR__);
         }
 
         $container = $this->mockContainer();

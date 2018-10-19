@@ -21,8 +21,8 @@ class TagManagerTest extends ContaoTestCase
     {
         parent::setUp();
 
-        if (!defined('TL_ROOT')) {
-            define('TL_ROOT', '/src');
+        if (!\defined('TL_ROOT')) {
+            \define('TL_ROOT', '/src');
         }
 
         $container = new ContainerBuilder(new ParameterBag(['kernel.cache_dir' => false]));
@@ -42,7 +42,7 @@ class TagManagerTest extends ContaoTestCase
 
         $this->assertNotEmpty($tags);
         $this->assertCount(1, $tags);
-        $this->assertArrayHasKey(get_class($tag), $tags);
+        $this->assertArrayHasKey(\get_class($tag), $tags);
     }
 
     /**
@@ -63,7 +63,7 @@ class TagManagerTest extends ContaoTestCase
 
         $this->assertNotEmpty($tags);
         $this->assertCount(1, $tags);
-        $this->assertArrayNotHasKey(get_class($tag), $tags);
+        $this->assertArrayNotHasKey(\get_class($tag), $tags);
 
         $tag = $this->createMock(TagInterface::class);
         $tag->method('hasContent')->willReturn(false);
