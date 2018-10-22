@@ -1,4 +1,4 @@
-# Contao <head> bundle
+# Contao Head bundle
 
 [![](https://img.shields.io/coveralls/heimrichhannot/contao-head-bundle/master.svg)](https://coveralls.io/github/heimrichhannot/contao-head-bundle)
 
@@ -30,7 +30,7 @@ Each meta tags is registered as a symfony service. Get the service and set the c
 ### Example `<meta name="date">`
 
 ```
-\System::getContainer()->get('huh.head.tag.meta_date')->setContent(\Date::parse('c', time()));
+\Contao\System::getContainer()->get('huh.head.tag.meta_date')->setContent(\Date::parse('c', time()));
 ```
 
 ## Available Tags
