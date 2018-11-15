@@ -33,6 +33,6 @@ class MetaCharset extends AbstractTag
      */
     public function generate()
     {
-        return sprintf('<%s %s="%s">', static::$tag, static::$key, $this->getContent());
+        return sprintf('<%s %s="%s">', static::$tag, static::$key, $this->escapeForHtmlAttribute($this->getContent()));
     }
 }

@@ -31,6 +31,6 @@ abstract class AbstractMetaTag extends AbstractTag
      */
     public function generate()
     {
-        return sprintf('<%s %s="%s" content="%s">', static::$tag, static::$key, static::$name, $this->getContent());
+        return sprintf('<%s %s="%s" content="%s">', static::$tag, static::$key, static::$name, $this->escapeForHtmlAttribute($this->getContent()));
     }
 }

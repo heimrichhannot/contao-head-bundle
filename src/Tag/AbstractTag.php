@@ -8,6 +8,8 @@
 
 namespace HeimrichHannot\HeadBundle\Head;
 
+use Contao\Controller;
+use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 
 abstract class AbstractTag implements TagInterface
@@ -61,9 +63,9 @@ abstract class AbstractTag implements TagInterface
      *
      * @param string
      */
-    public function setContent($content, $escape = true)
+    public function setContent($content)
     {
-        $this->content = $escape ? addslashes($content) : $content;
+        $this->content = $content;
     }
 
     /**
@@ -92,4 +94,16 @@ abstract class AbstractTag implements TagInterface
      * @return string
      */
     abstract public function generate();
+
+    /**
+     * Escapes double quotes.
+     *
+     * @param $content
+     *
+     * @return mixed
+     */
+    public function escapeForHtmlAttribute($content)
+    {
+        return str_replace('"', '&quot;', StringUtil::stripInsertTags(Controller::replaceInsertTags($content)));
+    }
 }

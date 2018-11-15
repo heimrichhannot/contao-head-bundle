@@ -34,6 +34,6 @@ class MetaDescription extends AbstractMetaTag
         $content = str_replace("\n", ' ', $content);
         $content = \StringUtil::substr($content, 320);
 
-        return sprintf('<%s %s="%s" content="%s">', static::$tag, static::$key, static::$name, $content);
+        return sprintf('<%s %s="%s" content="%s">', static::$tag, static::$key, static::$name, $this->escapeForHtmlAttribute($content));
     }
 }

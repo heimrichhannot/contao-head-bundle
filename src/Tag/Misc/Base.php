@@ -19,6 +19,6 @@ class Base extends AbstractTag
      */
     public function generate()
     {
-        return sprintf('<base href="%s">', $this->getContent());
+        return sprintf('<base href="%s">', $this->escapeForHtmlAttribute($this->getContent()));
     }
 }
