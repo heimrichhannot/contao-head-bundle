@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.9] - 2019-02-27
+
+### Fixed
+- `AbstractTag::hasContent()` now uses `empty()` in order to properly check against null, 0, false, ''
+
 ## [1.1.8] - 2018-11-15
 
 ### Fixed

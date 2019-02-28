@@ -75,7 +75,7 @@ abstract class AbstractTag implements TagInterface
      */
     public function hasContent()
     {
-        return '' !== $this->getContent();
+        return !empty($this->getContent());
     }
 
     /**

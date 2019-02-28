@@ -45,4 +45,3 @@ return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setUsingCache(false)
 ;
-
