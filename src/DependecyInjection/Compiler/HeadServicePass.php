@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2019 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -22,12 +22,12 @@ class HeadServicePass implements CompilerPassInterface
         $tags = [];
         $definitions = $container->getDefinitions();
 
-        foreach ($definitions as $service => $defintion) {
+        foreach ($definitions as $service => $definition) {
             try {
-                $r = $container->getReflectionClass($defintion->getClass());
+                $r = $container->getReflectionClass($definition->getClass());
 
                 if (null !== $r && $r->implementsInterface(TagInterface::class)) {
-                    $tags[] = $service;
+                    $tags[$definition->getClass()] = $service;
                 }
             } catch (\Exception $e) {
             }

@@ -10,9 +10,11 @@ Add the meta information to your `fe_page.html5` template and make sure, that yo
 
 ```
 <?php $this->block('meta'); ?>
-    <?= $this->meta; ?>
+    <?= $this->meta(); ?>
 <?php $this->endblock(); ?>
 ```
+The `meta` function accepts currently one parameter that can contain service names (array) that should be skipped.
+
 
 and make sure, that you remove:
 

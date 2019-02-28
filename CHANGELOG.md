@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2019-02-28
+
+### Changed
+- `$this->meta` in `fe_page` is now a function that can be passed an array `$skip` head bundle tag services 
+
 ## [1.1.9] - 2019-02-27
 
 ### Fixed

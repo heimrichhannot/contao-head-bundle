@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2019 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -50,7 +50,9 @@ class HookListener
      */
     public function generatePage(PageModel $page, LayoutModel $layout, PageRegular $pageRegular)
     {
-        $pageRegular->Template->meta = implode("\n", $this->tagManager->getTags());
+        $pageRegular->Template->meta = function (array $skip = []) {
+            return implode("\n", $this->tagManager->getTags($skip));
+        };
     }
 
     /**
