@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2019-04-23
+
+### Fixed
+- compatibility with symfony 4 (updated framework bundle dependency)
+
 ## [1.2.0] - 2019-02-28
 
 ### Changed
