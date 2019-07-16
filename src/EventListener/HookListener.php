@@ -14,8 +14,8 @@ use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
-use Contao\System;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class HookListener
@@ -29,16 +29,21 @@ class HookListener
      * @var TagManager
      */
     private $tagManager;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
     /**
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(ContaoFrameworkInterface $framework, TagManager $tagManager)
+    public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework, TagManager $tagManager)
     {
         $this->framework = $framework;
         $this->tagManager = $tagManager;
+        $this->container = $container;
     }
 
     /**
@@ -64,26 +69,21 @@ class HookListener
      */
     public function getPageLayout(PageModel $page, LayoutModel $layout, PageRegular $pageRegular)
     {
-        /*
-         * @var $objPage \Contao\PageModel
-         */
-        global $objPage;
-
         $titleTag = $layout->titleTag;
 
-        System::getContainer()->get('huh.head.tag.meta_charset')->setContent(Config::get('characterSet'));
-        System::getContainer()->get('huh.head.tag.base')->setContent(Environment::get('base'));
+        $this->container->get('huh.head.tag.meta_charset')->setContent(Config::get('characterSet'));
+        $this->container->get('huh.head.tag.base')->setContent(Environment::get('base'));
 
         // prepare data
-        $description = str_replace(["\n", "\r", '"'], [' ', '', ''], $objPage->description);
+        $description = str_replace(["\n", "\r", '"'], [' ', '', ''], $page->description);
 
         if ('' === $titleTag) {
-            $firstPage = $this->framework->getAdapter(PageModel::class)->findFirstPublishedByPid($objPage->rootId);
+            $firstPage = $this->framework->getAdapter(PageModel::class)->findFirstPublishedByPid($page->rootId);
 
             $title = '{{page::rootPageTitle}}';
 
             // add pageTitle only if not first page / front page)
-            if (null === $firstPage || $firstPage->id !== $objPage->id || isset($_GET['auto_item'])) {
+            if (null === $firstPage || $firstPage->id !== $page->id || isset($_GET['auto_item'])) {
                 $title = '{{page::pageTitle}} - '.$title;
             }
 
@@ -93,9 +93,9 @@ class HookListener
         // image
         $image = null;
 
-        if (null !== ($rootPage = $this->framework->getAdapter(PageModel::class)->findByPk($objPage->rootId ?: $objPage->id))) {
+        if (null !== ($rootPage = $this->framework->getAdapter(PageModel::class)->findByPk($page->rootId ?: $page->id))) {
             if ($rootPage->addHeadDefaultImage && $rootPage->headDefaultImage) {
-                if ($imageTmp = System::getContainer()->get('huh.utils.file')->getPathFromUuid($rootPage->headDefaultImage)) {
+                if ($imageTmp = $this->container->get('huh.utils.file')->getPathFromUuid($rootPage->headDefaultImage)) {
                     $image = Environment::get('url').'/'.$imageTmp;
                 }
             }
@@ -106,40 +106,40 @@ class HookListener
 
         // if path is id, take absolute url from current page
         if (is_numeric(ltrim($path, '/'))) {
-            $url = $objPage->getAbsoluteUrl();
+            $url = $page->getAbsoluteUrl();
         }
 
-        if (System::getContainer()->get('huh.request')->hasGet('full')) {
-            $url = System::getContainer()->get('huh.utils.url')->getCurrentUrl([]);
+        if ($this->container->get('huh.request')->hasGet('full')) {
+            $url = $this->container->get('huh.utils.url')->getCurrentUrl([]);
         }
 
         // title tag
-        System::getContainer()->get('huh.head.tag.title')->setContent($titleTag);
+        $this->container->get('huh.head.tag.title')->setContent($titleTag);
 
         // default meta data
-        System::getContainer()->get('huh.head.tag.meta_language')->setContent(System::getContainer()->get('translator')->getLocale());
-        System::getContainer()->get('huh.head.tag.meta_description')->setContent($description);
-        System::getContainer()->get('huh.head.tag.meta_robots')->setContent($objPage->robots ?: 'index,follow');
+        $this->container->get('huh.head.tag.meta_language')->setContent($this->container->get('translator')->getLocale());
+        $this->container->get('huh.head.tag.meta_description')->setContent($description);
+        $this->container->get('huh.head.tag.meta_robots')->setContent($page->robots ?: 'index,follow');
 
         // default twitter card
-        System::getContainer()->get('huh.head.tag.twitter_card')->setContent('summary');
-        System::getContainer()->get('huh.head.tag.twitter_title')->setContent($titleTag);
-        System::getContainer()->get('huh.head.tag.twitter_description')->setContent($description);
+        $this->container->get('huh.head.tag.twitter_card')->setContent('summary');
+        $this->container->get('huh.head.tag.twitter_title')->setContent($titleTag);
+        $this->container->get('huh.head.tag.twitter_description')->setContent($description);
 
         if ($image) {
-            System::getContainer()->get('huh.head.tag.twitter_image')->setContent($image);
+            $this->container->get('huh.head.tag.twitter_image')->setContent($image);
         }
 
         // default open graph data
-        System::getContainer()->get('huh.head.tag.og_title')->setContent($titleTag);
-        System::getContainer()->get('huh.head.tag.og_description')->setContent($description);
-        System::getContainer()->get('huh.head.tag.og_url')->setContent($url);
+        $this->container->get('huh.head.tag.og_title')->setContent($titleTag);
+        $this->container->get('huh.head.tag.og_description')->setContent($description);
+        $this->container->get('huh.head.tag.og_url')->setContent($url);
 
         if ($image) {
-            System::getContainer()->get('huh.head.tag.og_image')->setContent($image);
+            $this->container->get('huh.head.tag.og_image')->setContent($image);
         }
 
         // canonical
-        System::getContainer()->get('huh.head.tag.link_canonical')->setContent($url);
+        $this->container->get('huh.head.tag.link_canonical')->setContent($url);
     }
 }

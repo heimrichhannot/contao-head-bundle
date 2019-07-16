@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2019-07-16
+
+### Changed
+- updated readme
+- some code enhancements
+
 ## [1.2.1] - 2019-04-23
 
 ### Fixed

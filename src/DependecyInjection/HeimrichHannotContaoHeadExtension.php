@@ -27,5 +27,6 @@ class HeimrichHannotContaoHeadExtension extends Extension
 
         $loader->load('listener.yml');
         $loader->load('services.yml');
+        $loader->load('tags.yml');
     }
 }
