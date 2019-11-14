@@ -1,10 +1,7 @@
 services:
-  _instanceof:
-    Contao\CoreBundle\Framework\FrameworkAwareInterface:
-      calls:
-        - ["setFramework", ["@contao.framework"]]
-    Symfony\Component\DependencyInjection\ContainerAwareInterface:
-      calls:
-        - ["setContainer", ["@service_container"]]
+
   huh.head.tag_manager:
     class: HeimrichHannot\HeadBundle\Manager\TagManager
+    public: true
+    autowire: true
+  HeimrichHannot\HeadBundle\Manager\TagManager: '@huh.head.tag_manager'

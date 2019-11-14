@@ -12,13 +12,17 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\Config\ContainerBuilder;
+use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use HeimrichHannot\HeadBundle\HeimrichHannotContaoHeadBundle;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
 
-class Plugin implements BundlePluginInterface, RoutingPluginInterface
+class Plugin implements BundlePluginInterface, ConfigPluginInterface
 {
     /**
      * {@inheritdoc}
@@ -32,19 +36,12 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
     }
 
     /**
-     * Returns a collection of routes for this bundle.
-     *
-     * @param LoaderResolverInterface $resolver
-     * @param KernelInterface         $kernel
-     *
-     * @throws \Exception
-     *
-     * @return null|RouteCollection
+     * Allows a plugin to load container configuration.
      */
-    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
+    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
     {
-        return $resolver
-            ->resolve(__DIR__.'/../Resources/config/routing.yml')
-            ->load(__DIR__.'/../Resources/config/routing.yml');
+        $loader->load('@HeimrichHannotContaoHeadBundle/Resources/config/listener.yml');
+        $loader->load('@HeimrichHannotContaoHeadBundle/Resources/config/services.yml');
+        $loader->load('@HeimrichHannotContaoHeadBundle/Resources/config/tags.yml');
     }
 }

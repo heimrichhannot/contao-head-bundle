@@ -13,15 +13,27 @@ use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Head\TagInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class TagManager implements ContainerAwareInterface
+class TagManager
 {
-    use ContainerAwareTrait;
-
     /**
      * @var TagInterface[]
      */
     private $tags = [];
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * TagManager constructor.
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
 
     public function registerTag(TagInterface $tag)
     {

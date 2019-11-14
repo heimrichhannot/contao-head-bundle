@@ -29,12 +29,4 @@ class HeimrichHannotContaoHeadBundle extends Bundle
     {
         $container->addCompilerPass(new HeadServicePass());
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContainerExtension()
-    {
-        return new HeimrichHannotContaoHeadExtension();
-    }
 }
