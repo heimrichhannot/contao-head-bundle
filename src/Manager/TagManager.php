@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2019 Heimrich & Hannot GmbH
+ * Copyright (c) 2020 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -11,8 +11,6 @@ namespace HeimrichHannot\HeadBundle\Manager;
 use Contao\Controller;
 use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Head\TagInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TagManager
@@ -33,7 +31,6 @@ class TagManager
     {
         $this->container = $container;
     }
-
 
     public function registerTag(TagInterface $tag)
     {
@@ -63,7 +60,7 @@ class TagManager
                 continue;
             }
 
-            if (!empty($skip) && in_array($service, $skip)) {
+            if (!empty($skip) && \in_array($service, $skip)) {
                 continue;
             }
 

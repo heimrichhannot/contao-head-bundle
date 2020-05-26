@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2019 Heimrich & Hannot GmbH
+ * Copyright (c) 2020 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -63,7 +63,7 @@ class PluginTest extends ContaoTestCase
 
         $resolver->expects($this->once())
             ->method('resolve')
-            ->will($this->returnValue($resolvedLoader));
+            ->willReturn($resolvedLoader);
 
         $originalRoute = new Route(TL_ROOT.'/Resources/config/routing.yml');
         $expectedCollection = new RouteCollection();
@@ -73,12 +73,12 @@ class PluginTest extends ContaoTestCase
         $resolvedLoader
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($expectedCollection));
+            ->willReturn($expectedCollection);
 
         $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
         $loader->expects($this->any())
             ->method('getResolver')
-            ->will($this->returnValue($resolver));
+            ->willReturn($resolver);
 
         $collection = $plugin->getRouteCollection($resolver, $kernel);
 

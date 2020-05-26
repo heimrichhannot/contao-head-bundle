@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.5] - 2020-05-26
+- updated service definitions for better symfony 4 compatibility
+
 ## [1.2.4] - 2019-11-14
 - updated service definitions for better symfony 4 compatibility
 - removed unused code
