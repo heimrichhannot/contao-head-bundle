@@ -120,6 +120,10 @@ class HookListener
             $this->container->get('huh.head.tag.twitter_image')->setContent($image);
         }
 
+        if ($rootPage->twitterSite) {
+            $this->container->get('huh.head.tag.twitter_creator')->setContent($rootPage->twitterSite);
+        }
+
         // default open graph data
         $this->container->get('huh.head.tag.og_title')->setContent($titleTag);
         $this->container->get('huh.head.tag.og_description')->setContent($description);
