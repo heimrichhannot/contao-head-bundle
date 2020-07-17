@@ -11,6 +11,9 @@ $dca = &$GLOBALS['TL_DCA']['tl_page'];
  * palettes
  */
 $dca['palettes']['root'] = str_replace(';{sitemap_legend', ';{head_legend},addHeadDefaultImage;{head_twitter_legend},twitterSite;{sitemap_legend', $dca['palettes']['root']);
+if (isset($dca['palettes']['rootfallback'])) {
+    $dca['palettes']['rootfallback']           = str_replace(';{sitemap_legend', ';{head_legend},addHeadDefaultImage;{head_twitter_legend},twitterSite;{sitemap_legend', $dca['palettes']['rootfallback']);
+}
 
 /**
  * Subpalettes

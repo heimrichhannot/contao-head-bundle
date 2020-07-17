@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2020-07-17
+- added support for rootfallback palette of contao 4.9
+
 ## [1.2.5] - 2020-05-26
 - updated service definitions for better symfony 4 compatibility
 
