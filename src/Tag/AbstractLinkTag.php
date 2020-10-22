@@ -31,6 +31,6 @@ abstract class AbstractLinkTag extends AbstractTag
      */
     public function generate()
     {
-        return sprintf('<%s %s="%s" href="%s">', static::$tag, static::$key, static::$name, $this->getContent());
+        return sprintf('<%s %s="%s" href="%s">', static::$tag, static::$key, static::$name, $this->escapeForHtmlAttribute($this->getContent()));
     }
 }
