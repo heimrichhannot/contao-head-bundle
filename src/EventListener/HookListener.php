@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -11,6 +11,7 @@ namespace HeimrichHannot\HeadBundle\EventListener;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Environment;
+use Contao\FrontendTemplate;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
@@ -47,9 +48,9 @@ class HookListener
     /**
      * Modify the page object.
      */
-    public function generatePage(PageModel $page, LayoutModel $layout, PageRegular $pageRegular)
+    public function parseTemplate(FrontendTemplate $template)
     {
-        $pageRegular->Template->meta = function (array $skip = []) {
+        $template->meta = function (array $skip = []) {
             return implode("\n", $this->tagManager->getTags($skip));
         };
     }
