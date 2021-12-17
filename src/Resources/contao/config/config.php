@@ -7,4 +7,4 @@
  */
 
 $GLOBALS['TL_HOOKS']['getPageLayout']['huh.head-bundle'] = ['huh.head.listener.hooks', 'getPageLayout'];
-$GLOBALS['TL_HOOKS']['parseTemplate']['huh.head-bundle'] = ['huh.head.listener.hooks', 'parseTemplate'];
+$GLOBALS['TL_HOOKS']['parseFrontendTemplate']['huh.head-bundle'] = ['huh.head.listener.hooks', 'parseFrontendTemplate'];

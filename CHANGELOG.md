@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.2] - 2021-12-17
+
+- fixed meta function for contao 4.9.24 (again)
+
 ## [1.4.1] - 2021-12-17
 
 - fixed meta function for contao 4.9.24

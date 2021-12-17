@@ -48,7 +48,7 @@ class HookListener
     /**
      * Modify the page object.
      */
-    public function parseTemplate(FrontendTemplate $template)
+    public function parseFrontendTemplate(FrontendTemplate $template)
     {
         $template->meta = function (array $skip = []) {
             return implode("\n", $this->tagManager->getTags($skip));
