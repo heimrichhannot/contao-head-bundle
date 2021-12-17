@@ -11,10 +11,10 @@ namespace HeimrichHannot\HeadBundle\EventListener;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Environment;
-use Contao\FrontendTemplate;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
+use Contao\Template;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +48,7 @@ class HookListener
     /**
      * Modify the page object.
      */
-    public function parseFrontendTemplate(FrontendTemplate $template)
+    public function parseTemplate(Template $template)
     {
         $template->meta = function (array $skip = []) {
             return implode("\n", $this->tagManager->getTags($skip));
