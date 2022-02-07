@@ -4,10 +4,12 @@
   "description": "This module contains enhancements for the contao frontend page <head> region.",
   "license": "LGPL-3.0-or-later",
   "require": {
-    "php": "^7.1|^8.0",
+    "php": "^7.1||^8.0",
     "contao/core-bundle": "^4.4",
-    "symfony/framework-bundle": "^3.4|^4.0",
-    "heimrichhannot/contao-utils-bundle": "^2.0"
+    "heimrichhannot/contao-utils-bundle": "^2.0",
+    "symfony/config": "4.4||^5.4",
+    "symfony/dependency-injection": "^4.4||^5.4",
+    "symfony/http-kernel": "4.4||^5.4"
   },
   "require-dev": {
     "contao/test-case": "^1.1",
