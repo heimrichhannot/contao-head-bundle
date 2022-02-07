@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.2] - 2022-02-07
+
+- Fixed: symfony deps
+
 ## [1.5.1] - 2022-02-07
 
 - Fixed: increased contao minimum version to 4.9
