@@ -1,4 +1,10 @@
 services:
+  HeimrichHannot\HeadBundle\EventListener\Contao\:
+    resource: '../../EventListener/Contao/*'
+    autowire: true
+    autoconfigure: true
+    bind:
+      $bundleConfig: '%huh_head%'
 
   huh.head.tag_manager:
     class: HeimrichHannot\HeadBundle\Manager\TagManager
