@@ -21,9 +21,11 @@ This module contains enhancements for the contao frontend page <head> section. I
       use_contao_variables: true
     ```
 
+### Set tag content
+
 Each meta tags is registered as a symfony service. Get the service and set the content, thats it.
 
-### Example `<meta name="date">`
+**Example `<meta name="date">`**
 
 ```
 /** @var ContainerInterface $container */
