@@ -17,55 +17,84 @@ use Contao\PageModel;
 use Contao\PageRegular;
 use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
+use Psr\Container\ContainerInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * @Hook("generatePage", priority=-10)
  */
-class GeneratePageListener
+class GeneratePageListener implements ServiceSubscriberInterface
 {
     private TagManager              $manager;
-    private ResponseContextAccessor $contextAccessor;
     private array                   $config;
+    private ContainerInterface      $container;
 
-    public function __construct(TagManager $manager, ResponseContextAccessor $contextAccessor, array $bundleConfig)
+    public function __construct(ContainerInterface $container, TagManager $manager, array $bundleConfig)
     {
         $this->manager = $manager;
-        $this->contextAccessor = $contextAccessor;
         $this->config = $bundleConfig;
+        $this->container = $container;
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
     {
-        if (class_exists(HtmlHeadBag::class)) {
-            if ($this->contextAccessor->getResponseContext()->has(HtmlHeadBag::class)) {
-                /** @var HtmlHeadBag $htmlHeadBag */
-                $htmlHeadBag = $this->contextAccessor->getResponseContext()->get(HtmlHeadBag::class);
+        if ($this->config['use_contao_head'] ?? false) {
+            // 4.13
+            if (class_exists(HtmlHeadBag::class) && $this->container->has(ResponseContextAccessor::class)) {
+                $contextAccessor = $this->container->get(ResponseContextAccessor::class);
 
+                if ($contextAccessor->getResponseContext()->has(HtmlHeadBag::class)) {
+                    /** @var HtmlHeadBag $htmlHeadBag */
+                    $htmlHeadBag = $contextAccessor->getResponseContext()->get(HtmlHeadBag::class);
+
+                    if (($tag = $this->manager->getTagInstance('huh.head.tag.title')) && $tag->hasContent()) {
+                        $htmlHeadBag->setTitle(StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent())));
+                        $this->manager->removeTag('huh.head.tag.title');
+                    }
+
+                    if (($tag = $this->manager->getTagInstance('huh.head.tag.meta_description')) && $tag->hasContent()) {
+                        $htmlHeadBag->setMetaDescription(StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent())));
+                        $this->manager->removeTag('huh.head.tag.meta_description');
+                    }
+
+                    if (($tag = $this->manager->getTagInstance('huh.head.tag.meta_robots')) && $tag->hasContent()) {
+                        $htmlHeadBag->setMetaRobots(StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent())));
+                        $this->manager->removeTag('huh.head.tag.meta_robots');
+                    }
+
+                    if (($tag = $this->manager->getTagInstance('huh.head.tag.link_canonical')) && $tag->hasContent()) {
+                        $htmlHeadBag->setCanonicalUri(StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent())));
+                        $this->manager->removeTag('huh.head.tag.link_canonical');
+                    }
+                }
+            } else {
                 if (($tag = $this->manager->getTagInstance('huh.head.tag.title')) && $tag->hasContent()) {
-                    $htmlHeadBag->setTitle(StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent())));
+                    $layout->titleTag = $tag->getContent();
                     $this->manager->removeTag('huh.head.tag.title');
                 }
 
                 if (($tag = $this->manager->getTagInstance('huh.head.tag.meta_description')) && $tag->hasContent()) {
-                    $htmlHeadBag->setMetaDescription(StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent())));
+                    $pageModel->description = StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent()));
                     $this->manager->removeTag('huh.head.tag.meta_description');
                 }
 
                 if (($tag = $this->manager->getTagInstance('huh.head.tag.meta_robots')) && $tag->hasContent()) {
-                    $htmlHeadBag->setMetaRobots(StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent())));
+                    $pageModel->robots = StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent()));
                     $this->manager->removeTag('huh.head.tag.meta_robots');
                 }
+            }
 
-                if (($tag = $this->manager->getTagInstance('huh.head.tag.link_canonical')) && $tag->hasContent()) {
-                    $htmlHeadBag->setCanonicalUri(StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent())));
-                    $this->manager->removeTag('huh.head.tag.link_canonical');
-                }
-
-                if (($tag = $this->manager->getTagInstance('huh.head.tag.base')) && $tag->hasContent()) {
-                    $pageRegular->Template->base = StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent()));
-                    $this->manager->removeTag('huh.head.tag.base');
-                }
+            if (($tag = $this->manager->getTagInstance('huh.head.tag.base')) && $tag->hasContent()) {
+                $pageRegular->Template->base = StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent()));
+                $this->manager->removeTag('huh.head.tag.base');
             }
         }
+    }
+
+    public static function getSubscribedServices()
+    {
+        return [
+            '?'.ResponseContextAccessor::class,
+        ];
     }
 }
