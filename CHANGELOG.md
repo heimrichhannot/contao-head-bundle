@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2022-05-11
+- Added: options to use core functionality ([#3])
+- Changed: minimum php version is now 7.4 ([#3])
+
 ## [1.5.2] - 2022-02-07
 
 - Fixed: symfony deps
@@ -218,3 +222,5 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2017-09-12
 
 - initial version
+
+[#3]: https://github.com/heimrichhannot/contao-head-bundle/pull/3
