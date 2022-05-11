@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -42,6 +42,23 @@ class TagManager
         }
 
         $this->tags[$services[$className]] = $tag;
+    }
+
+    public function hasTag(string $name): bool
+    {
+        return isset($this->tags[$name]);
+    }
+
+    public function getTagInstance(string $name): ?TagInterface
+    {
+        return $this->tags[$name] ?? null;
+    }
+
+    public function removeTag(string $name): void
+    {
+        if (isset($this->tags[$name])) {
+            unset($this->tags[$name]);
+        }
     }
 
     /**

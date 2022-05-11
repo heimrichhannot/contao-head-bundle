@@ -9,31 +9,23 @@ This module contains enhancements for the contao frontend page <head> section. I
 
 ## Usage
 
-Add the meta information to your `fe_page.html5` template and make sure, that you remove robots:
+### Setup
 
-```
-<?php $this->block('meta'); ?>
-    <?= $this->meta(); ?>
-<?php $this->endblock(); ?>
-```
-The `meta` function accepts currently one parameter that can contain service names (array) that should be skipped.
+1. Install with composer
+2. Update your database
+3. Set following config variables (if you don't need the legacy implementation)
 
+    ```yaml
+    huh_head:
+      use_contao_head: true
+      use_contao_variables: true
+    ```
 
-and make sure, that you remove:
-
-```
-<meta charset="<?= $this->charset ?>">
-<title><?= $this->title ?></title>
-<base href="<?php echo $this->base; ?>">
-<meta name="robots" content="<?= $this->robots ?>">
-<meta name="description" content="<?= $this->description ?>">
-```
-
-as they are already shipped within `$this->meta`.
+### Set tag content
 
 Each meta tags is registered as a symfony service. Get the service and set the content, thats it.
 
-### Example `<meta name="date">`
+**Example `<meta name="date">`**
 
 ```
 /** @var ContainerInterface $container */
@@ -104,4 +96,40 @@ To set the tag content, simply call:
 
 ```
 $container->get('huh.head.tag.meta_custom')->setContent('FOO');
+```
+## Legacy integration
+
+Be sure, `huh_head.use_contao_head` and/or `huh_head.use_contao_variables` are not set to true.
+
+Output `$this->meta()` in your fe_page template ()
+
+```
+<?php $this->block('meta'); ?>
+    <?= $this->meta(); ?>
+<?php $this->endblock(); ?>
+```
+
+Make sure, that you remove (are outputted by $this->meta() if `huh_head.use_contao_head` not true):
+
+```
+<meta charset="<?= $this->charset ?>">
+<title><?= $this->title ?></title>
+<base href="<?php echo $this->base; ?>">
+<meta name="robots" content="<?= $this->robots ?>">
+<meta name="description" content="<?= $this->description ?>">
+```
+
+The `meta` function accepts currently one parameter that can contain service names (array) that should be skipped.
+
+## Config reference
+
+```yaml
+# Default configuration for extension with alias: "huh_head"
+huh_head:
+
+    # Use the default head variables for title,base,robots and description instead of removing them from the page template.
+    use_contao_head:      false
+
+    # Use the default contao template variables for outputting head tags instead of the meta function.
+    use_contao_variables: false
 ```
