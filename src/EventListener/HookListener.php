@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -14,8 +14,6 @@ use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
-use Contao\Template;
-use HeimrichHannot\HeadBundle\Manager\TagManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -27,10 +25,6 @@ class HookListener
     private $framework;
 
     /**
-     * @var TagManager
-     */
-    private $tagManager;
-    /**
      * @var ContainerInterface
      */
     private $container;
@@ -38,21 +32,10 @@ class HookListener
     /**
      * Constructor.
      */
-    public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework, TagManager $tagManager)
+    public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
-        $this->tagManager = $tagManager;
         $this->container = $container;
-    }
-
-    /**
-     * Modify the page object.
-     */
-    public function parseTemplate(Template $template)
-    {
-        $template->meta = function (array $skip = []) {
-            return implode("\n", $this->tagManager->getTags($skip));
-        };
     }
 
     /**
