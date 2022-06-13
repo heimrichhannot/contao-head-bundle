@@ -11,6 +11,7 @@ namespace HeimrichHannot\HeadBundle\HeadTag;
 class BaseTag extends AbstractHeadTag
 {
     const NAME = 'base';
+    const LEGACY_NAME = 'huh.head.tag.base';
 
     public function __construct(string $href)
     {

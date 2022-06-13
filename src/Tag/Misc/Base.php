@@ -19,6 +19,16 @@ class Base extends AbstractTag
         System::getContainer()->get(HtmlHeadTagManager::class)->setBaseTag($content);
     }
 
+    public function getContent()
+    {
+        if (($baseTag = System::getContainer()->get(HtmlHeadTagManager::class)->getBaseTag())
+            && $baseTag->hasAttribute('href')) {
+            return $baseTag->getAttributes()['href'];
+        }
+
+        return null;
+    }
+
     /**
      * Generate the tag output.
      *

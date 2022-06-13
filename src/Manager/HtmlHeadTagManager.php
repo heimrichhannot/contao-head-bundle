@@ -35,7 +35,7 @@ class HtmlHeadTagManager
             $baseTag = new BaseTag($baseTag);
         }
 
-        if (null !== $baseTag || !($baseTag instanceof BaseTag)) {
+        if (null !== $baseTag && !($baseTag instanceof BaseTag)) {
             throw new \InvalidArgumentException('Method only allow properties of type BaseTag, string or null.');
         }
         $this->baseTag = $baseTag;
@@ -61,16 +61,11 @@ class HtmlHeadTagManager
 
     private function setLegacyBaseTag(BaseTag $baseTag = null): void
     {
-        if ($baseTag && $baseTag->hasAttribute('href')) {
-            if ($this->legacyTagManager->hasTag('base')) {
-                $this->legacyTagManager->getTagInstance('base')->setContent($baseTag->getAttributes()['href']);
-            } else {
-                $legacyBaseTag = new Base($this->legacyTagManager);
-                $legacyBaseTag->setContent($baseTag->getAttributes()['href']);
-                $this->legacyTagManager->registerTag($legacyBaseTag);
-            }
-        } else {
-            $this->legacyTagManager->removeTag('base');
+        if (!$baseTag) {
+            $this->legacyTagManager->removeTag(BaseTag::LEGACY_NAME);
+        } elseif (!$this->legacyTagManager->hasTag(BaseTag::LEGACY_NAME)) {
+            $legacyBaseTag = new Base($this->legacyTagManager);
+            $this->legacyTagManager->registerTag($legacyBaseTag);
         }
     }
 }
