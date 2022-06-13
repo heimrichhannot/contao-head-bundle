@@ -16,6 +16,7 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
 use Contao\StringUtil;
+use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -25,15 +26,17 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class GeneratePageListener implements ServiceSubscriberInterface
 {
-    private TagManager              $manager;
-    private array                   $config;
-    private ContainerInterface      $container;
+    private TagManager         $manager;
+    private array              $config;
+    private ContainerInterface $container;
+    private HtmlHeadTagManager $headTagManager;
 
-    public function __construct(ContainerInterface $container, TagManager $manager, array $bundleConfig)
+    public function __construct(ContainerInterface $container, TagManager $manager, array $bundleConfig, HtmlHeadTagManager $headTagManager)
     {
         $this->manager = $manager;
         $this->config = $bundleConfig;
         $this->container = $container;
+        $this->headTagManager = $headTagManager;
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
@@ -86,7 +89,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
             if (($tag = $this->manager->getTagInstance('huh.head.tag.base')) && $tag->hasContent()) {
                 $pageRegular->Template->base = StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->getContent()));
-                $this->manager->removeTag('huh.head.tag.base');
+                $this->headTagManager->setBaseTag(null);
             }
         }
     }

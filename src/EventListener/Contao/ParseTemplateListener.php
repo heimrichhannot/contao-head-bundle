@@ -10,6 +10,7 @@ namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Template;
+use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 
 /**
@@ -17,13 +18,15 @@ use HeimrichHannot\HeadBundle\Manager\TagManager;
  */
 class ParseTemplateListener
 {
-    private array      $bundleConfig;
-    private TagManager $tagManager;
+    private array              $bundleConfig;
+    private TagManager         $tagManager;
+    private HtmlHeadTagManager $headTagManager;
 
-    public function __construct(array $bundleConfig, TagManager $tagManager)
+    public function __construct(array $bundleConfig, TagManager $tagManager, HtmlHeadTagManager $headTagManager)
     {
         $this->bundleConfig = $bundleConfig;
         $this->tagManager = $tagManager;
+        $this->headTagManager = $headTagManager;
     }
 
     public function __invoke(Template $template): void
@@ -33,7 +36,7 @@ class ParseTemplateListener
             && ('fe_page' === $template->getName() || 0 === strpos($template->getName(), 'fe_page_'))
         ) {
             $template->meta = function (array $skip = []) {
-                return implode("\n", $this->tagManager->getTags($skip));
+                return $this->headTagManager->renderTags(['skip_tags' => $skip]);
             };
         }
     }
