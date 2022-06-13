@@ -53,7 +53,7 @@ class HtmlHeadTagManager
         $buffer = '';
 
         if (!\in_array(BaseTag::NAME, $options['skip_tags']) && $this->getBaseTag()) {
-            $buffer .= $this->baseTag->generate().'\n';
+            $buffer .= $this->baseTag->generate()."\n";
         }
 
         return $buffer.implode("\n", $this->legacyTagManager->getTags(array_merge(['base'], $options['skip_tags'])));
