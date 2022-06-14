@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/heimrichhannot/contao-head-bundle.svg?branch=master)](https://travis-ci.org/heimrichhannot/contao-head-bundle)
 [![Coverage Status](https://coveralls.io/repos/github/heimrichhannot/contao-head-bundle/badge.svg?branch=master)](https://coveralls.io/github/heimrichhannot/contao-head-bundle?branch=master)
 
-This module contains enhancements for the contao frontend page <head> section. It provides a [service for each tag](#available-tags) and gives better overwrite control.
+This bundle enhances the handling of html `<head>` section tags. It provides services to update head tags dynamically from your code.
 
 ## Usage
 
@@ -20,6 +20,35 @@ This module contains enhancements for the contao frontend page <head> section. I
       use_contao_head: true
       use_contao_variables: true
     ```
+
+### Set head content
+
+Currently there are two ways to update head tags, as we are in a progress of refactoring this bundle to use a better approach. 
+This section describes the new/modern way, for the legacy way see the next chapters.
+
+Currently the new service only allows setting the base tag.
+
+```php
+use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
+use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
+use Symfony\Component\HttpFoundation\Request;
+
+class SomeEventListener
+{
+    private HtmlHeadTagManager $headTagManager;
+
+    public function updateBaseTag(Request $request): void
+    {
+        // Set base tag to null to remove it
+        $this->headTagManager->setBaseTag(null);
+        
+        //Set base tag from object or url
+        $this->headTagManager->setBaseTag(new BaseTag($request->getSchemeAndHttpHost()));
+        $this->headTagManager->setBaseTag('https://example.org'));
+    }
+}
+```
+
 
 ### Set tag content
 
@@ -41,39 +70,39 @@ The container parameter `huh.head.tags` contains a list of all available tag ser
 #available-tags->getParameter('huh.head.tags')
 ```
 
-| tag | setter |
-|----:|--------|
-| `<base href="http://heimrich-hannot.de">` | `$container->get('huh.head.tag.base')->setContent(\Environment::get('base'))`  |
-| `<title>My site title</title>` | `$container->get('huh.head.tag.title')->setContent('My site title')`  |
-| `<meta name="date" content="2017-07-28T11:31:00+02:00">` | `$container->get('huh.head.tag.title')->setContent(\Date::parse('c', time()))`  |
-| `<meta name="language" content="de">` | `$container->get('huh.head.tag.meta_language')->setContent($container->get('translator')->getLocale())` |
-| `<meta charset="utf-8">` | `$container->get('huh.head.tag.meta_charset')->setContent(\Config::get('characterSet'))`  |
-| `<meta name="meta_title" content="My site title">` | `$container->get('huh.head.tag.meta_title')->setContent('My site title')`  |
-| `<meta name="meta_description" content="My site description">` | `$container->get('huh.head.tag.meta_title')->setContent('My site title')`  |
-| `<meta name="meta_keywords" content="keyword1, keyword2">` | `$container->get('huh.head.tag.meta_keywords')->setContent('keyword1, keyword2')`  |
-| `<meta name="meta_robots" content="index,follow">` | `$container->get('huh.head.tag.meta_robots')->setContent('index,follow')`  |
-| `<meta property="og:title" content="My site title">` | `$container->get('huh.head.tag.og_title')->setContent('My site title')`  |
-| `<meta property="og:type" content="article">` | `$container->get('huh.head.tag.og_type')->setContent('article')`  |
-| `<meta property="og:url" content="http://heimrich-hannot.de/my-article-url">` | `$container->get('huh.head.tag.og_url')->setContent(\Environment::get('url') . '/' . $this->alias)`  |
-| `<meta property="og:description" content="My site description">` | `$container->get('huh.head.tag.og_description')->setContent('My site description')`  |
-| `<meta property="og:image" content="http://heimrich-hannot.de/my-article-image.jpg">` | `$container->get('huh.head.tag.og_image')->setContent('http://heimrich-hannot.de/my-article-image.jpg')`  |
-| `<meta property="og:locale" content="de">` | `$container->get('huh.head.tag.og_locale')->setContent($container->get('request_stack')->getCurrentRequest()->getLocale())`  |
-| `<meta property="og:site_name" content="My website title">` | `$container->get('huh.head.tag.og_site_name')->setContent('My website title')`  |
-| `<meta name="twitter:card" content="summary_large_image">` | `$container->get('huh.head.tag.twitter_card')->setContent('summary_large_image')`  |
-| `<meta name="twitter:site" content="@twitterSiteName">` | `$container->get('huh.head.tag.twitter_site')->setContent('@twitterSiteName')`  |
-| `<meta name="twitter:creator" content="@twitterCreator">` | `$container->get('huh.head.tag.twitter_creator')->setContent('@twitterCreator')`  |
-| `<meta name="twitter:title" content="My article title">` | `$container->get('huh.head.tag.twitter_title')->setContent('My article title')`  |
-| `<meta name="twitter:description" content="My article description">` | `$container->get('huh.head.tag.twitter_description')->setContent('My article description')`  |
-| `<meta name="twitter:image" content="http://heimrich-hannot.de/my-article-image.jpg">` | `$container->get('huh.head.tag.twitter_image')->setContent('http://heimrich-hannot.de/my-article-image.jpg')`  |
-| `<meta name="twitter:image:alt" content="My image alt text">` | `$container->get('huh.head.tag.twitter_image_alt')->setContent('My image alt text')`  |
-| `<meta name="twitter:player" content="https://www.youtube.com/embed/tERRFWuYG48">` | `$container->get('huh.head.tag.twitter_player')->setContent('https://www.youtube.com/embed/tERRFWuYG48')`  |
-| `<meta name="twitter:player:width" content="480">` | `$container->get('huh.head.tag.twitter_player_width')->setContent('480')`  |
-| `<meta name="twitter:player:height" content="300">` | `$container->get('huh.head.tag.twitter_player_height')->setContent('300')`  |
-| `<meta name="twitter:player:stream" content="http://heimrich-hannot.de/my-video.mp4">` | `$container->get('huh.head.tag.twitter_player_stream')->setContent('http://heimrich-hannot.de/my-video.mp4')`  |
-| `<meta name="twitter:player:stream:content_type" content="video/mp4">` | `$container->get('huh.head.tag.twitter_player_stream_content_type')->setContent('video/mp4')`  |
-| `<link rel="prev" href="http://heimrich-hannot.de/list?page_n199=1">` | `$container->get('huh.head.tag.link_prev')->setContent('http://heimrich-hannot.de/list?page_n199=1')`  |
-| `<link rel="next" href="http://heimrich-hannot.de/list?page_n199=3">` | `$container->get('huh.head.tag.link_next')->setContent('http://heimrich-hannot.de/list?page_n199=3')`  |
-| `<link rel="canonical" href="http://heimrich-hannot.de/site-name">` | `$container->get('huh.head.tag.link_canonical')->setContent('http://heimrich-hannot.de/site-name')`  |
+|                                                                                    tag | setter                                                                                                                      |
+|---------------------------------------------------------------------------------------:|-----------------------------------------------------------------------------------------------------------------------------|
+|                                          ~~`<base href="http://heimrich-hannot.de">`~~ | ~~`$container->get('huh.head.tag.base')->setContent(\Environment::get('base'))`~~                                           |
+|                                                         `<title>My site title</title>` | `$container->get('huh.head.tag.title')->setContent('My site title')`                                                        |
+|                               `<meta name="date" content="2017-07-28T11:31:00+02:00">` | `$container->get('huh.head.tag.title')->setContent(\Date::parse('c', time()))`                                              |
+|                                                  `<meta name="language" content="de">` | `$container->get('huh.head.tag.meta_language')->setContent($container->get('translator')->getLocale())`                     |
+|                                                               `<meta charset="utf-8">` | `$container->get('huh.head.tag.meta_charset')->setContent(\Config::get('characterSet'))`                                    |
+|                                     `<meta name="meta_title" content="My site title">` | `$container->get('huh.head.tag.meta_title')->setContent('My site title')`                                                   |
+|                         `<meta name="meta_description" content="My site description">` | `$container->get('huh.head.tag.meta_title')->setContent('My site title')`                                                   |
+|                             `<meta name="meta_keywords" content="keyword1, keyword2">` | `$container->get('huh.head.tag.meta_keywords')->setContent('keyword1, keyword2')`                                           |
+|                                     `<meta name="meta_robots" content="index,follow">` | `$container->get('huh.head.tag.meta_robots')->setContent('index,follow')`                                                   |
+|                                   `<meta property="og:title" content="My site title">` | `$container->get('huh.head.tag.og_title')->setContent('My site title')`                                                     |
+|                                          `<meta property="og:type" content="article">` | `$container->get('huh.head.tag.og_type')->setContent('article')`                                                            |
+|          `<meta property="og:url" content="http://heimrich-hannot.de/my-article-url">` | `$container->get('huh.head.tag.og_url')->setContent(\Environment::get('url') . '/' . $this->alias)`                         |
+|                       `<meta property="og:description" content="My site description">` | `$container->get('huh.head.tag.og_description')->setContent('My site description')`                                         |
+|  `<meta property="og:image" content="http://heimrich-hannot.de/my-article-image.jpg">` | `$container->get('huh.head.tag.og_image')->setContent('http://heimrich-hannot.de/my-article-image.jpg')`                    |
+|                                             `<meta property="og:locale" content="de">` | `$container->get('huh.head.tag.og_locale')->setContent($container->get('request_stack')->getCurrentRequest()->getLocale())` |
+|                            `<meta property="og:site_name" content="My website title">` | `$container->get('huh.head.tag.og_site_name')->setContent('My website title')`                                              |
+|                             `<meta name="twitter:card" content="summary_large_image">` | `$container->get('huh.head.tag.twitter_card')->setContent('summary_large_image')`                                           |
+|                                `<meta name="twitter:site" content="@twitterSiteName">` | `$container->get('huh.head.tag.twitter_site')->setContent('@twitterSiteName')`                                              |
+|                              `<meta name="twitter:creator" content="@twitterCreator">` | `$container->get('huh.head.tag.twitter_creator')->setContent('@twitterCreator')`                                            |
+|                               `<meta name="twitter:title" content="My article title">` | `$container->get('huh.head.tag.twitter_title')->setContent('My article title')`                                             |
+|                   `<meta name="twitter:description" content="My article description">` | `$container->get('huh.head.tag.twitter_description')->setContent('My article description')`                                 |
+| `<meta name="twitter:image" content="http://heimrich-hannot.de/my-article-image.jpg">` | `$container->get('huh.head.tag.twitter_image')->setContent('http://heimrich-hannot.de/my-article-image.jpg')`               |
+|                          `<meta name="twitter:image:alt" content="My image alt text">` | `$container->get('huh.head.tag.twitter_image_alt')->setContent('My image alt text')`                                        |
+|     `<meta name="twitter:player" content="https://www.youtube.com/embed/tERRFWuYG48">` | `$container->get('huh.head.tag.twitter_player')->setContent('https://www.youtube.com/embed/tERRFWuYG48')`                   |
+|                                     `<meta name="twitter:player:width" content="480">` | `$container->get('huh.head.tag.twitter_player_width')->setContent('480')`                                                   |
+|                                    `<meta name="twitter:player:height" content="300">` | `$container->get('huh.head.tag.twitter_player_height')->setContent('300')`                                                  |
+| `<meta name="twitter:player:stream" content="http://heimrich-hannot.de/my-video.mp4">` | `$container->get('huh.head.tag.twitter_player_stream')->setContent('http://heimrich-hannot.de/my-video.mp4')`               |
+|                 `<meta name="twitter:player:stream:content_type" content="video/mp4">` | `$container->get('huh.head.tag.twitter_player_stream_content_type')->setContent('video/mp4')`                               |
+|                  `<link rel="prev" href="http://heimrich-hannot.de/list?page_n199=1">` | `$container->get('huh.head.tag.link_prev')->setContent('http://heimrich-hannot.de/list?page_n199=1')`                       |
+|                  `<link rel="next" href="http://heimrich-hannot.de/list?page_n199=3">` | `$container->get('huh.head.tag.link_next')->setContent('http://heimrich-hannot.de/list?page_n199=3')`                       |
+|                    `<link rel="canonical" href="http://heimrich-hannot.de/site-name">` | `$container->get('huh.head.tag.link_canonical')->setContent('http://heimrich-hannot.de/site-name')`                         |
 
 
 The name of the `twitter:site` @username can be provided within root contao page `tl_page`.

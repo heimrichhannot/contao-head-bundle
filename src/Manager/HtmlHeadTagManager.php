@@ -56,7 +56,7 @@ class HtmlHeadTagManager
             $buffer .= $this->baseTag->generate()."\n";
         }
 
-        return $buffer.implode("\n", $this->legacyTagManager->getTags(array_merge(['base'], $options['skip_tags'])));
+        return $buffer.implode("\n", $this->legacyTagManager->getTags(array_merge([BaseTag::LEGACY_NAME], $options['skip_tags'])));
     }
 
     private function setLegacyBaseTag(BaseTag $baseTag = null): void

@@ -12,6 +12,9 @@ use Contao\System;
 use HeimrichHannot\HeadBundle\Head\AbstractTag;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 
+/**
+ * @deprecated Use HtmlHeadTagManager service instead
+ */
 class Base extends AbstractTag
 {
     public function setContent($content)
