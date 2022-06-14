@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2022-06-14
+- Added: HtmlHeadTagManager service ([#4])
+- Deprecated: Base class ([#4])
+- Deprecated: TagManager::getTags() ([#4])
+
 ## [1.6.0] - 2022-05-11
 - Added: options to use core functionality ([#3])
 - Changed: minimum php version is now 7.4 ([#3])
@@ -223,4 +228,5 @@ All notable changes to this project will be documented in this file.
 
 - initial version
 
+[#4]: https://github.com/heimrichhannot/contao-head-bundle/pull/4
 [#3]: https://github.com/heimrichhannot/contao-head-bundle/pull/3
