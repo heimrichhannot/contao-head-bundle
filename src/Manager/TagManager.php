@@ -67,6 +67,8 @@ class TagManager
      * @param array $skip List of service ids that should be skipped
      *
      * @return array
+     *
+     * @deprecated Use HeadTagManager::renderTags instead
      */
     public function getTags(array $skip = [])
     {
