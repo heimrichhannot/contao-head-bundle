@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.1] - 2022-06-15
+- Fixed: unnecessary method argument in AbstractHeadTag::removeAttribute()
+
 ## [1.7.0] - 2022-06-14
 - Added: HtmlHeadTagManager service ([#4])
 - Deprecated: Base class ([#4])

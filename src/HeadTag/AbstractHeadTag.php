@@ -38,7 +38,7 @@ abstract class AbstractHeadTag
         return $this;
     }
 
-    public function removeAttribute(string $attribute, $value): self
+    public function removeAttribute(string $attribute): self
     {
         if (isset($this->attributes[$attribute])) {
             unset($this->attributes[$attribute]);
