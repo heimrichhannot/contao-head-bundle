@@ -9,12 +9,14 @@
 namespace HeimrichHannot\HeadBundle\Manager;
 
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
+use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Tag\Misc\Base;
 
 class HtmlHeadTagManager
 {
     private ?BaseTag   $baseTag = null;
     private TagManager $legacyTagManager;
+    private array $metaTags = [];
 
     public function __construct(TagManager $legacyTagManager)
     {
@@ -42,6 +44,35 @@ class HtmlHeadTagManager
         $this->setLegacyBaseTag($baseTag);
 
         return $this;
+    }
+
+    /**
+     * @param MetaTag|string $metaTag A MetaTag instance or the meta tag name (name attribute). If provided as string, argument content MUST be set.
+     * @param string|null    $content The meta tag content attribute value. Only used if argument metaTag is a string value.
+     *
+     * @return $this
+     */
+    public function addMetaTag($metaTag, string $content = null): self
+    {
+        if (\is_string($metaTag)) {
+            if (!$content) {
+                throw new \InvalidArgumentException('When not passing a MetaTag instance to HtmlHeadTagManager::addMetaTag(), the content argument must be set.');
+            }
+            $metaTag = (new MetaTag())->setName($metaTag)->setContent($content);
+        }
+
+        if (!$metaTag->getName()) {
+            throw new \UnexpectedValueException('MetaTag::getName() must return a value!');
+        }
+
+        $this->metaTags[$metaTag->getName()] = $metaTag;
+
+        return $this;
+    }
+
+    public function getMetaTag(string $name): ?MetaTag
+    {
+        return $this->metaTags[$name] ?? null;
     }
 
     public function renderTags(array $options = []): string
