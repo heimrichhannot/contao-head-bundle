@@ -16,6 +16,7 @@ class HtmlHeadTagManager
 {
     private ?BaseTag   $baseTag = null;
     private TagManager $legacyTagManager;
+    /** @var MetaTag[] */
     private array $metaTags = [];
 
     public function __construct(TagManager $legacyTagManager)
@@ -75,6 +76,12 @@ class HtmlHeadTagManager
         return $this->metaTags[$name] ?? null;
     }
 
+    /**
+     * Render head tags.
+     *
+     * Options:
+     * - skip_tags: (array) Name of tags to skip
+     */
     public function renderTags(array $options = []): string
     {
         $options = array_merge([
@@ -85,6 +92,13 @@ class HtmlHeadTagManager
 
         if (!\in_array(BaseTag::NAME, $options['skip_tags']) && $this->getBaseTag()) {
             $buffer .= $this->baseTag->generate()."\n";
+        }
+
+        foreach ($this->metaTags as $metaTag) {
+            if (\in_array($metaTag->getName(), $options['skip_tags'])) {
+                continue;
+            }
+            $buffer .= $metaTag->generate()."\n";
         }
 
         return $buffer.implode("\n", $this->legacyTagManager->getTags(array_merge([BaseTag::LEGACY_NAME], $options['skip_tags'])));
