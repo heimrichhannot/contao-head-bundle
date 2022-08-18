@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] - 2022-08-18
+- Added: set fallback images for regular pages
+- Changed: resize fallback images for og:image and twitter:image
+- Fixed: fallback image and twitter username not displayed in root page in contao 4.13
+
 ## [1.7.1] - 2022-06-15
 - Fixed: unnecessary method argument in AbstractHeadTag::removeAttribute()
 

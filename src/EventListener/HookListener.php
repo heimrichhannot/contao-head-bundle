@@ -92,9 +92,7 @@ class HookListener
         $this->container->get('huh.head.tag.twitter_title')->setContent($titleTag);
         $this->container->get('huh.head.tag.twitter_description')->setContent($description);
 
-        if ($page->twitterSite) {
-            $this->container->get('huh.head.tag.twitter_creator')->setContent($page->twitterSite);
-        } elseif (($rootPage = $this->utils->request()->getCurrentRootPageModel($page)) && $rootPage->twitterSite) {
+        if (($rootPage = $this->utils->request()->getCurrentRootPageModel($page)) && $rootPage->twitterSite) {
             $this->container->get('huh.head.tag.twitter_creator')->setContent($rootPage->twitterSite);
         }
 
