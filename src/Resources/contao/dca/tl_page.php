@@ -14,30 +14,8 @@ $dca = &$GLOBALS['TL_DCA']['tl_page'];
  * palettes
  */
 PaletteManipulator::create()
-    ->addField(
-        'addHeadDefaultImage',
-        'meta_legend',
-        PaletteManipulator::POSITION_APPEND
-    )
-    ->addField(
-        'twitterSite',
-        'meta_legend',
-        PaletteManipulator::POSITION_APPEND
-    )
-    ->applyToPalette('root', 'tl_page')
-    ->applyToPalette('rootfallback', 'tl_page');
-
-PaletteManipulator::create()
-    ->addField(
-        'addHeadDefaultImage',
-        'meta_legend',
-        PaletteManipulator::POSITION_APPEND
-    )
-    ->addField(
-        'twitterSite',
-        'meta_legend',
-        PaletteManipulator::POSITION_APPEND
-    )
+    ->addField('addHeadDefaultImage', 'meta_legend', PaletteManipulator::POSITION_APPEND)
+    ->addField('twitterSite', 'meta_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('root', 'tl_page')
     ->applyToPalette('regular', 'tl_page')
     ->applyToPalette('rootfallback', 'tl_page');

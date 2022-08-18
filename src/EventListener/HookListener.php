@@ -14,6 +14,7 @@ use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
+use HeimrichHannot\UtilsBundle\Util\Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,14 +29,16 @@ class HookListener
      * @var ContainerInterface
      */
     private $container;
+    private Utils $utils;
 
     /**
      * Constructor.
      */
-    public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework)
+    public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework, Utils $utils)
     {
         $this->framework = $framework;
         $this->container = $container;
+        $this->utils = $utils;
     }
 
     /**
@@ -64,17 +67,6 @@ class HookListener
             $titleTag = $title;
         }
 
-        // image
-        $image = null;
-
-        if (null !== ($rootPage = $this->framework->getAdapter(PageModel::class)->findByPk($page->rootId ?: $page->id))) {
-            if ($rootPage->addHeadDefaultImage && $rootPage->headDefaultImage) {
-                if ($imageTmp = $this->container->get('huh.utils.file')->getPathFromUuid($rootPage->headDefaultImage)) {
-                    $image = Environment::get('url').'/'.$imageTmp;
-                }
-            }
-        }
-
         $path = Request::createFromGlobals()->getPathInfo(); // path without query string
         $url = Environment::get('url').$path;
 
@@ -100,8 +92,10 @@ class HookListener
         $this->container->get('huh.head.tag.twitter_title')->setContent($titleTag);
         $this->container->get('huh.head.tag.twitter_description')->setContent($description);
 
-        if ($image) {
-            $this->container->get('huh.head.tag.twitter_image')->setContent($image);
+        if ($page->twitterSite) {
+            $this->container->get('huh.head.tag.twitter_creator')->setContent($page->twitterSite);
+        } elseif (($rootPage = $this->utils->request()->getCurrentRootPageModel($page)) && $rootPage->twitterSite) {
+            $this->container->get('huh.head.tag.twitter_creator')->setContent($rootPage->twitterSite);
         }
 
         if ($rootPage->twitterSite) {
@@ -112,10 +106,6 @@ class HookListener
         $this->container->get('huh.head.tag.og_title')->setContent($titleTag);
         $this->container->get('huh.head.tag.og_description')->setContent($description);
         $this->container->get('huh.head.tag.og_url')->setContent($url);
-
-        if ($image) {
-            $this->container->get('huh.head.tag.og_image')->setContent($image);
-        }
 
         // canonical
         $this->container->get('huh.head.tag.link_canonical')->setContent($url);
