@@ -8,8 +8,6 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Image;
 use Contao\LayoutModel;
@@ -19,21 +17,17 @@ use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\HeadBundle\Tag\Meta\OG\OGImage;
 use HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterImage;
 use HeimrichHannot\UtilsBundle\Util\Utils;
-use Psr\Container\ContainerInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * @Hook("getPageLayout", priority=-10)
  */
-class GetPageLayoutListener implements ServiceSubscriberInterface
+class GetPageLayoutListener
 {
-    private ContainerInterface $container;
     private Utils              $utils;
     private TagManager         $tagManager;
 
-    public function __construct(ContainerInterface $container, Utils $utils, TagManager $tagManager)
+    public function __construct(Utils $utils, TagManager $tagManager)
     {
-        $this->container = $container;
         $this->utils = $utils;
         $this->tagManager = $tagManager;
     }
@@ -45,23 +39,6 @@ class GetPageLayoutListener implements ServiceSubscriberInterface
         }
 
         $this->setPageFallbackImage($pageModel);
-
-//        if ($this->container->has(ResponseContextAccessor::class) && $this->container->get(ResponseContextAccessor::class)->getResponseContext()->has(JsonLdManager::class)) {
-//
-//            /** @var JsonLdManager $schemaManager */
-//            $schemaManager = $this->container->get(ResponseContextAccessor::class)->getResponseContext()->get(JsonLdManager::class);
-//            $graph = $schemaManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG);
-//            $graph->webPage()->image($baseUrl.DIRECTORY_SEPARATOR.$imagePath);
-//            $this->tagManager->removeTag('huh.head.tag.og_image');
-//        }
-    }
-
-    public static function getSubscribedServices()
-    {
-        return [
-            '?'.ResponseContextAccessor::class,
-            'huh.head.tag.og_image' => '?'.OGImage::class,
-        ];
     }
 
     /**
