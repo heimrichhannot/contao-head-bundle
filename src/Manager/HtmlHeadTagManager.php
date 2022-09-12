@@ -47,25 +47,8 @@ class HtmlHeadTagManager
         return $this;
     }
 
-    /**
-     * @param MetaTag|string $metaTag A MetaTag instance or the meta tag name (name attribute). If provided as string, argument content MUST be set.
-     * @param string|null    $content The meta tag content attribute value. Only used if argument metaTag is a string value.
-     *
-     * @return $this
-     */
-    public function addMetaTag($metaTag, string $content = null): self
+    public function addMetaTag(MetaTag $metaTag): self
     {
-        if (\is_string($metaTag)) {
-            if (!$content) {
-                throw new \InvalidArgumentException('When not passing a MetaTag instance to HtmlHeadTagManager::addMetaTag(), the content argument must be set.');
-            }
-            $metaTag = (new MetaTag())->setName($metaTag)->setContent($content);
-        }
-
-        if (!$metaTag->getName()) {
-            throw new \UnexpectedValueException('MetaTag::getName() must return a value!');
-        }
-
         $this->metaTags[$metaTag->getName()] = $metaTag;
 
         return $this;
@@ -74,6 +57,13 @@ class HtmlHeadTagManager
     public function getMetaTag(string $name): ?MetaTag
     {
         return $this->metaTags[$name] ?? null;
+    }
+
+    public function removeMetaTag(string $name): void
+    {
+        if (isset($this->metaTags[$name])) {
+            unset($this->metaTags[$name]);
+        }
     }
 
     /**

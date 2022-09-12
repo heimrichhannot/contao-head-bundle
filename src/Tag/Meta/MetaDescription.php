@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -12,6 +12,9 @@ use Contao\Controller;
 use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Head\AbstractMetaTag;
 
+/**
+ * @deprecated Use HtmlHeadTagManager service instead
+ */
 class MetaDescription extends AbstractMetaTag
 {
     /**

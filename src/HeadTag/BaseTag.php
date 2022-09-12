@@ -15,7 +15,7 @@ class BaseTag extends AbstractHeadTag
 
     public function __construct(string $href)
     {
-        $this->addAttribute('href', $href);
+        $this->setAttribute('href', $href);
     }
 
     public function generate(): string

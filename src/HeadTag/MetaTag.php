@@ -10,10 +10,16 @@ namespace HeimrichHannot\HeadBundle\HeadTag;
 
 class MetaTag extends AbstractHeadTag
 {
+    public function __construct(string $name, string $content = null)
+    {
+        $this->setName($name);
+        $this->setContent($content);
+    }
+
     public function setName(?string $name): self
     {
-        if ($name) {
-            $this->addAttribute('name', $name);
+        if (null !== $name) {
+            $this->setAttribute('name', $name);
         } else {
             $this->removeAttribute('name');
         }
@@ -21,19 +27,17 @@ class MetaTag extends AbstractHeadTag
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         if ($this->hasAttribute('name')) {
-            return $this->getAttributes()['name'];
+            return str_replace(':', '_', $this->getAttributes()['name']);
         }
-
-        return null;
     }
 
     public function setContent(?string $content): self
     {
-        if ($content) {
-            $this->addAttribute('content', $content);
+        if (null !== $content) {
+            $this->setAttribute('content', $content);
         } else {
             $this->removeAttribute('content');
         }
