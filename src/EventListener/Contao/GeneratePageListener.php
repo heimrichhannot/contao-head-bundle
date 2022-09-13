@@ -17,14 +17,16 @@ use Contao\PageModel;
 use Contao\PageRegular;
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\CharsetMetaTag;
-use HeimrichHannot\HeadBundle\HeadTag\Meta\DescriptionMetaTag;
+use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
+use HeimrichHannot\HeadBundle\Helper\MetaTagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\HeadBundle\Tag\Link\LinkCanonical;
 use HeimrichHannot\HeadBundle\Tag\Misc\Title;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
@@ -54,8 +56,18 @@ class GeneratePageListener implements ServiceSubscriberInterface
     {
         if ($this->config['use_contao_head'] ?? false) {
             $this->setContaoHead($layout, $pageModel, $pageRegular);
+            $title = $layout->titleTag;
+            $description = $pageModel->description;
         } else {
             $this->setHeadTagsFromContao($pageRegular, $pageModel);
+            $title = $this->legacyTagManager->getTagInstance('huh.head.tag.og_title')->getContent();
+            $description = $this->headTagManager->getMetaTag('description')->getContent();
+        }
+
+        $this->setOpenGraphTag($title, $description);
+
+        if (!$this->headTagManager->getMetaTag('twitter_card')) {
+            $this->headTagManager->addMetaTag(new MetaTag('twitter:card', 'summary'));
         }
     }
 
@@ -163,7 +175,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
                 $description = $htmlHeadBag->getMetaDescription();
             }
             $description = str_replace(["\n", "\r", '"'], [' ', '', ''], strip_tags(Controller::replaceInsertTags($description)) ?? '');
-            $this->headTagManager->addMetaTag((new DescriptionMetaTag())->setContent($description));
+            $this->headTagManager->addMetaTag(new MetaTag('description', MetaTagHelper::prepareDescription($description)));
         }
 
         // Robots
@@ -203,5 +215,37 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param string $title
+     * @param string|null $description
+     * @return void
+     */
+    protected function setOpenGraphTag(string $title, string $description): void
+    {
+        if (!$this->headTagManager->getMetaTag('og_title')) {
+            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:title', $title));
+        }
+
+        if (!$this->headTagManager->getMetaTag('og_description')) {
+            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:description', MetaTagHelper::prepareDescription($description)));
+        }
+
+        if (!$this->headTagManager->getMetaTag('og_url')) {
+            $request = $this->requestStack->getCurrentRequest();
+
+            if ($headTagBag = $this->getHtmlHeadBag()) {
+                $url = $headTagBag->getCanonicalUriForRequest($request);
+            } else {
+                $url = Request::create(
+                    $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo(),
+                    $request->getMethod(),
+                )->getUri();
+            }
+            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:url', $url));
+        }
+
+
     }
 }

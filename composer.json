@@ -13,16 +13,6 @@
     "symfony/http-kernel": "^4.4 || ^5.4",
     "symfony/service-contracts": "^1.0 || ^2.0 || ^3.0"
   },
-  "require-dev": {
-    "contao/test-case": "^1.1",
-    "contao/manager-plugin": "^2.0",
-    "friendsofphp/php-cs-fixer": "^2.2",
-    "phpunit/phpunit": ">=6.0 <6.5",
-    "php-http/guzzle6-adapter": "^1.1",
-    "php-http/message-factory": "^1.0.2",
-    "php-coveralls/php-coveralls": "^2.0",
-    "symfony/phpunit-bridge": "^3.2"
-  },
   "autoload": {
     "psr-4": {
       "HeimrichHannot\\HeadBundle\\": "src/"
@@ -37,18 +27,7 @@
       "src/Resources/contao/templates/"
     ]
   },
-  "autoload-dev": {
-    "psr-4": {
-      "HeimrichHannot\\HeadBundle\\Test\\": "tests/"
-    }
-  },
-  "config": {
-    "preferred-install": "dist"
-  },
   "extra": {
     "contao-manager-plugin": "HeimrichHannot\\HeadBundle\\ContaoManager\\Plugin"
-  },
-  "suggest": {
-    "heimrichhannot/contao-news-bundle": "Head tag control for news articles with twitter card, og support and many more"
   }
 }

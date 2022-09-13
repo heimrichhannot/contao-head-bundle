@@ -14,7 +14,7 @@ class CharsetMetaTag extends MetaTag
 {
     public const TYPE = 'charset';
 
-    public function __construct(string $content = null)
+    public function __construct(string $content)
     {
         parent::__construct(static::TYPE, $content);
     }
@@ -29,8 +29,19 @@ class CharsetMetaTag extends MetaTag
         return $this;
     }
 
-    public function setContent(?string $content): self
+    /**
+     * Alias for setAttribute(static::TYPE, $content)
+     */
+    public function setContent(string $content): self
     {
         return $this->setAttribute(static::TYPE, $content);
+    }
+
+    /**
+     * Alias for getAttributes()['charset']
+     */
+    public function getContent(): string
+    {
+        return $this->getAttributes()[static::TYPE] ?? '';
     }
 }

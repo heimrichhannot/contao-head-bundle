@@ -13,7 +13,9 @@ class MetaTag extends AbstractHeadTag
     public function __construct(string $name, string $content = null)
     {
         $this->setName($name);
-        $this->setContent($content);
+        if ($content) {
+            $this->setContent($content);
+        }
     }
 
     public function setName(string $name): self
@@ -32,19 +34,15 @@ class MetaTag extends AbstractHeadTag
         throw new \Exception('Meta tag must have a name!');
     }
 
-    public function setContent(?string $content): self
+    public function setContent(string $content): self
     {
-        if (null !== $content) {
-            $this->setAttribute('content', $content);
-        } else {
-            $this->removeAttribute('content');
-        }
-
+        $this->setAttribute('content', $content);
         return $this;
     }
 
     public function getContent(): string
     {
+        return $this->getAttributes()['content'] ?? '';
     }
 
     public function generate(): string

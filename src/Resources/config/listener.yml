@@ -1,8 +1,0 @@
-services:
-  _defaults:
-    autowire: true
-
-  huh.head.listener.hooks:
-    class: HeimrichHannot\HeadBundle\EventListener\HookListener
-    public: true
-  HeimrichHannot\HeadBundle\EventListener\HookListener: '@huh.head.listener.hooks'
