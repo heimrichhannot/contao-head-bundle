@@ -19,12 +19,12 @@ class CharsetMetaTag extends MetaTag
         parent::__construct(static::TYPE, $content);
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return static::TYPE;
     }
 
-    public function setName(?string $name): self
+    public function setName(string $name): self
     {
         return $this;
     }

@@ -16,13 +16,9 @@ class MetaTag extends AbstractHeadTag
         $this->setContent($content);
     }
 
-    public function setName(?string $name): self
+    public function setName(string $name): self
     {
-        if (null !== $name) {
-            $this->setAttribute('name', $name);
-        } else {
-            $this->removeAttribute('name');
-        }
+        $this->setAttribute('name', $name);
 
         return $this;
     }
@@ -32,6 +28,8 @@ class MetaTag extends AbstractHeadTag
         if ($this->hasAttribute('name')) {
             return str_replace(':', '_', $this->getAttributes()['name']);
         }
+
+        throw new \Exception('Meta tag must have a name!');
     }
 
     public function setContent(?string $content): self
@@ -43,6 +41,10 @@ class MetaTag extends AbstractHeadTag
         }
 
         return $this;
+    }
+
+    public function getContent(): string
+    {
     }
 
     public function generate(): string

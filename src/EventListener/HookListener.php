@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Environment;
 use Contao\LayoutModel;
@@ -48,7 +47,6 @@ class HookListener
     {
         $titleTag = $layout->titleTag;
 
-        $this->container->get('huh.head.tag.meta_charset')->setContent(Config::get('characterSet'));
         $this->container->get('huh.head.tag.base')->setContent(Environment::get('base'));
 
         // prepare data
@@ -85,8 +83,6 @@ class HookListener
         // default meta data
         $this->container->get('huh.head.tag.meta_language')->setContent($this->container->get('translator')->getLocale());
         $this->container->get('huh.head.tag.meta_description')->setContent($description);
-        $this->container->get('huh.head.tag.meta_robots')->setContent($page->robots ?: 'index,follow');
-
         // default twitter card
         $this->container->get('huh.head.tag.twitter_card')->setContent('summary');
         $this->container->get('huh.head.tag.twitter_title')->setContent($titleTag);
@@ -104,8 +100,5 @@ class HookListener
         $this->container->get('huh.head.tag.og_title')->setContent($titleTag);
         $this->container->get('huh.head.tag.og_description')->setContent($description);
         $this->container->get('huh.head.tag.og_url')->setContent($url);
-
-        // canonical
-        $this->container->get('huh.head.tag.link_canonical')->setContent($url);
     }
 }

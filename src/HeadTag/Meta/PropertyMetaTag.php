@@ -15,7 +15,7 @@ class PropertyMetaTag extends MetaTag
     /**
      * Alias for setProperty.
      */
-    public function setName(?string $name): self
+    public function setName(string $name): self
     {
         return $this->setProperty($name);
     }

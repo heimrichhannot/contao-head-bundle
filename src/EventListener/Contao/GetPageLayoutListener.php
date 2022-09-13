@@ -16,7 +16,6 @@ use Contao\PageRegular;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
-use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 
 /**
@@ -25,13 +24,11 @@ use HeimrichHannot\UtilsBundle\Util\Utils;
 class GetPageLayoutListener
 {
     private Utils              $utils;
-    private TagManager         $tagManager;
     private HtmlHeadTagManager $headTagManager;
 
-    public function __construct(Utils $utils, TagManager $tagManager, HtmlHeadTagManager $headTagManager)
+    public function __construct(Utils $utils, HtmlHeadTagManager $headTagManager)
     {
         $this->utils = $utils;
-        $this->tagManager = $tagManager;
         $this->headTagManager = $headTagManager;
     }
 

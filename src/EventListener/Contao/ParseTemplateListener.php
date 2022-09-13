@@ -11,7 +11,6 @@ namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Template;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
-use HeimrichHannot\HeadBundle\Manager\TagManager;
 
 /**
  * @Hook("parseTemplate")
@@ -19,13 +18,11 @@ use HeimrichHannot\HeadBundle\Manager\TagManager;
 class ParseTemplateListener
 {
     private array              $bundleConfig;
-    private TagManager         $tagManager;
     private HtmlHeadTagManager $headTagManager;
 
-    public function __construct(array $bundleConfig, TagManager $tagManager, HtmlHeadTagManager $headTagManager)
+    public function __construct(array $bundleConfig, HtmlHeadTagManager $headTagManager)
     {
         $this->bundleConfig = $bundleConfig;
-        $this->tagManager = $tagManager;
         $this->headTagManager = $headTagManager;
     }
 
