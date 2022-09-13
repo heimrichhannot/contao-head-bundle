@@ -66,7 +66,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $description = $this->headTagManager->getMetaTag('description')->getContent();
         }
 
-        $this->setOpenGraphTags($title, $description);
+        $this->setOpenGraphTags($title ?? '', $description ?? '');
         $this->setTwitterTags();
     }
 
