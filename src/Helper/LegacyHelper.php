@@ -8,6 +8,9 @@
 
 namespace HeimrichHannot\HeadBundle\Helper;
 
+/**
+ * @internal
+ */
 class LegacyHelper
 {
     public const SERVICE_MAP = [
@@ -48,15 +51,6 @@ class LegacyHelper
         'huh.head.tag.pwa.meta_themecolor' => 'meta_theme-color',
 //        'huh.head.tag.pwa.script' => '',
     ];
-
-    public static function mapServiceToTagName(string $service): ?string
-    {
-        if (isset(static::SERVICE_MAP[$service])) {
-            return static::SERVICE_MAP[$service];
-        }
-
-        return null;
-    }
 
     public static function mapTagToService(string $tag): ?string
     {

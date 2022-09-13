@@ -19,7 +19,7 @@ use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\CharsetMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
-use HeimrichHannot\HeadBundle\Helper\MetaTagHelper;
+use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\HeadBundle\Tag\Link\LinkCanonical;
@@ -41,8 +41,9 @@ class GeneratePageListener implements ServiceSubscriberInterface
     private HtmlHeadTagManager $headTagManager;
     private RequestStack       $requestStack;
     private Utils              $utils;
+    private TagHelper          $tagHelper;
 
-    public function __construct(ContainerInterface $container, TagManager $manager, array $bundleConfig, HtmlHeadTagManager $headTagManager, RequestStack $requestStack, Utils $utils)
+    public function __construct(ContainerInterface $container, TagManager $manager, array $bundleConfig, HtmlHeadTagManager $headTagManager, RequestStack $requestStack, Utils $utils, TagHelper $tagHelper)
     {
         $this->legacyTagManager = $manager;
         $this->config = $bundleConfig;
@@ -50,6 +51,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         $this->headTagManager = $headTagManager;
         $this->requestStack = $requestStack;
         $this->utils = $utils;
+        $this->tagHelper = $tagHelper;
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
@@ -124,6 +126,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         if (($htmlHeadBag && $tag = $this->legacyTagManager->getTagInstance('huh.head.tag.link_canonical')) && $tag->hasContent()) {
             $pageModel->enableCanonical = true;
             $htmlHeadBag->setCanonicalUri($tag->getContent());
+            $this->legacyTagManager->removeTag('huh.head.tag.link_canonical');
         }
     }
 
@@ -171,8 +174,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
             if ($htmlHeadBag && !empty($htmlHeadBag->getMetaDescription())) {
                 $description = $htmlHeadBag->getMetaDescription();
             }
-            $description = str_replace(["\n", "\r", '"'], [' ', '', ''], strip_tags(Controller::replaceInsertTags($description)) ?? '');
-            $this->headTagManager->addMetaTag(new MetaTag('description', MetaTagHelper::prepareDescription($description)));
+            $this->headTagManager->addMetaTag(new MetaTag('description', $this->tagHelper->prepareDescription($description ?? '')));
         }
 
         // Robots
@@ -198,6 +200,41 @@ class GeneratePageListener implements ServiceSubscriberInterface
     }
 
     /**
+     * @param string|null $description
+     */
+    protected function setOpenGraphTag(string $title, string $description): void
+    {
+        if (!$this->headTagManager->getMetaTag('og_title')) {
+            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:title', $title));
+        }
+
+        if (!$this->headTagManager->getMetaTag('og_description')) {
+            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:description', $this->tagHelper->prepareDescription($description)));
+        }
+
+        if (!$this->headTagManager->getMetaTag('og_url')) {
+            $request = $this->requestStack->getCurrentRequest();
+
+            if ($headTagBag = $this->getHtmlHeadBag()) {
+                $url = $headTagBag->getCanonicalUriForRequest($request);
+            } else {
+                $url = Request::create(
+                    $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
+                    $request->getMethod(),
+                )->getUri();
+            }
+            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:url', $url));
+        }
+    }
+
+    protected function setTwitterTag(): void
+    {
+        if (!$this->headTagManager->getMetaTag('twitter_card')) {
+            $this->headTagManager->addMetaTag(new MetaTag('twitter:card', 'summary'));
+        }
+    }
+
+    /**
      * @return HtmlHeadBag|null
      */
     private function getHtmlHeadBag(): ?object
@@ -212,47 +249,5 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         return null;
-    }
-
-    /**
-     * @param string $title
-     * @param string|null $description
-     * @return void
-     */
-    protected function setOpenGraphTag(string $title, string $description): void
-    {
-        if (!$this->headTagManager->getMetaTag('og_title')) {
-            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:title', $title));
-        }
-
-        if (!$this->headTagManager->getMetaTag('og_description')) {
-            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:description', MetaTagHelper::prepareDescription($description)));
-        }
-
-        if (!$this->headTagManager->getMetaTag('og_url')) {
-            $request = $this->requestStack->getCurrentRequest();
-
-            if ($headTagBag = $this->getHtmlHeadBag()) {
-                $url = $headTagBag->getCanonicalUriForRequest($request);
-            } else {
-                $url = Request::create(
-                    $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo(),
-                    $request->getMethod(),
-                )->getUri();
-            }
-            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:url', $url));
-        }
-
-
-    }
-
-    /**
-     * @return void
-     */
-    protected function setTwitterTag(): void
-    {
-        if (!$this->headTagManager->getMetaTag('twitter_card')) {
-            $this->headTagManager->addMetaTag(new MetaTag('twitter:card', 'summary'));
-        }
     }
 }
