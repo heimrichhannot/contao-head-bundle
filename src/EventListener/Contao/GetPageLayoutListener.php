@@ -39,6 +39,7 @@ class GetPageLayoutListener
         }
 
         $this->setPageFallbackImage($pageModel);
+        $this->setTwitterTags($pageModel);
     }
 
     /**
@@ -76,6 +77,13 @@ class GetPageLayoutListener
         if (!$twitterImageTag) {
             $twitterImagePath = Image::get($imagePath, 1024, 512, 'proportional');
             $this->headTagManager->addMetaTag(new MetaTag('twitter:image', $baseUrl.\DIRECTORY_SEPARATOR.$twitterImagePath));
+        }
+    }
+
+    private function setTwitterTags(PageModel $pageModel): void
+    {
+        if (($rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel)) && $rootPageModel->twitterSite) {
+            $this->headTagManager->addMetaTag(new MetaTag('twitter:creator', $rootPageModel->twitterSite));
         }
     }
 }

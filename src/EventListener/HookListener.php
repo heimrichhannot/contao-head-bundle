@@ -47,8 +47,6 @@ class HookListener
     {
         $titleTag = $layout->titleTag;
 
-        $this->container->get('huh.head.tag.base')->setContent(Environment::get('base'));
-
         // prepare data
         $description = str_replace(["\n", "\r", '"'], [' ', '', ''], $page->description);
 
@@ -77,24 +75,12 @@ class HookListener
             $url = $this->container->get('huh.utils.url')->getCurrentUrl([]);
         }
 
-        // title tag
-        $this->container->get('huh.head.tag.title')->setContent($titleTag);
-
         // default meta data
         $this->container->get('huh.head.tag.meta_language')->setContent($this->container->get('translator')->getLocale());
-        $this->container->get('huh.head.tag.meta_description')->setContent($description);
         // default twitter card
         $this->container->get('huh.head.tag.twitter_card')->setContent('summary');
         $this->container->get('huh.head.tag.twitter_title')->setContent($titleTag);
         $this->container->get('huh.head.tag.twitter_description')->setContent($description);
-
-        if (($rootPage = $this->utils->request()->getCurrentRootPageModel($page)) && $rootPage->twitterSite) {
-            $this->container->get('huh.head.tag.twitter_creator')->setContent($rootPage->twitterSite);
-        }
-
-        if ($rootPage->twitterSite) {
-            $this->container->get('huh.head.tag.twitter_creator')->setContent($rootPage->twitterSite);
-        }
 
         // default open graph data
         $this->container->get('huh.head.tag.og_title')->setContent($titleTag);

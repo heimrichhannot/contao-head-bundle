@@ -6,7 +6,7 @@
   "require": {
     "php": "^7.4 || ^8.0",
     "contao/core-bundle": "^4.9",
-    "heimrichhannot/contao-utils-bundle": "^2.218.1",
+    "heimrichhannot/contao-utils-bundle": "^2.219",
     "psr/container": "^1.0 || ^2.0",
     "symfony/config": "^4.4 || ^5.4",
     "symfony/dependency-injection": "^4.4 || ^5.4",

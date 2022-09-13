@@ -23,6 +23,7 @@ use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\HeadBundle\Tag\Link\LinkCanonical;
 use HeimrichHannot\HeadBundle\Tag\Misc\Title;
+use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -37,14 +38,16 @@ class GeneratePageListener implements ServiceSubscriberInterface
     private ContainerInterface $container;
     private HtmlHeadTagManager $headTagManager;
     private RequestStack       $requestStack;
+    private Utils              $utils;
 
-    public function __construct(ContainerInterface $container, TagManager $manager, array $bundleConfig, HtmlHeadTagManager $headTagManager, RequestStack $requestStack)
+    public function __construct(ContainerInterface $container, TagManager $manager, array $bundleConfig, HtmlHeadTagManager $headTagManager, RequestStack $requestStack, Utils $utils)
     {
         $this->legacyTagManager = $manager;
         $this->config = $bundleConfig;
         $this->container = $container;
         $this->headTagManager = $headTagManager;
         $this->requestStack = $requestStack;
+        $this->utils = $utils;
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
@@ -52,7 +55,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         if ($this->config['use_contao_head'] ?? false) {
             $this->setContaoHead($layout, $pageModel, $pageRegular);
         } else {
-            $this->setHeadTags($pageRegular, $pageModel);
+            $this->setHeadTagsFromContao($pageRegular, $pageModel);
         }
     }
 
@@ -115,7 +118,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
     }
 
-    protected function setHeadTags(PageRegular $pageRegular, PageModel $pageModel): void
+    protected function setHeadTagsFromContao(PageRegular $pageRegular, PageModel $pageModel): void
     {
         $htmlHeadBag = $this->getHtmlHeadBag();
 
@@ -139,6 +142,10 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
             if (empty($titleTag)) {
                 $titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
+
+                if ($this->utils->request()->isIndexPage($pageModel)) {
+                    $titleTag = '{{page::rootPageTitle}}';
+                }
             }
 
             if (!$tag) {
