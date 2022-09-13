@@ -60,15 +60,12 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $description = $pageModel->description;
         } else {
             $this->setHeadTagsFromContao($pageRegular, $pageModel);
-            $title = $this->legacyTagManager->getTagInstance('huh.head.tag.og_title')->getContent();
+            $title = ($tag = $this->legacyTagManager->getTagInstance('huh.head.tag.og_title')) ? $tag->getContent() : '';
             $description = $this->headTagManager->getMetaTag('description')->getContent();
         }
 
         $this->setOpenGraphTag($title, $description);
-
-        if (!$this->headTagManager->getMetaTag('twitter_card')) {
-            $this->headTagManager->addMetaTag(new MetaTag('twitter:card', 'summary'));
-        }
+        $this->setTwitterTag();
     }
 
     public static function getSubscribedServices()
@@ -146,7 +143,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
         // Title
         if (!($tag = $this->legacyTagManager->getTagInstance('huh.head.tag.title')) || !$tag->hasContent()) {
-            $titleTag = $pageRegular->Template->title ?? '';
+            $titleTag = $objLayout->titleTag ?? '';
 
             if ($htmlHeadBag && !empty($htmlHeadBag->getTitle())) {
                 $titleTag = $htmlHeadBag->getTitle();
@@ -247,5 +244,15 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
 
+    }
+
+    /**
+     * @return void
+     */
+    protected function setTwitterTag(): void
+    {
+        if (!$this->headTagManager->getMetaTag('twitter_card')) {
+            $this->headTagManager->addMetaTag(new MetaTag('twitter:card', 'summary'));
+        }
     }
 }
