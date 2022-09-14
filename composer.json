@@ -11,7 +11,8 @@
     "symfony/config": "^4.4 || ^5.4",
     "symfony/dependency-injection": "^4.4 || ^5.4",
     "symfony/http-kernel": "^4.4 || ^5.4",
-    "symfony/service-contracts": "^1.0 || ^2.0 || ^3.0"
+    "symfony/service-contracts": "^1.0 || ^2.0 || ^3.0",
+    "symfony/polyfill-php80": "^1.26"
   },
   "autoload": {
     "psr-4": {

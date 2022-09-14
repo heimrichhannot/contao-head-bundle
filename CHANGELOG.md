@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0] - 2022-09-14
+- Added: meta tags to HtmlHeadManager ([#5])
+- Added: support for contao 4.13 canonical options ([#5])
+- Changed: removed twitter:title and twitter:description tags from default output (not necessary as og:title and og:description are present) ([#5])
+- Changed: removed outdated test setup ([#5])
+- Changed: make bundle less invasive ([#5])
+- Deprecated: old meta tags ([#5])
+- Fixed: some tags where outputted two time when using contao head option
+- Fixed: Twitter username outputted as twitter:creator instead of twitter:site
+
 ## [1.8.0] - 2022-08-18
 - Added: set fallback images for regular pages
 - Changed: resize fallback images for og:image and twitter:image
@@ -236,5 +246,6 @@ All notable changes to this project will be documented in this file.
 
 - initial version
 
+[#5]: https://github.com/heimrichhannot/contao-head-bundle/pull/5
 [#4]: https://github.com/heimrichhannot/contao-head-bundle/pull/4
 [#3]: https://github.com/heimrichhannot/contao-head-bundle/pull/3
