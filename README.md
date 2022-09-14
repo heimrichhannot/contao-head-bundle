@@ -5,6 +5,12 @@
 
 This bundle enhances the handling of html `<head>` section tags. It provides services to update head tags dynamically from your code.
 
+## Features
+- Provide a nice api to set head tags like meta, title, base, link
+- Set important meta tags like og:title, og:description, og:url and twitter:card out of the box
+- Set open graph and twitter fallback image on root page
+- Set twitter author per root page
+
 ## Usage
 
 ### Setup
@@ -18,10 +24,11 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
       use_contao_head: true
       use_contao_variables: true
     ```
+4. Optional: Set fallback image and twitter author in root page(s)
 
 ### Set head content
 
-> Currently there are two ways to update head tags, as we are in progress of refactoring this bundle to use a better approach. 
+> Currently, there are two ways to update head tags, as we are in progress of refactoring this bundle to use a better approach. 
 > This section describes the new/modern way, currently available for meta tags and base tag. For the legacy way see the next chapters.
 
 To set base tag and meta tags, use the `HtmlHeadTagManager` service:
@@ -54,7 +61,7 @@ class SomeEventListener
         // Add a new meta tag. If a tag with the same name already exists, it will be overridden
         $this->headTagManager->addMetaTag(new MetaTag('author', 'John Doe'));
         
-        // Get an existing tag. To retrive names from tags with : (colon), replace the colon with _ (underscore).
+        // Get an existing tag. To retrieve names from tags with : (colon), replace the colon with _ (underscore).
         $description = ($tag = $this->headTagManager->getMetaTag('og_description')) ? $tag->getContent() : '';
         $this->headTagManager->removeMetaTag('twitter_site');
         
@@ -76,7 +83,7 @@ class SomeEventListener
 > This section describe the current usage for setting tags other than base or meta tags. 
 > This is the legacy implementation that should be replaced in the future.
 
-Each meta tags is registered as a symfony service. Get the service and set the content, thats it.
+Each meta tags is registered as a symfony service. Get the service and set the content, that's it.
 
 **Example `<meta name="date">`**
 
