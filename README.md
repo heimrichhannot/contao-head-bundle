@@ -7,9 +7,9 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
 
 ## Features
 - Provide a nice api to set head tags like meta, title, base, link
-- Set important meta tags like og:title, og:description, og:url and twitter:card out of the box
-- Set open graph and twitter fallback image on root page
-- Set twitter author per root page
+- Sets important meta tags like og:title, og:description, og:url and twitter:card out of the box
+- Allow setting open graph and twitter fallback image on root page
+- Allow setting twitter author per root page
 
 ## Usage
 
