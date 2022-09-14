@@ -83,7 +83,9 @@ class GetPageLayoutListener
     private function setTwitterTags(PageModel $pageModel): void
     {
         if (($rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel)) && $rootPageModel->twitterSite) {
-            $this->headTagManager->addMetaTag(new MetaTag('twitter:creator', $rootPageModel->twitterSite));
+            $this->headTagManager->addMetaTag(
+                new MetaTag('twitter:site', (str_starts_with($pageModel->twitterSite, '@') ? '@' : '').$rootPageModel->twitterSite)
+            );
         }
     }
 }
