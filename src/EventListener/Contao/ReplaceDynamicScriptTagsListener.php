@@ -10,20 +10,20 @@ namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
-use HeimrichHannot\HeadBundle\Manager\TagManager;
+use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 
 /**
  * @Hook("replaceDynamicScriptTags")
  */
 class ReplaceDynamicScriptTagsListener
 {
-    private array      $bundleConfig;
-    private TagManager $tagManager;
+    private array              $bundleConfig;
+    private HtmlHeadTagManager $headTagManager;
 
-    public function __construct(array $bundleConfig, TagManager $tagManager)
+    public function __construct(array $bundleConfig, HtmlHeadTagManager $headTagManager)
     {
         $this->bundleConfig = $bundleConfig;
-        $this->tagManager = $tagManager;
+        $this->headTagManager = $headTagManager;
     }
 
     public function __invoke(string $buffer): string
@@ -35,7 +35,7 @@ class ReplaceDynamicScriptTagsListener
                 $nonce = '_'.ContaoFramework::getNonce();
             }
 
-            $meta = implode("\n", $this->tagManager->getTags());
+            $meta = $this->headTagManager->renderTags();
 
             $buffer = str_replace("[[TL_HEAD$nonce]]", "[[TL_HEAD$nonce]]".$meta, $buffer);
         }

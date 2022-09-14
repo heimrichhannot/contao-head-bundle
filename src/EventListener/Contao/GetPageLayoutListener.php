@@ -13,9 +13,9 @@ use Contao\Image;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
-use HeimrichHannot\HeadBundle\Manager\TagManager;
-use HeimrichHannot\HeadBundle\Tag\Meta\OG\OGImage;
-use HeimrichHannot\HeadBundle\Tag\Meta\Twitter\TwitterImage;
+use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
+use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
+use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 
 /**
@@ -24,12 +24,12 @@ use HeimrichHannot\UtilsBundle\Util\Utils;
 class GetPageLayoutListener
 {
     private Utils              $utils;
-    private TagManager         $tagManager;
+    private HtmlHeadTagManager $headTagManager;
 
-    public function __construct(Utils $utils, TagManager $tagManager)
+    public function __construct(Utils $utils, HtmlHeadTagManager $headTagManager)
     {
         $this->utils = $utils;
-        $this->tagManager = $tagManager;
+        $this->headTagManager = $headTagManager;
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
@@ -39,6 +39,7 @@ class GetPageLayoutListener
         }
 
         $this->setPageFallbackImage($pageModel);
+        $this->setTwitterTags($pageModel);
     }
 
     /**
@@ -46,29 +47,10 @@ class GetPageLayoutListener
      */
     private function setPageFallbackImage(PageModel $pageModel): void
     {
-        if ($this->tagManager->hasTag('huh.head.tag.og_image')) {
-            $metaImageTag = $this->tagManager->getTagInstance('huh.head.tag.og_image');
+        $metaImageTag = $this->headTagManager->getMetaTag('og_image');
+        $twitterImageTag = $this->headTagManager->getMetaTag('twitter_image');
 
-            if ($metaImageTag->hasContent()) {
-                $metaImageTag = null;
-            }
-        } else {
-            $metaImageTag = new OGImage($this->tagManager);
-            $this->tagManager->registerTag($metaImageTag);
-        }
-
-        if ($this->tagManager->hasTag('huh.head.tag.twitter_image')) {
-            $twitterImageTag = $this->tagManager->getTagInstance('huh.head.tag.twitter_image');
-
-            if ($twitterImageTag->hasContent()) {
-                $twitterImageTag = null;
-            }
-        } else {
-            $twitterImageTag = new TwitterImage($this->tagManager);
-            $this->tagManager->registerTag($twitterImageTag);
-        }
-
-        if ($metaImageTag || $twitterImageTag) {
+        if (!$metaImageTag || !$twitterImageTag) {
             $imagePath = null;
 
             if ($pageModel->addHeadDefaultImage && $pageModel->headDefaultImage) {
@@ -87,14 +69,21 @@ class GetPageLayoutListener
 
         $baseUrl = $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]);
 
-        if ($metaImageTag) {
+        if (!$metaImageTag) {
             $metaImagePath = Image::get($imagePath, 1200, 630, 'proportional');
-            $metaImageTag->setContent($baseUrl.\DIRECTORY_SEPARATOR.$metaImagePath);
+            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl.\DIRECTORY_SEPARATOR.$metaImagePath));
         }
 
-        if ($twitterImageTag) {
+        if (!$twitterImageTag) {
             $twitterImagePath = Image::get($imagePath, 1024, 512, 'proportional');
-            $twitterImageTag->setContent($baseUrl.\DIRECTORY_SEPARATOR.$twitterImagePath);
+            $this->headTagManager->addMetaTag(new MetaTag('twitter:image', $baseUrl.\DIRECTORY_SEPARATOR.$twitterImagePath));
+        }
+    }
+
+    private function setTwitterTags(PageModel $pageModel): void
+    {
+        if (($rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel)) && $rootPageModel->twitterSite) {
+            $this->headTagManager->addMetaTag(new MetaTag('twitter:creator', $rootPageModel->twitterSite));
         }
     }
 }

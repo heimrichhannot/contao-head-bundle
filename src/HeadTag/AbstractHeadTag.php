@@ -31,7 +31,7 @@ abstract class AbstractHeadTag
         return vsprintf($compiled, array_map('htmlspecialchars', array_values($this->attributes)));
     }
 
-    public function addAttribute(string $attribute, $value): self
+    public function setAttribute(string $attribute, string $value): self
     {
         $this->attributes[$attribute] = $value;
 

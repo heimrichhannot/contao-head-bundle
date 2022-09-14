@@ -9,12 +9,15 @@
 namespace HeimrichHannot\HeadBundle\Manager;
 
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
-use HeimrichHannot\HeadBundle\Tag\Misc\Base;
+use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
+use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
 
 class HtmlHeadTagManager
 {
     private ?BaseTag   $baseTag = null;
     private TagManager $legacyTagManager;
+    /** @var MetaTag[] */
+    private array $metaTags = [];
 
     public function __construct(TagManager $legacyTagManager)
     {
@@ -39,11 +42,35 @@ class HtmlHeadTagManager
             throw new \InvalidArgumentException('Method only allow properties of type BaseTag, string or null.');
         }
         $this->baseTag = $baseTag;
-        $this->setLegacyBaseTag($baseTag);
 
         return $this;
     }
 
+    public function addMetaTag(MetaTag $metaTag): self
+    {
+        $this->metaTags[$metaTag->getName()] = $metaTag;
+
+        return $this;
+    }
+
+    public function getMetaTag(string $name): ?MetaTag
+    {
+        return $this->metaTags[$name] ?? null;
+    }
+
+    public function removeMetaTag(string $name): void
+    {
+        if (isset($this->metaTags[$name])) {
+            unset($this->metaTags[$name]);
+        }
+    }
+
+    /**
+     * Render head tags.
+     *
+     * Options:
+     * - skip_tags: (array) Name of tags to skip. For meta tags, prefix name with meta_
+     */
     public function renderTags(array $options = []): string
     {
         $options = array_merge([
@@ -56,16 +83,24 @@ class HtmlHeadTagManager
             $buffer .= $this->baseTag->generate()."\n";
         }
 
-        return $buffer.implode("\n", $this->legacyTagManager->getTags(array_merge([BaseTag::LEGACY_NAME], $options['skip_tags'])));
-    }
+        foreach ($this->metaTags as $metaTag) {
+            if (\in_array('meta_'.$metaTag->getName(), $options['skip_tags'])) {
+                unset($options['skip_tags']['meta_'.$metaTag->getName()]);
 
-    private function setLegacyBaseTag(BaseTag $baseTag = null): void
-    {
-        if (!$baseTag) {
-            $this->legacyTagManager->removeTag(BaseTag::LEGACY_NAME);
-        } elseif (!$this->legacyTagManager->hasTag(BaseTag::LEGACY_NAME)) {
-            $legacyBaseTag = new Base($this->legacyTagManager);
-            $this->legacyTagManager->registerTag($legacyBaseTag);
+                continue;
+            }
+
+            if (\in_array(LegacyHelper::mapTagToService('meta_'.$metaTag->getName()), $options['skip_tags'])) {
+                unset($options['skip_tags'][LegacyHelper::mapTagToService('meta_'.$metaTag->getName())]);
+
+                continue;
+            }
+            $buffer .= $metaTag->generate()."\n";
         }
+
+        return $buffer.implode("\n", $this->legacyTagManager->getTags(array_merge(
+            array_keys(LegacyHelper::SERVICE_MAP),
+            $options['skip_tags']
+        )));
     }
 }

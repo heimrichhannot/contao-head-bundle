@@ -3,8 +3,9 @@ services:
     autowire: true
     autoconfigure: true
 
-  HeimrichHannot\HeadBundle\EventListener\Contao\:
-    resource: '../../EventListener/Contao/*'
+  HeimrichHannot\HeadBundle\:
+    resource: '../../{EventListener,Helper}/*'
+    exclude: '../../Helper/LegacyHelper.php'
     bind:
       $bundleConfig: '%huh_head%'
 
