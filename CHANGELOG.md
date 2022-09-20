@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.1] - 2022-09-20
+- Fixed: og:title empty in some cases
+- Fixed: og:description tag shown when description empty
+
 ## [1.9.0] - 2022-09-14
 - Added: meta tags to HtmlHeadManager ([#5])
 - Added: support for contao 4.13 canonical options ([#5])
