@@ -8,7 +8,10 @@
 
 namespace HeimrichHannot\HeadBundle\Manager;
 
+use HeimrichHannot\HeadBundle\Exception\UnsupportedTagException;
+use HeimrichHannot\HeadBundle\HeadTag\AbstractHeadTag;
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
+use HeimrichHannot\HeadBundle\HeadTag\HeadTagFactory;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
 
@@ -17,11 +20,43 @@ class HtmlHeadTagManager
     private ?BaseTag   $baseTag = null;
     private TagManager $legacyTagManager;
     /** @var MetaTag[] */
-    private array $metaTags = [];
+    private array          $metaTags = [];
+    private HeadTagFactory $headTagFactory;
 
-    public function __construct(TagManager $legacyTagManager)
+    public function __construct(TagManager $legacyTagManager, HeadTagFactory $headTagFactory)
     {
         $this->legacyTagManager = $legacyTagManager;
+        $this->headTagFactory = $headTagFactory;
+    }
+
+    public function getTag(string $name): ?AbstractHeadTag
+    {
+        if ('base' === $name) {
+            return $this->getBaseTag();
+        }
+
+        if (str_starts_with($name, 'meta_')) {
+            return $this->getMetaTag(substr($name, 5));
+        }
+
+        return null;
+    }
+
+    public function addTag(AbstractHeadTag $tag): void
+    {
+        if ($tag instanceof BaseTag) {
+            $this->setBaseTag($tag);
+
+            return;
+        }
+
+        if ($tag instanceof MetaTag) {
+            $this->addMetaTag($tag);
+
+            return;
+        }
+
+        throw new UnsupportedTagException('Tag with attributes '.$tag->generateAttributeString().' is currently not supported by HtmlHeadTagManager!');
     }
 
     public function getBaseTag(): ?BaseTag
@@ -102,5 +137,15 @@ class HtmlHeadTagManager
             array_keys(LegacyHelper::SERVICE_MAP),
             $options['skip_tags']
         )));
+    }
+
+    public function getHeadTagFactory(): HeadTagFactory
+    {
+        return $this->headTagFactory;
+    }
+
+    public function getLegacyTagManager(): TagManager
+    {
+        return $this->legacyTagManager;
     }
 }
