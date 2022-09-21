@@ -15,6 +15,14 @@ use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
 
 class HeadTagFactory
 {
+    /**
+     * Create a tag by name.
+     * For tags with multiple occurrences like meta, prefix name with tag name,
+     * for example meta_ (meta_description, meta_og:title, ...) for meta tags.
+     *
+     * Options:
+     * - skip_legacy_mapping: (bool) do not check for legacy tag service names
+     */
     public function createTagByName(string $name, string $value = null, array $options = []): ?AbstractHeadTag
     {
         $options = array_merge([
