@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.0] - 2022-09-21
+This release change the names of tags when store internally (and retrieved by HtmlHeadTagManager::getMetaTags()) to use
+their orignal tag names (do not replace colons with underscores). This is possibly breaking if you have already used that method.
+
+- Added: HeadTagFactory service ([#7])
+- Added: DcaHelper to get tag options ([#7])
+- Changed: don't replace column with underscore for internal tag name handling (**Possibly breaking!**) ([#7])
+- Fixed: http-equiv constructor value ([#7])
+
 ## [1.9.1] - 2022-09-20
 - Fixed: og:title empty in some cases
 - Fixed: og:description tag shown when description empty
