@@ -204,17 +204,17 @@ class GeneratePageListener implements ServiceSubscriberInterface
      */
     protected function setOpenGraphTags(string $title, string $description): void
     {
-        if (!$this->headTagManager->getMetaTag('og_title')) {
+        if (!$this->headTagManager->getMetaTag('og:title')) {
             $this->headTagManager->addMetaTag(new PropertyMetaTag('og:title', $title));
         }
 
         if (!empty($description)) {
-            if (!$this->headTagManager->getMetaTag('og_description')) {
+            if (!$this->headTagManager->getMetaTag('og:description')) {
                 $this->headTagManager->addMetaTag(new PropertyMetaTag('og:description', $this->tagHelper->prepareDescription($description)));
             }
         }
 
-        if (!$this->headTagManager->getMetaTag('og_url')) {
+        if (!$this->headTagManager->getMetaTag('og:url')) {
             $request = $this->requestStack->getCurrentRequest();
 
             if ($headTagBag = $this->getHtmlHeadBag()) {
@@ -231,7 +231,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
     protected function setTwitterTags(): void
     {
-        if (!$this->headTagManager->getMetaTag('twitter_card')) {
+        if (!$this->headTagManager->getMetaTag('twitter:card')) {
             $this->headTagManager->addMetaTag(new MetaTag('twitter:card', 'summary'));
         }
     }

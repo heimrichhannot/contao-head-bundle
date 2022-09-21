@@ -68,18 +68,8 @@ abstract class AbstractMetaTag extends AbstractTag
     public function getContent()
     {
         if (isset(static::$name)) {
-            if ('property' === static::$key) {
-                $name = str_replace(':', '_', static::$name);
-
-                if ($tag = System::getContainer()->get(HtmlHeadTagManager::class)->getMetaTag($name)) {
-                    return $tag->getAttributes()['content'] ?? null;
-                }
-
-                return null;
-            }
-
             if ($tag = System::getContainer()->get(HtmlHeadTagManager::class)->getMetaTag(static::$name)) {
-                return $tag->getAttributes()['content'] ?? null;
+                return $tag->getContent();
             }
 
             return null;
