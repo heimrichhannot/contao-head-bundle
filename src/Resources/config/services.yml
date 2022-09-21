@@ -13,6 +13,9 @@ services:
     public: true
     autoconfigure: false
 
+  HeimrichHannot\HeadBundle\HeadTag\HeadTagFactory:
+    autoconfigure: true
+
   huh.head.tag_manager:
     class: HeimrichHannot\HeadBundle\Manager\TagManager
     public: true

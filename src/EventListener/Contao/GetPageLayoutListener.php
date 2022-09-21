@@ -47,8 +47,8 @@ class GetPageLayoutListener
      */
     private function setPageFallbackImage(PageModel $pageModel): void
     {
-        $metaImageTag = $this->headTagManager->getMetaTag('og_image');
-        $twitterImageTag = $this->headTagManager->getMetaTag('twitter_image');
+        $metaImageTag = $this->headTagManager->getMetaTag('og:image');
+        $twitterImageTag = $this->headTagManager->getMetaTag('twitter:image');
 
         if (!$metaImageTag || !$twitterImageTag) {
             $imagePath = null;

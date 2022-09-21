@@ -61,8 +61,8 @@ class SomeEventListener
         // Add a new meta tag. If a tag with the same name already exists, it will be overridden
         $this->headTagManager->addMetaTag(new MetaTag('author', 'John Doe'));
         
-        // Get an existing tag. To retrieve names from tags with : (colon), replace the colon with _ (underscore).
-        $description = ($tag = $this->headTagManager->getMetaTag('og_description')) ? $tag->getContent() : '';
+        // Get an existing tag
+        $description = ($tag = $this->headTagManager->getMetaTag('og:description')) ? $tag->getContent() : '';
         $this->headTagManager->removeMetaTag('twitter_site');
         
         // Create a tag for property meta tags

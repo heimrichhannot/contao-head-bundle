@@ -21,11 +21,11 @@ class PropertyMetaTag extends MetaTag
     }
 
     /**
-     * Return property value with : replaced by _.
+     * Alias for getProperty().
      */
     public function getName(): string
     {
-        return str_replace(':', '_', $this->getProperty());
+        return $this->getProperty();
     }
 
     public function setProperty(?string $name): self

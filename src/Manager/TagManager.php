@@ -61,6 +61,21 @@ class TagManager
         }
     }
 
+    public function loadTagFromService(string $name): ?TagInterface
+    {
+        $services = $this->container->getParameter('huh.head.tags');
+
+        if (!\in_array($name, $services)) {
+            return null;
+        }
+
+        if ($this->container->has($name)) {
+            return $this->container->get($name);
+        }
+
+        return null;
+    }
+
     /**
      * Get the generated tags as array.
      *
