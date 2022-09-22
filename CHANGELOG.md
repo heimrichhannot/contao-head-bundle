@@ -2,10 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.1] - 2022-09-22
+- Fixed: HeadTagFactory not passing value to property meta tags
+
 ## [1.10.0] - 2022-09-21
 This release change the naming of tags when stored internally. Before colons were replaced by underscore, 
 but that caused problems with the HeadTagFactory. 
-This change also affects `HtmlHeadTagManager::getMetaTags()`, so if you have already used that method,
+This change also affect `HtmlHeadTagManager::getMetaTags()`, so if you have already used that method,
 this is possibly breaking!
 
 - Added: HeadTagFactory service ([#7])

@@ -38,7 +38,7 @@ class HeadTagFactory
         }
 
         if (str_starts_with($name, 'meta_')) {
-            return $this->createMetaTag(substr($name, 5));
+            return $this->createMetaTag(substr($name, 5), $value);
         }
 
         return null;
