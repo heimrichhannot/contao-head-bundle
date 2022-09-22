@@ -3,8 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.10.0] - 2022-09-21
-This release change the names of tags when store internally (and retrieved by HtmlHeadTagManager::getMetaTags()) to use
-their orignal tag names (do not replace colons with underscores). This is possibly breaking if you have already used that method.
+This release change the naming of tags when stored internally. Before colons were replaced by underscore, 
+but that caused problems with the HeadTagFactory. 
+This change also affects `HtmlHeadTagManager::getMetaTags()`, so if you have already used that method,
+this is possibly breaking!
 
 - Added: HeadTagFactory service ([#7])
 - Added: DcaHelper to get tag options ([#7])
@@ -259,6 +261,7 @@ their orignal tag names (do not replace colons with underscores). This is possib
 
 - initial version
 
+[#7]: https://github.com/heimrichhannot/contao-head-bundle/pull/7
 [#5]: https://github.com/heimrichhannot/contao-head-bundle/pull/5
 [#4]: https://github.com/heimrichhannot/contao-head-bundle/pull/4
 [#3]: https://github.com/heimrichhannot/contao-head-bundle/pull/3
