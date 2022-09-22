@@ -47,8 +47,8 @@ class DcaHelper
      * Get available meta tags as options.
      *
      * Options:
-     * - filter: (array) If set, only tags fulfill given filters will be returned. See FILTER constants for available options.
-     * - skip_tags: (array) Skip specific tags
+     * - filter: (array|null) If set, only tags fulfill given filters will be returned. See FILTER constants for available options. Default null
+     * - skip_tags: (array) Skip specific tags. Default empty
      */
     public function getTagOptions(array $options = []): array
     {

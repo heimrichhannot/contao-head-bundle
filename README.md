@@ -56,14 +56,14 @@ class SomeEventListener
         $this->headTagManager->setBaseTag('https://example.org'));
     }
     
-    public function setMetaTag(): void
+    public function setMetaTags(): void
     {
         // Add a new meta tag. If a tag with the same name already exists, it will be overridden
         $this->headTagManager->addMetaTag(new MetaTag('author', 'John Doe'));
         
         // Get an existing tag
         $description = ($tag = $this->headTagManager->getMetaTag('og:description')) ? $tag->getContent() : '';
-        $this->headTagManager->removeMetaTag('twitter_site');
+        $this->headTagManager->removeMetaTag('twitter:site');
         
         // Create a tag for property meta tags
         $this->headTagManager->addMetaTag(new PropertyMetaTag('og:type', 'article'));
@@ -73,12 +73,20 @@ class SomeEventListener
         
         // Set a charset tag
         $this->headTagManager->addMetaTag(new CharsetMetaTag('UTF-8'));
+        
+        // Create tags without class (usefull when creating tags in a loop without custom checks)
+        $this->headTagManager->addMetaTag(
+            $this->headTagManager->getHeadTagFactory()->createMetaTag('description', 'Lorem ipsum!')
+        );
+        $this->headTagManager->addMetaTag(
+            $this->headTagManager->getHeadTagFactory()->createTagByName('meta_og:url', 'https://example.org')
+        );
     }
 }
 ```
 
 
-### Other tags
+### Other tags (legacy)
 
 > This section describe the current usage for setting tags other than base or meta tags. 
 > This is the legacy implementation that should be replaced in the future.
@@ -92,7 +100,7 @@ Each meta tags is registered as a symfony service. Get the service and set the c
 $container->get('huh.head.tag.meta_date')->setContent(\Date::parse('c', time()));
 ```
 
-## Available Tags
+## Available Tags (legacy)
 
 The container parameter `huh.head.tags` contains a list of all available tag services from the list below. 
 
@@ -109,9 +117,7 @@ The container parameter `huh.head.tags` contains a list of all available tag ser
 | `<link rel="canonical" href="http://heimrich-hannot.de/site-name">`   | `$container->get('huh.head.tag.link_canonical')->setContent('http://heimrich-hannot.de/site-name')`   |
 
 
-The name of the `twitter:site` @username can be provided within root contao page `tl_page`.
-
-## Custom Tags
+## Custom Tags (legacy)
 
 If you want to register your custom tag, add create a class that implements the `TagInterface` and extends from one of the `Abstract` Tag classes like `AbstractSimpleTag`.
 
@@ -153,6 +159,48 @@ Make sure, that you remove (are outputted by $this->meta() if `huh_head.use_cont
 ```
 
 The `meta` function accepts currently one parameter that can contain service names (array) that should be skipped.
+
+## Developers
+
+### Backend field
+
+Get tag options for a select field. If you want to define options by your own, prepend meta tag options with `meta_`.
+
+```php
+use HeimrichHannot\HeadBundle\Helper\DcaHelper;
+
+class HeadTagOptionsListener {
+    private DcaHelper $dcaHelper;
+
+    public function __invoke() {
+        return $this->dcaHelper->getTagOptions([
+            // filter: (array|null) If set, only tags fulfill given filters will be returned. See FILTER constants for available options. Default null
+            'filter' => [DcaHelper::FILTER_META, DcaHelper::FILTER_TITLE],
+            // skip_tags: (array) Skip specific tags. Default empty
+            'skip_tag' => ['og:locale'],
+        ]);
+    }
+}
+```
+
+Example how to evaluate field values:
+
+```php
+use Contao\ContentModel;
+use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
+
+class SomeEventListener {
+    private HtmlHeadTagManager $headTagManager;
+    
+    public function __invoke(ContentModel $contentModel){
+        $tag = $this->headTagManager->getHeadTagFactory()->createTagByName($contentModel->headTag);
+        if ($tag) {
+            $tag->setAttribute("content", $contentModel->headTagContent);
+            $this->headTagManager->addTag($tag);
+        }
+    }
+}
+```
 
 ## Config reference
 
