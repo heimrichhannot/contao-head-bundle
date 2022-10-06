@@ -240,7 +240,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
     {
         $titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
 
-        if ($this->utils->request()->isIndexPage($pageModel)) {
+        if ($this->utils->request()->isIndexPage($pageModel) && !$pageModel->pageTitle) {
             $titleTag = '{{page::rootPageTitle}}';
         }
 
