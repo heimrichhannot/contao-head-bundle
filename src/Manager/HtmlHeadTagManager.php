@@ -17,6 +17,7 @@ use HeimrichHannot\HeadBundle\HeadTag\HeadTagFactory;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\TitleTag;
 use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
+use HeimrichHannot\HeadBundle\Helper\TagHelper;
 
 class HtmlHeadTagManager
 {
@@ -26,11 +27,13 @@ class HtmlHeadTagManager
     private array          $metaTags = [];
     private HeadTagFactory $headTagFactory;
     private ?TitleTag      $titleTag = null;
+    private TagHelper      $tagHelper;
 
-    public function __construct(TagManager $legacyTagManager, HeadTagFactory $headTagFactory)
+    public function __construct(TagManager $legacyTagManager, HeadTagFactory $headTagFactory, TagHelper $tagHelper)
     {
         $this->legacyTagManager = $legacyTagManager;
         $this->headTagFactory = $headTagFactory;
+        $this->tagHelper = $tagHelper;
     }
 
     public function getTag(string $name): ?AbstractHeadTag

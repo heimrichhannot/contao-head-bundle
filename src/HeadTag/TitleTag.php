@@ -13,15 +13,17 @@ class TitleTag extends AbstractHeadTag
     public const NAME = 'title';
 
     private string $title;
+    private string $format;
 
-    public function __construct(string $title)
+    public function __construct(string $title, string $format = '%s')
     {
         $this->title = $title;
+        $this->format = $format;
     }
 
     public function generate(): string
     {
-        return sprintf('<title>%s</title>', $this->title);
+        return '<title>'.sprintf($this->format, $this->title).'</title>';
     }
 
     public function getTitle(): string
@@ -32,6 +34,18 @@ class TitleTag extends AbstractHeadTag
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getFormat(): string
+    {
+        return $this->format;
+    }
+
+    public function setFormat(string $format): self
+    {
+        $this->format = $format;
 
         return $this;
     }

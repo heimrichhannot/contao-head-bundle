@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -35,6 +35,10 @@ class HeadTagFactory
 
         if ('base' === $name) {
             return new BaseTag($value);
+        }
+
+        if ('title' === $name) {
+            return new TitleTag($value);
         }
 
         if (str_starts_with($name, 'meta_')) {

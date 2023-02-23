@@ -66,7 +66,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         if (empty($title)) {
-            $title = $this->getFallbackPageTitle($pageModel);
+            $title = Controller::replaceInsertTags('{{page::pageTitle}}');
         }
 
         $this->setOpenGraphTags($title ?? '', $description ?? '');
@@ -99,7 +99,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         if (($tag = $this->headTagManager->getTitleTag()) && $tag->getTitle()) {
-            $layout->titleTag = $tag->getTitle();
+            $pageModel->pageTitle = $tag->getTitle();
 
             if ($htmlHeadBag) {
                 $htmlHeadBag->setTitle($tag->getTitle());
@@ -149,17 +149,10 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
         // Title
         if (!($tag = $this->headTagManager->getTitleTag()) || !$tag->getTitle()) {
-            $titleTag = $objLayout->titleTag ?? '';
+            $titleFormat = str_replace('{{page::pageTitle}}', '%s', $this->tagHelper->getContaoTitleTag($pageModel));
+            $title = Controller::replaceInsertTags('{{page::pageTitle}}');
 
-            if ($htmlHeadBag && !empty($htmlHeadBag->getTitle())) {
-                $titleTag = $htmlHeadBag->getTitle();
-            }
-
-            if (empty($titleTag)) {
-                $titleTag = $this->getFallbackPageTitle($pageModel);
-            }
-
-            $this->headTagManager->setTitleTag($this->headTagManager->inputEncodedToPlainText($titleTag));
+            $this->headTagManager->setTitleTag($this->headTagManager->inputEncodedToPlainText($title), $titleFormat);
         }
 
         // Description
@@ -229,17 +222,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
         if (!$this->headTagManager->getMetaTag('twitter:card')) {
             $this->headTagManager->addMetaTag(new MetaTag('twitter:card', 'summary'));
         }
-    }
-
-    protected function getFallbackPageTitle(PageModel $pageModel): string
-    {
-        $titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
-
-        if ($this->utils->request()->isIndexPage($pageModel) && !$pageModel->pageTitle) {
-            $titleTag = '{{page::rootPageTitle}}';
-        }
-
-        return Controller::replaceInsertTags($titleTag);
     }
 
     /**
