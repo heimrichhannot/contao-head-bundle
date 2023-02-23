@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -23,7 +23,6 @@ use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\HeadBundle\Tag\Link\LinkCanonical;
-use HeimrichHannot\HeadBundle\Tag\Misc\Title;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,8 +61,8 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $description = $pageModel->description;
         } else {
             $this->setHeadTagsFromContao($pageRegular, $pageModel);
-            $title = ($tag = $this->legacyTagManager->getTagInstance('huh.head.tag.og_title')) ? $tag->getContent() : '';
-            $description = $this->headTagManager->getMetaTag('description')->getContent();
+            $title = ($titleTag = $this->headTagManager->getTitleTag()) ? $titleTag->getTitle() : '';
+            $description = ($descriptionTag = $this->headTagManager->getMetaTag('description')) ? $descriptionTag->getContent() : '';
         }
 
         if (empty($title)) {
@@ -99,13 +98,13 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $this->headTagManager->setBaseTag(null);
         }
 
-        if (($tag = $this->legacyTagManager->getTagInstance('huh.head.tag.title')) && $tag->hasContent()) {
-            $layout->titleTag = $tag->getContent();
+        if (($tag = $this->headTagManager->getTitleTag()) && $tag->getTitle()) {
+            $layout->titleTag = $tag->getTitle();
 
             if ($htmlHeadBag) {
-                $htmlHeadBag->setTitle($tag->getContent());
+                $htmlHeadBag->setTitle($tag->getTitle());
             }
-            $this->legacyTagManager->removeTag('huh.head.tag.title');
+            $this->headTagManager->setTitleTag(null);
         }
 
         if ($tag = $this->headTagManager->getMetaTag('description')) {
@@ -149,7 +148,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         // Title
-        if (!($tag = $this->legacyTagManager->getTagInstance('huh.head.tag.title')) || !$tag->hasContent()) {
+        if (!($tag = $this->headTagManager->getTitleTag()) || !$tag->getTitle()) {
             $titleTag = $objLayout->titleTag ?? '';
 
             if ($htmlHeadBag && !empty($htmlHeadBag->getTitle())) {
@@ -160,11 +159,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
                 $titleTag = $this->getFallbackPageTitle($pageModel);
             }
 
-            if (!$tag) {
-                $tag = new Title($this->legacyTagManager);
-                $this->legacyTagManager->registerTag($tag);
-            }
-            $tag->setContent(strip_tags(Controller::replaceInsertTags($titleTag)));
+            $this->headTagManager->setTitleTag($this->headTagManager->inputEncodedToPlainText($titleTag));
         }
 
         // Description

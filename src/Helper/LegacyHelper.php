@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -15,7 +15,7 @@ class LegacyHelper
 {
     public const SERVICE_MAP = [
         'huh.head.tag.base' => 'base',
-//        'huh.head.tag.title' => 'title',
+        'huh.head.tag.title' => 'title',
         'huh.head.tag.meta_date' => 'meta_date',
         'huh.head.tag.meta_language' => 'meta_language',
         'huh.head.tag.meta_charset' => 'meta_charset',

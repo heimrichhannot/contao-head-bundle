@@ -1,18 +1,21 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\HeadBundle\Manager;
 
+use Contao\Controller;
+use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Exception\UnsupportedTagException;
 use HeimrichHannot\HeadBundle\HeadTag\AbstractHeadTag;
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
 use HeimrichHannot\HeadBundle\HeadTag\HeadTagFactory;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
+use HeimrichHannot\HeadBundle\HeadTag\TitleTag;
 use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
 
 class HtmlHeadTagManager
@@ -22,6 +25,7 @@ class HtmlHeadTagManager
     /** @var MetaTag[] */
     private array          $metaTags = [];
     private HeadTagFactory $headTagFactory;
+    private ?TitleTag      $titleTag = null;
 
     public function __construct(TagManager $legacyTagManager, HeadTagFactory $headTagFactory)
     {
@@ -33,6 +37,10 @@ class HtmlHeadTagManager
     {
         if ('base' === $name) {
             return $this->getBaseTag();
+        }
+
+        if ('title' === $name) {
+            return $this->getTitleTag();
         }
 
         if (str_starts_with($name, 'meta_')) {
@@ -48,6 +56,10 @@ class HtmlHeadTagManager
             $this->setBaseTag($tag);
 
             return;
+        }
+
+        if ($tag instanceof TitleTag) {
+            $this->setTitleTag($tag);
         }
 
         if ($tag instanceof MetaTag) {
@@ -77,6 +89,26 @@ class HtmlHeadTagManager
             throw new \InvalidArgumentException('Method only allow properties of type BaseTag, string or null.');
         }
         $this->baseTag = $baseTag;
+
+        return $this;
+    }
+
+    public function getTitleTag(): ?TitleTag
+    {
+        return $this->titleTag;
+    }
+
+    public function setTitleTag($title): self
+    {
+        if (\is_string($title)) {
+            $title = new TitleTag($title);
+        }
+
+        if (null !== $title && !($title instanceof TitleTag)) {
+            throw new \InvalidArgumentException('Method only allow properties of type TitleTag, string or null.');
+        }
+
+        $this->titleTag = $title;
 
         return $this;
     }
@@ -118,6 +150,10 @@ class HtmlHeadTagManager
             $buffer .= $this->baseTag->generate()."\n";
         }
 
+        if (!\in_array(TitleTag::NAME, $options['skip_tags']) && $this->getTitleTag()) {
+            $buffer .= $this->titleTag->generate()."\n";
+        }
+
         foreach ($this->metaTags as $metaTag) {
             if (\in_array('meta_'.$metaTag->getName(), $options['skip_tags'])) {
                 unset($options['skip_tags']['meta_'.$metaTag->getName()]);
@@ -147,5 +183,31 @@ class HtmlHeadTagManager
     public function getLegacyTagManager(): TagManager
     {
         return $this->legacyTagManager;
+    }
+
+    /**
+     * Converts an input-encoded string to plain text UTF-8.
+     *
+     * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes insert tag braces.
+     *
+     * Same as HtmlDecoder::inputEncodedToPlainText() of contao 4.13 (with 4.9 adjustments).
+     * Should be replaced with contao core version when moving to 4.13+
+     *
+     * @see StringUtil::revertInputEncoding()
+     *
+     * @param bool $removeInsertTags True to remove insert tags instead of replacing them
+     */
+    public function inputEncodedToPlainText(string $val, bool $removeInsertTags = false): string
+    {
+        if ($removeInsertTags) {
+            $val = StringUtil::stripInsertTags($val);
+        } else {
+            $val = Controller::replaceInsertTags($val);
+        }
+
+        $val = strip_tags($val);
+        $val = StringUtil::revertInputEncoding($val);
+
+        return str_replace(['{{', '}}'], ['[{]', '[}]'], $val);
     }
 }
