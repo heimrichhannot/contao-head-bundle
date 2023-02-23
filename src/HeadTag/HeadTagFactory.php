@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -12,9 +12,17 @@ use HeimrichHannot\HeadBundle\HeadTag\Meta\CharsetMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\HttpEquivMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
+use HeimrichHannot\HeadBundle\Helper\TagHelper;
 
 class HeadTagFactory
 {
+    private TagHelper $tagHelper;
+
+    public function __construct(TagHelper $tagHelper)
+    {
+        $this->tagHelper = $tagHelper;
+    }
+
     /**
      * Create a tag by name.
      * For tags with multiple occurrences like meta, prefix name with tag name,
@@ -37,11 +45,38 @@ class HeadTagFactory
             return new BaseTag($value);
         }
 
+        if ('title' === $name) {
+            return $this->createTitleTag($value);
+        }
+
         if (str_starts_with($name, 'meta_')) {
             return $this->createMetaTag(substr($name, 5), $value);
         }
 
         return null;
+    }
+
+    /**
+     * Create title tag instance.
+     *
+     * $titleTagFormat parameter:
+     * You can pass a title tag format like "{{page::pageTitle}} - {{page::rootPageTitle}}".
+     * {{page::pageTitle}} or %s will replaced by the passed $pageTitle.
+     * Leave empty (null) to use the default contao titleTag format (or a fallback if none defined).
+     */
+    public function createTitleTag(string $pageTitle, ?string $titleTagFormat = null): TitleTag
+    {
+        if (null === $titleTagFormat) {
+            $titleTagFormat = $this->tagHelper->getContaoTitleTag();
+        }
+
+        $titleTagFormat = str_replace('{{page::pageTitle}}', '%s', $titleTagFormat);
+
+        if (!empty($titleTagFormat)) {
+            return new TitleTag($pageTitle, $titleTagFormat);
+        }
+
+        return new TitleTag($pageTitle);
     }
 
     public function createMetaTag(string $name, string $content = null): MetaTag

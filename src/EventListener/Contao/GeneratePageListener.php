@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -23,7 +23,6 @@ use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\HeadBundle\Tag\Link\LinkCanonical;
-use HeimrichHannot\HeadBundle\Tag\Misc\Title;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,16 +57,16 @@ class GeneratePageListener implements ServiceSubscriberInterface
     {
         if ($this->config['use_contao_head'] ?? false) {
             $this->setContaoHead($layout, $pageModel, $pageRegular);
-            $title = $layout->titleTag;
+            $title = $pageModel->pageTitle ?: $pageModel->title;
             $description = $pageModel->description;
         } else {
             $this->setHeadTagsFromContao($pageRegular, $pageModel);
-            $title = ($tag = $this->legacyTagManager->getTagInstance('huh.head.tag.og_title')) ? $tag->getContent() : '';
-            $description = $this->headTagManager->getMetaTag('description')->getContent();
+            $title = ($titleTag = $this->headTagManager->getTitleTag()) ? $titleTag->getTitle() : '';
+            $description = ($descriptionTag = $this->headTagManager->getMetaTag('description')) ? $descriptionTag->getContent() : '';
         }
 
         if (empty($title)) {
-            $title = $this->getFallbackPageTitle($pageModel);
+            $title = Controller::replaceInsertTags('{{page::pageTitle}}');
         }
 
         $this->setOpenGraphTags($title ?? '', $description ?? '');
@@ -99,13 +98,13 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $this->headTagManager->setBaseTag(null);
         }
 
-        if (($tag = $this->legacyTagManager->getTagInstance('huh.head.tag.title')) && $tag->hasContent()) {
-            $layout->titleTag = $tag->getContent();
+        if (($tag = $this->headTagManager->getTitleTag()) && $tag->getTitle()) {
+            $pageModel->pageTitle = $tag->getTitle();
 
             if ($htmlHeadBag) {
-                $htmlHeadBag->setTitle($tag->getContent());
+                $htmlHeadBag->setTitle($tag->getTitle());
             }
-            $this->legacyTagManager->removeTag('huh.head.tag.title');
+            $this->headTagManager->setTitleTag(null);
         }
 
         if ($tag = $this->headTagManager->getMetaTag('description')) {
@@ -149,22 +148,11 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         // Title
-        if (!($tag = $this->legacyTagManager->getTagInstance('huh.head.tag.title')) || !$tag->hasContent()) {
-            $titleTag = $objLayout->titleTag ?? '';
+        if (!($tag = $this->headTagManager->getTitleTag()) || !$tag->getTitle()) {
+            $titleFormat = str_replace('{{page::pageTitle}}', '%s', $this->tagHelper->getContaoTitleTag($pageModel));
+            $title = Controller::replaceInsertTags('{{page::pageTitle}}');
 
-            if ($htmlHeadBag && !empty($htmlHeadBag->getTitle())) {
-                $titleTag = $htmlHeadBag->getTitle();
-            }
-
-            if (empty($titleTag)) {
-                $titleTag = $this->getFallbackPageTitle($pageModel);
-            }
-
-            if (!$tag) {
-                $tag = new Title($this->legacyTagManager);
-                $this->legacyTagManager->registerTag($tag);
-            }
-            $tag->setContent(strip_tags(Controller::replaceInsertTags($titleTag)));
+            $this->headTagManager->setTitleTag($this->headTagManager->inputEncodedToPlainText($title), $titleFormat);
         }
 
         // Description
@@ -234,17 +222,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
         if (!$this->headTagManager->getMetaTag('twitter:card')) {
             $this->headTagManager->addMetaTag(new MetaTag('twitter:card', 'summary'));
         }
-    }
-
-    protected function getFallbackPageTitle(PageModel $pageModel): string
-    {
-        $titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
-
-        if ($this->utils->request()->isIndexPage($pageModel) && !$pageModel->pageTitle) {
-            $titleTag = '{{page::rootPageTitle}}';
-        }
-
-        return Controller::replaceInsertTags($titleTag);
     }
 
     /**

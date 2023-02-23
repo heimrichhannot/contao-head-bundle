@@ -29,13 +29,14 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
 ### Set head content
 
 > Currently, there are two ways to update head tags, as we are in progress of refactoring this bundle to use a better approach. 
-> This section describes the new/modern way, currently available for meta tags and base tag. For the legacy way see the next chapters.
+> This section describes the new/modern way, currently available for meta tags, title and base tag. For the legacy way see the next chapters.
 
 To set base tag and meta tags, use the `HtmlHeadTagManager` service:
 
 ```php
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
+use HeimrichHannot\HeadBundle\HeadTag\TitleTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\CharsetMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\HttpEquivMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
@@ -54,6 +55,16 @@ class SomeEventListener
         //Set base tag from object or url
         $this->headTagManager->setBaseTag(new BaseTag($request->getSchemeAndHttpHost()));
         $this->headTagManager->setBaseTag('https://example.org'));
+    }
+    
+    public function updatedTitleTag(): void
+    {
+        // Set title to "Hello World"
+        $this->headTagManager->setTitleTag('Hello World');
+        
+        // Set title tag from object and adjust output format
+        $this->headTagManager->setTitleTag(new TitleTag('Foo Bar', '%s | {{page::rootPageTitle}}'))
+        // Will output: <title>Foo Bar | My Great Website Page Title</title>
     }
     
     public function setMetaTags(): void
@@ -88,7 +99,7 @@ class SomeEventListener
 
 ### Other tags (legacy)
 
-> This section describe the current usage for setting tags other than base or meta tags. 
+> This section describe the current usage for setting tags other than base, title or meta tags. 
 > This is the legacy implementation that should be replaced in the future.
 
 Each meta tags is registered as a symfony service. Get the service and set the content, that's it.
@@ -111,7 +122,6 @@ The container parameter `huh.head.tags` contains a list of all available tag ser
 
 | tag                                                                   | setter                                                                                                |
 |-----------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| `<title>My site title</title>`                                        | `$container->get('huh.head.tag.title')->setContent('My site title')`                                  |
 | `<link rel="prev" href="http://heimrich-hannot.de/list?page_n199=1">` | `$container->get('huh.head.tag.link_prev')->setContent('http://heimrich-hannot.de/list?page_n199=1')` |
 | `<link rel="next" href="http://heimrich-hannot.de/list?page_n199=3">` | `$container->get('huh.head.tag.link_next')->setContent('http://heimrich-hannot.de/list?page_n199=3')` |
 | `<link rel="canonical" href="http://heimrich-hannot.de/site-name">`   | `$container->get('huh.head.tag.link_canonical')->setContent('http://heimrich-hannot.de/site-name')`   |
