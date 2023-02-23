@@ -57,7 +57,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
     {
         if ($this->config['use_contao_head'] ?? false) {
             $this->setContaoHead($layout, $pageModel, $pageRegular);
-            $title = $layout->titleTag;
+            $title = $pageModel->pageTitle ?: $pageModel->title;
             $description = $pageModel->description;
         } else {
             $this->setHeadTagsFromContao($pageRegular, $pageModel);

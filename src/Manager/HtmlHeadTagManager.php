@@ -104,7 +104,7 @@ class HtmlHeadTagManager
     public function setTitleTag($title): self
     {
         if (\is_string($title)) {
-            $title = new TitleTag($title);
+            $title = $this->headTagFactory->createTitleTag($title);
         }
 
         if (null !== $title && !($title instanceof TitleTag)) {
