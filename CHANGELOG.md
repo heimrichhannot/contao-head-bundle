@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.1] - 2023-02-28
+- Fixed: usage of contao 4.13-only method
+
 ## [1.11.0] - 2023-02-23
 - Added: title tag to HeadTagManager ([#8])
 - Changed: some optimizations to title tag output

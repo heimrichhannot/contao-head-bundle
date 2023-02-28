@@ -209,8 +209,34 @@ class HtmlHeadTagManager
         }
 
         $val = strip_tags($val);
-        $val = StringUtil::revertInputEncoding($val);
+        $val = $this->revertInputEncoding($val);
 
         return str_replace(['{{', '}}'], ['[{]', '[}]'], $val);
+    }
+
+    /**
+     * Convert an input-encoded string back to the raw UTF-8 value it originated from.
+     *
+     * It handles all Contao input encoding specifics like basic entities and encoded entities.
+     *
+     * Same as StringUtil::revertInputEncoding() of contao 4.13.
+     * Should be replaced with contao core version when moving to 4.13+
+     */
+    public function revertInputEncoding(string $strValue): string
+    {
+        $strValue = StringUtil::restoreBasicEntities($strValue);
+        $strValue = StringUtil::decodeEntities($strValue);
+
+        // Ensure valid UTF-8
+        if (1 !== preg_match('//u', $strValue)) {
+            $substituteCharacter = mb_substitute_character();
+            mb_substitute_character(0xFFFD);
+
+            $strValue = mb_convert_encoding($strValue, 'UTF-8', 'UTF-8');
+
+            mb_substitute_character($substituteCharacter);
+        }
+
+        return $strValue;
     }
 }
