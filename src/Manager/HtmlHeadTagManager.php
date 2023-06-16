@@ -307,7 +307,7 @@ class HtmlHeadTagManager
         return $strValue;
     }
 
-    private function addLinkTag(LinkTag $tag)
+    public function addLinkTag(LinkTag $tag)
     {
         $this->linkTags[$tag->getName()] = $tag;
     }
