@@ -19,7 +19,6 @@ use HeimrichHannot\HeadBundle\HeadTag\LinkTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\TitleTag;
 use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
-use HeimrichHannot\HeadBundle\Helper\TagHelper;
 
 class HtmlHeadTagManager
 {
@@ -30,13 +29,11 @@ class HtmlHeadTagManager
     private array $linkTags = [];
     private HeadTagFactory $headTagFactory;
     private ?TitleTag $titleTag = null;
-    private TagHelper $tagHelper;
 
-    public function __construct(TagManager $legacyTagManager, HeadTagFactory $headTagFactory, TagHelper $tagHelper)
+    public function __construct(TagManager $legacyTagManager, HeadTagFactory $headTagFactory)
     {
         $this->legacyTagManager = $legacyTagManager;
         $this->headTagFactory = $headTagFactory;
-        $this->tagHelper = $tagHelper;
     }
 
     public function getTag(string $name): ?AbstractHeadTag
@@ -237,6 +234,7 @@ class HtmlHeadTagManager
             $buffer .= $linkTag->generate()."\n";
         }
 
+        /* @noinspection PhpDeprecationInspection */
         return $buffer.implode("\n", $this->legacyTagManager->getTags(array_merge(
             array_keys(LegacyHelper::SERVICE_MAP),
             $options['skip_tags']

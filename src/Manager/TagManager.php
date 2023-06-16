@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -13,6 +13,9 @@ use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Head\TagInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * @deprecated Use HeadTagManager instead. Will be removed in next major version.
+ */
 class TagManager
 {
     /**
