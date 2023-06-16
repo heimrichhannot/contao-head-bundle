@@ -22,7 +22,7 @@ $lang['head_legend'] = 'Head-Bundle';
 $lang['head_twitter_legend'] = 'Head-Bundle - Twitter';
 
 if (version_compare(VERSION, '4.13', '<')) {
-    $lang['canonical_legend'] = 'Canonical URL';
+    $lang['canonical_legend'] = 'Kanonische URL';
     $lang['enableCanonical'][0] = 'rel=&quot;canonical&quot; aktivieren';
     $lang['enableCanonical'][1] = 'Der Website rel=&quot;canonical&quot;-Tags hinzufügen.';
     $lang['canonicalLink'][0] = 'Individuelle URL';
