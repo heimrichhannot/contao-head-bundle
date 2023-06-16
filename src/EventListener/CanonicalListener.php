@@ -48,11 +48,6 @@ class CanonicalListener
 
         $dca = &$GLOBALS['TL_DCA'][$table];
 
-        // check if field already exists (since this is core function in since contao 4.13)
-        if (isset($dca['fields']['enableCanonical'])) {
-            return;
-        }
-
         $dca['fields']['enableCanonical'] = [
             'exclude' => true,
             'inputType' => 'checkbox',
@@ -96,7 +91,7 @@ class CanonicalListener
             return $value;
         }
 
-        if (($rootPageModel = $this->utils->request()->getCurrentRootPageModel()) === null) {
+        if (($rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel)) === null) {
             return $value;
         }
 
