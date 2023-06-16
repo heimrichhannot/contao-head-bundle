@@ -22,7 +22,6 @@ use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
-use HeimrichHannot\HeadBundle\Tag\Link\LinkCanonical;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,6 +80,8 @@ class GeneratePageListener implements ServiceSubscriberInterface
     }
 
     /**
+     * Set contao head tags from head bundle tags (use contao template variables instead of head bundle output where possible).
+     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
@@ -126,13 +127,16 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         // Canonical Link
-        if (($htmlHeadBag && $tag = $this->legacyTagManager->getTagInstance('huh.head.tag.link_canonical')) && $tag->hasContent()) {
+        if ($htmlHeadBag && ($tag = $this->headTagManager->getCanonical())) {
             $pageModel->enableCanonical = true;
             $htmlHeadBag->setCanonicalUri($tag->getContent());
-            $this->legacyTagManager->removeTag('huh.head.tag.link_canonical');
+            $this->headTagManager->setCanonical(null);
         }
     }
 
+    /**
+     * Set head tags from contao setting/ variables (use head bundle output instead of contao template variables).
+     */
     protected function setHeadTagsFromContao(PageRegular $pageRegular, PageModel $pageModel): void
     {
         $htmlHeadBag = $this->getHtmlHeadBag();
@@ -176,13 +180,11 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         // Canonical Link
-        if (!($tag = $this->legacyTagManager->getTagInstance('huh.head.tag.link_canonical')) || !$tag->hasContent()) {
+        if (!$this->headTagManager->getCanonical()) {
             if ($htmlHeadBag && $pageModel->enableCanonical) {
-                if (!$tag) {
-                    $tag = new LinkCanonical($this->legacyTagManager);
-                    $this->legacyTagManager->registerTag($tag);
-                }
-                $tag->setContent(htmlspecialchars($htmlHeadBag->getCanonicalUriForRequest($this->requestStack->getCurrentRequest())));
+                $this->headTagManager->setCanonical(
+                    htmlspecialchars($htmlHeadBag->getCanonicalUriForRequest($this->requestStack->getCurrentRequest()))
+                );
             }
         }
     }

@@ -1,13 +1,16 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\HeadBundle\Head;
 
+/**
+ * @deprecated Use HtmlHeadTagManager service instead
+ */
 abstract class AbstractLinkTag extends AbstractTag
 {
     /**

@@ -14,6 +14,7 @@ use HeimrichHannot\HeadBundle\Exception\UnsupportedTagException;
 use HeimrichHannot\HeadBundle\HeadTag\AbstractHeadTag;
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
 use HeimrichHannot\HeadBundle\HeadTag\HeadTagFactory;
+use HeimrichHannot\HeadBundle\HeadTag\Link\CanonicalLink;
 use HeimrichHannot\HeadBundle\HeadTag\LinkTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\TitleTag;
@@ -155,6 +156,32 @@ class HtmlHeadTagManager
         if (isset($this->linkTags[$name])) {
             unset($this->linkTags[$name]);
         }
+    }
+
+    /**
+     * Set canonical url. If null is passed, the canonical tag will be removed. If canonical tag already exists, it will be overwritten.
+     *
+     * @return $this
+     */
+    public function setCanonical(?string $url): self
+    {
+        if (null === $url) {
+            $this->removeLinkTag('canonical');
+
+            return $this;
+        }
+
+        $this->addLinkTag(new CanonicalLink($url));
+
+        return $this;
+    }
+
+    /**
+     * @return LinkTag|CanonicalLink|null
+     */
+    public function getCanonical(): ?LinkTag
+    {
+        return $this->getLinkTag('canonical');
     }
 
     /**
