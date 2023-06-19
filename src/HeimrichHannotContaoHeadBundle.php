@@ -1,14 +1,14 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\HeadBundle;
 
-use HeimrichHannot\HeadBundle\DependencyInjection\Compiler\HeadServicePass;
+use HeimrichHannot\HeadBundle\DependencyInjection\Compiler\AdjustContainerPass;
 use HeimrichHannot\HeadBundle\DependencyInjection\HeimrichHannotHeadBundleExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -27,7 +27,7 @@ class HeimrichHannotContaoHeadBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new HeadServicePass());
+        $container->addCompilerPass(new AdjustContainerPass());
     }
 
     public function getContainerExtension()
