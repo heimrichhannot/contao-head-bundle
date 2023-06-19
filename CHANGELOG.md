@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.1] - 2023-06-19
+- Fixed: exception in contao backend
+
 ## [1.12.0] - 2023-06-19
 - Added: link tag support to HeadTagManager ([#9])
 - Added: option to add canonical to every page (backports of contao 4.13 functioniality) ([#10])

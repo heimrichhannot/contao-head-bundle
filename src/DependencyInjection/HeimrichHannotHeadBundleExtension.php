@@ -8,8 +8,12 @@
 
 namespace HeimrichHannot\HeadBundle\DependencyInjection;
 
+use Contao\CoreBundle\EventListener\DataContainer\DisableCanonicalFieldsListener;
+use HeimrichHannot\HeadBundle\EventListener\CanonicalListener;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class HeimrichHannotHeadBundleExtension extends Extension
 {
@@ -18,6 +22,14 @@ class HeimrichHannotHeadBundleExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter('huh_head', $config);
+
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
+        $loader->load('tags.yml');
+
+        if (class_exists(DisableCanonicalFieldsListener::class)) {
+            $container->removeDefinition(CanonicalListener::class);
+        }
     }
 
     public function getAlias()

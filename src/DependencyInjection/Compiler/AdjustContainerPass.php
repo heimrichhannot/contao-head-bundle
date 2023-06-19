@@ -8,8 +8,6 @@
 
 namespace HeimrichHannot\HeadBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\EventListener\DataContainer\DisableCanonicalFieldsListener;
-use HeimrichHannot\HeadBundle\EventListener\CanonicalListener;
 use HeimrichHannot\HeadBundle\Head\TagInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -18,10 +16,6 @@ class AdjustContainerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (class_exists(DisableCanonicalFieldsListener::class)) {
-            $container->removeDefinition(CanonicalListener::class);
-        }
-
         $this->processLegacy($container);
     }
 
