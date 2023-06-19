@@ -42,9 +42,9 @@ class LegacyHelper
         'huh.head.tag.twitter_player_height' => 'meta_twitter:player:height',
         'huh.head.tag.twitter_player_stream' => 'meta_twitter:player:stream',
         'huh.head.tag.twitter_player_stream_content_type' => 'twitter:player:stream:content_type',
-//        'huh.head.tag.link_prev' => 'link_prev',
-//        'huh.head.tag.link_next' => 'link_next',
-//        'huh.head.tag.link_canonical' => 'link_canonical',
+        'huh.head.tag.link_prev' => 'link_prev',
+        'huh.head.tag.link_next' => 'link_next',
+        'huh.head.tag.link_canonical' => 'link_canonical',
 
         // External bundles
 //        'huh.head.tag.pwa.link_manifest' => 'link_manifest',

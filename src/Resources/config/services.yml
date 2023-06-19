@@ -19,4 +19,5 @@ services:
   huh.head.tag_manager:
     class: HeimrichHannot\HeadBundle\Manager\TagManager
     public: true
+    deprecated: ~
   HeimrichHannot\HeadBundle\Manager\TagManager: '@huh.head.tag_manager'

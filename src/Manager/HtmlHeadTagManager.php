@@ -14,26 +14,26 @@ use HeimrichHannot\HeadBundle\Exception\UnsupportedTagException;
 use HeimrichHannot\HeadBundle\HeadTag\AbstractHeadTag;
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
 use HeimrichHannot\HeadBundle\HeadTag\HeadTagFactory;
+use HeimrichHannot\HeadBundle\HeadTag\Link\CanonicalLink;
+use HeimrichHannot\HeadBundle\HeadTag\LinkTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\TitleTag;
 use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
-use HeimrichHannot\HeadBundle\Helper\TagHelper;
 
 class HtmlHeadTagManager
 {
-    private ?BaseTag   $baseTag = null;
+    private ?BaseTag $baseTag = null;
     private TagManager $legacyTagManager;
     /** @var MetaTag[] */
-    private array          $metaTags = [];
+    private array $metaTags = [];
+    private array $linkTags = [];
     private HeadTagFactory $headTagFactory;
-    private ?TitleTag      $titleTag = null;
-    private TagHelper      $tagHelper;
+    private ?TitleTag $titleTag = null;
 
-    public function __construct(TagManager $legacyTagManager, HeadTagFactory $headTagFactory, TagHelper $tagHelper)
+    public function __construct(TagManager $legacyTagManager, HeadTagFactory $headTagFactory)
     {
         $this->legacyTagManager = $legacyTagManager;
         $this->headTagFactory = $headTagFactory;
-        $this->tagHelper = $tagHelper;
     }
 
     public function getTag(string $name): ?AbstractHeadTag
@@ -63,10 +63,18 @@ class HtmlHeadTagManager
 
         if ($tag instanceof TitleTag) {
             $this->setTitleTag($tag);
+
+            return;
         }
 
         if ($tag instanceof MetaTag) {
             $this->addMetaTag($tag);
+
+            return;
+        }
+
+        if ($tag instanceof LinkTag) {
+            $this->addLinkTag($tag);
 
             return;
         }
@@ -135,11 +143,49 @@ class HtmlHeadTagManager
         }
     }
 
+    public function getLinkTag(string $name): ?LinkTag
+    {
+        return $this->linkTags[$name] ?? null;
+    }
+
+    public function removeLinkTag(string $name): void
+    {
+        if (isset($this->linkTags[$name])) {
+            unset($this->linkTags[$name]);
+        }
+    }
+
+    /**
+     * Set canonical url. If null is passed, the canonical tag will be removed. If canonical tag already exists, it will be overwritten.
+     *
+     * @return $this
+     */
+    public function setCanonical(?string $url): self
+    {
+        if (null === $url) {
+            $this->removeLinkTag('canonical');
+
+            return $this;
+        }
+
+        $this->addLinkTag(new CanonicalLink($url));
+
+        return $this;
+    }
+
+    /**
+     * @return LinkTag|CanonicalLink|null
+     */
+    public function getCanonical(): ?LinkTag
+    {
+        return $this->getLinkTag('canonical');
+    }
+
     /**
      * Render head tags.
      *
      * Options:
-     * - skip_tags: (array) Name of tags to skip. For meta tags, prefix name with meta_
+     * - skip_tags: (array) Name of tags to skip. For meta tags, prefix name with meta_, for link tags, prefix name with link_ (except canonical).
      */
     public function renderTags(array $options = []): string
     {
@@ -172,6 +218,23 @@ class HtmlHeadTagManager
             $buffer .= $metaTag->generate()."\n";
         }
 
+        foreach ($this->linkTags as $linkTag) {
+            if (\in_array('link_'.$linkTag->getName(), $options['skip_tags']) || ('canonical' === $linkTag->getName() && \in_array('canonical', $options['skip_tags']))) {
+                unset($options['skip_tags']['link_'.$linkTag->getName()]);
+
+                continue;
+            }
+
+            if (\in_array(LegacyHelper::mapTagToService('link_'.$linkTag->getName()), $options['skip_tags'])) {
+                unset($options['skip_tags'][LegacyHelper::mapTagToService('link_'.$linkTag->getName())]);
+
+                continue;
+            }
+
+            $buffer .= $linkTag->generate()."\n";
+        }
+
+        /* @noinspection PhpDeprecationInspection */
         return $buffer.implode("\n", $this->legacyTagManager->getTags(array_merge(
             array_keys(LegacyHelper::SERVICE_MAP),
             $options['skip_tags']
@@ -199,6 +262,8 @@ class HtmlHeadTagManager
      * @see StringUtil::revertInputEncoding()
      *
      * @param bool $removeInsertTags True to remove insert tags instead of replacing them
+     *
+     * @internal May be removed in a minor version when contao 4.13 is required
      */
     public function inputEncodedToPlainText(string $val, bool $removeInsertTags = false): string
     {
@@ -221,6 +286,8 @@ class HtmlHeadTagManager
      *
      * Same as StringUtil::revertInputEncoding() of contao 4.13.
      * Should be replaced with contao core version when moving to 4.13+
+     *
+     * @internal May be removed in a minor version when contao 4.13 is required
      */
     public function revertInputEncoding(string $strValue): string
     {
@@ -238,5 +305,10 @@ class HtmlHeadTagManager
         }
 
         return $strValue;
+    }
+
+    public function addLinkTag(LinkTag $tag)
+    {
+        $this->linkTags[$tag->getName()] = $tag;
     }
 }
