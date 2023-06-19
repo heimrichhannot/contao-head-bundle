@@ -10,6 +10,7 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
 - Sets important meta tags like og:title, og:description, og:url and twitter:card out of the box
 - Allow setting open graph and twitter fallback image on root page
 - Allow setting twitter author per root page
+- Backport canonical url option from contao 4.13 for contao 4.9+
 
 ## Usage
 
@@ -28,10 +29,7 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
 
 ### Set head content
 
-> Currently, there are two ways to update head tags, as we are in progress of refactoring this bundle to use a better approach. 
-> This section describes the new/modern way, currently available for meta tags, title and base tag. For the legacy way see the next chapters.
-
-To set base tag and meta tags, use the `HtmlHeadTagManager` service:
+To set base, title, meta and link tags, use the `HtmlHeadTagManager` service:
 
 ```php
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
@@ -74,6 +72,8 @@ class SomeEventListener
         
         // Get an existing tag
         $description = ($tag = $this->headTagManager->getMetaTag('og:description')) ? $tag->getContent() : '';
+        
+        // Remove a tag
         $this->headTagManager->removeMetaTag('twitter:site');
         
         // Create a tag for property meta tags
@@ -93,59 +93,24 @@ class SomeEventListener
             $this->headTagManager->getHeadTagFactory()->createTagByName('meta_og:url', 'https://example.org')
         );
     }
+    
+    public function setLinkTags(): void
+    {
+        // Add a new link tag. If a tag with the same name already exists, it will be overridden
+        $this->headTagManager->addLinkTag(new LinkTag('next', 'https://example.org?page=2'));
+        
+        // Get an existing tag
+        $this->headTagManager->getLinkTag('prev');
+        
+        // Remove a tag
+        $this->headTagManager->removeLinkTag('prev');
+        
+        // Shorthand for canonical tag
+        $this->headTagManager->setCanonical('https://example.org');
+    }
 }
 ```
 
-
-### Other tags (legacy)
-
-> This section describe the current usage for setting tags other than base, title or meta tags. 
-> This is the legacy implementation that should be replaced in the future.
-
-Each meta tags is registered as a symfony service. Get the service and set the content, that's it.
-
-**Example `<meta name="date">`**
-
-```
-/** @var ContainerInterface $container */
-$container->get('huh.head.tag.meta_date')->setContent(\Date::parse('c', time()));
-```
-
-## Available Tags (legacy)
-
-The container parameter `huh.head.tags` contains a list of all available tag services from the list below. 
-
-```
-/** @var ContainerInterface $container */
-#available-tags->getParameter('huh.head.tags')
-```
-
-| tag                                                                   | setter                                                                                                |
-|-----------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| `<link rel="prev" href="http://heimrich-hannot.de/list?page_n199=1">` | `$container->get('huh.head.tag.link_prev')->setContent('http://heimrich-hannot.de/list?page_n199=1')` |
-| `<link rel="next" href="http://heimrich-hannot.de/list?page_n199=3">` | `$container->get('huh.head.tag.link_next')->setContent('http://heimrich-hannot.de/list?page_n199=3')` |
-| `<link rel="canonical" href="http://heimrich-hannot.de/site-name">`   | `$container->get('huh.head.tag.link_canonical')->setContent('http://heimrich-hannot.de/site-name')`   |
-
-
-## Custom Tags (legacy)
-
-If you want to register your custom tag, add create a class that implements the `TagInterface` and extends from one of the `Abstract` Tag classes like `AbstractSimpleTag`.
-
-In your bundle `services.yml` register your tag:
-
-```
-services:
-    huh.head.tag.meta_custom:
-      class: HeimrichHannot\HeadBundle\Tag\Simple\MetaCustom
-      public: true
-      arguments: ['@huh.head.tag_manager']
-```
-
-To set the tag content, simply call:
-
-```
-$container->get('huh.head.tag.meta_custom')->setContent('FOO');
-```
 ## Legacy integration
 
 Be sure, `huh_head.use_contao_head` and/or `huh_head.use_contao_variables` are not set to true.
@@ -158,7 +123,7 @@ Output `$this->meta()` in your fe_page template ()
 <?php $this->endblock(); ?>
 ```
 
-Make sure, that you remove (are outputted by $this->meta() if `huh_head.use_contao_head` not true):
+Make sure, that you remove (are outputted by $this->meta() if `huh_head.use_contao_head` is not true):
 
 ```
 <meta charset="<?= $this->charset ?>">
