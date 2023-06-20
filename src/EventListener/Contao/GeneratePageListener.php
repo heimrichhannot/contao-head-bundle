@@ -26,6 +26,7 @@ use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\HeadBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerInterface;
+use Spatie\SchemaOrg\Schema;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -261,20 +262,14 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
     private function prepareJsonLdContent(PageModel $pageModel, string $title): void
     {
-        // check if we are in contao 4.12+
-        if (class_exists('Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema')) {
-            return;
+        $rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel);
+
+        if ($rootPageModel && $rootPageModel->headAddOrganisationSchema) {
+            $organisation = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->organization();
+            if ($rootPageModel->headOrganisationName) {
+                $organisation->name($rootPageModel->headOrganisationName);
+            }
         }
 
-        $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->set(
-            new ContaoPageSchema(
-                $title ?: '',
-                (int) $pageModel->id,
-                (bool) $pageModel->noSearch,
-                (bool) $pageModel->protected,
-                array_map('intval', array_filter((array) $pageModel->groups)),
-                $this->utils->container()->isPreviewMode()
-            )
-        );
     }
 }

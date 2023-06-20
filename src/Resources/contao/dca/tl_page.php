@@ -23,11 +23,19 @@ PaletteManipulator::create()
     ->addField('addHeadDefaultImage', 'meta_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('regular', 'tl_page');
 
+PaletteManipulator::create()
+    ->addLegend('schema_legend', 'meta_legend', PaletteManipulator::POSITION_AFTER)
+    ->addField('headAddOrganisationSchema', 'schema_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('root', 'tl_page')
+    ->applyToPalette('rootfallback', 'tl_page');
+
 /*
  * Subpalettes
  */
 $dca['palettes']['__selector__'][] = 'addHeadDefaultImage';
+$dca['palettes']['__selector__'][] = 'headAddOrganisationSchema';
 $dca['subpalettes']['addHeadDefaultImage'] = 'headDefaultImage';
+$dca['subpalettes']['headAddOrganisationSchema'] = 'headOrganisationName,headOrganisationLogo';
 
 /**
  * fields.
@@ -53,6 +61,30 @@ $fields = [
         'exclude' => true,
         'eval' => ['tl_class' => 'w50 clr'],
         'sql' => "varchar(255) NOT NULL DEFAULT ''",
+    ],
+    'headAddOrganisationSchema' => [
+        'exclude' => true,
+        'inputType' => 'checkbox',
+        'eval' => [
+            'tl_class' => 'w50 clr',
+            'submitOnChange' => true,
+        ],
+        'sql' => "char(1) NOT NULL default ''",
+    ],
+    'headOrganisationName' => [
+        'inputType' => 'text',
+        'exclude' => true,
+        'eval' => [
+            'tl_class' => 'w50 clr',
+            'maxlength' => 128,
+        ],
+        'sql' => "varchar(128) NOT NULL DEFAULT ''",
+    ],
+    'headOrganisationLogo' => [
+        'inputType' => 'fileTree',
+        'exclude' => true,
+        'eval' => ['tl_class' => 'w50 clr', 'fieldType' => 'radio', 'filesOnly' => true, 'extensions' => 'jpg,jpeg,png'],
+        'sql' => 'binary(16) NULL',
     ],
 ];
 
