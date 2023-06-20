@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Template;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
@@ -28,13 +29,12 @@ class ParseTemplateListener
 
     public function __invoke(Template $template): void
     {
-        if (
-            !($this->bundleConfig['use_contao_variables'] ?? false)
-            && ('fe_page' === $template->getName() || 0 === strpos($template->getName(), 'fe_page_'))
-        ) {
-            $template->meta = function (array $skip = []) {
-                return $this->headTagManager->renderTags(['skip_tags' => $skip]);
-            };
+        if ('fe_page' === $template->getName() || 0 === strpos($template->getName(), 'fe_page_')) {
+            if (!($this->bundleConfig['use_contao_variables'] ?? false)) {
+                $template->meta = function (array $skip = []) {
+                    return $this->headTagManager->renderTags(['skip_tags' => $skip]);
+                };
+            }
         }
     }
 }

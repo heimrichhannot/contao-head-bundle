@@ -21,7 +21,9 @@ use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
+use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
+use HeimrichHannot\HeadBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,8 +42,18 @@ class GeneratePageListener implements ServiceSubscriberInterface
     private RequestStack       $requestStack;
     private Utils              $utils;
     private TagHelper          $tagHelper;
+    private JsonLdManager      $jsonLdManager;
 
-    public function __construct(ContainerInterface $container, TagManager $manager, array $bundleConfig, HtmlHeadTagManager $headTagManager, RequestStack $requestStack, Utils $utils, TagHelper $tagHelper)
+    public function __construct(
+        ContainerInterface $container,
+        TagManager $manager,
+        array $bundleConfig,
+        HtmlHeadTagManager $headTagManager,
+        RequestStack $requestStack,
+        Utils $utils,
+        TagHelper $tagHelper,
+        JsonLdManager $jsonLdManager
+    )
     {
         $this->legacyTagManager = $manager;
         $this->config = $bundleConfig;
@@ -50,6 +62,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         $this->requestStack = $requestStack;
         $this->utils = $utils;
         $this->tagHelper = $tagHelper;
+        $this->jsonLdManager = $jsonLdManager;
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
@@ -68,9 +81,12 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $title = Controller::replaceInsertTags('{{page::pageTitle}}');
         }
 
+        $this->prepareJsonLdContent($pageModel, $title);
         $this->setOpenGraphTags($title ?? '', $description ?? '');
         $this->setTwitterTags();
     }
+
+
 
     public static function getSubscribedServices()
     {
@@ -241,5 +257,24 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         return null;
+    }
+
+    private function prepareJsonLdContent(PageModel $pageModel, string $title): void
+    {
+        // check if we are in contao 4.12+
+        if (class_exists('Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema')) {
+            return;
+        }
+
+        $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->set(
+            new ContaoPageSchema(
+                $title ?: '',
+                (int) $pageModel->id,
+                (bool) $pageModel->noSearch,
+                (bool) $pageModel->protected,
+                array_map('intval', array_filter((array) $pageModel->groups)),
+                $this->utils->container()->isPreviewMode()
+            )
+        );
     }
 }

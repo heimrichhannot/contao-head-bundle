@@ -9,7 +9,8 @@ services:
     bind:
       $bundleConfig: '%huh_head%'
 
-  HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager:
+  HeimrichHannot\HeadBundle\Manager\:
+    resource: '../../Manager/*'
     public: true
     autoconfigure: false
 

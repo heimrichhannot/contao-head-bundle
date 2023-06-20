@@ -16,6 +16,8 @@ use Contao\PageRegular;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
+use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
+use HeimrichHannot\HeadBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 
 /**
