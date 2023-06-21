@@ -14,14 +14,18 @@ $lang = &$GLOBALS['TL_LANG']['tl_page'];
 $lang['addHeadDefaultImage'] = ['Add fallback image for the meta tags', 'This image is used for og:image and twitter:image.'];
 $lang['headDefaultImage'] = ['Fallback image (at least 200x200)', 'Choose an image here. Only PNG and JPG files allowed.'];
 $lang['twitterSite'] = ['Twitter @username', 'The Twitter @username a twitter card should be attributed to (twitter:site attribute).'];
-$lang['headAddOrganisationSchema'][0] = 'Add organisation schema';
-$lang['headAddOrganisationSchema'][1] = 'Add an organisation schema to the head section.';
+$lang['headAddOrganisationSchema'][0] = 'Output @Organization';
+$lang['headAddOrganisationSchema'][1] = 'Output the @Organization schema.';
 $lang['headOrganisationName'][0] = 'Name';
 $lang['headOrganisationName'][1] = 'Enter the name of the organisation.';
 $lang['headOrganisationLogo'][0] = 'Logo';
 $lang['headOrganisationLogo'][1] = 'Choose a logo.';
 $lang['headOrganisationWebsite'][0] = 'URL';
 $lang['headOrganisationWebsite'][1] = 'Enter the URL of the organisation.';
+$lang['headAddWebSiteSchema'][0] = 'Output @WebSite';
+$lang['headAddWebSiteSchema'][1] = 'Output the @WebSite schema.';
+$lang['headAddWebPageSchema'][0] = 'Output @WebPage';
+$lang['headAddWebPageSchema'][1] = 'Output the @WebPage schema.';
 
 /*
  * Legends

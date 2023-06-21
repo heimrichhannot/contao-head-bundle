@@ -32,10 +32,13 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
 ### Add additional schema.org data
 
 In your root page, you can activate to add additional structured data to you web page.
+Following schema.org types are available:
+* @Organization
+* @WebSite
+* @WebPage
 
 
-
-
+![Screenshot Structured Data Settings](docs%2Fimg%2Fscreenshot_backend_structured_data.png)
 
 ### Set json-ld in your templates
 

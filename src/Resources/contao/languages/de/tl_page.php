@@ -14,14 +14,18 @@ $lang = &$GLOBALS['TL_LANG']['tl_page'];
 $lang['addHeadDefaultImage'] = ['Fallback-Bild für die Meta-Tags hinzufügen', 'Dieses Bild wird bspw. für og:image und twitter:image verwendet.'];
 $lang['headDefaultImage'] = ['Fallback-Bild (mind. 200x200)', 'Wählen Sie hier ein Bild aus. Nur PNG- und JPG-Dateien sind erlaubt.'];
 $lang['twitterSite'] = ['Twitter @username', 'Der Twitter @username der einer Twitter-Karte zugewiesen werden soll (twitter:site Attribut).'];
-$lang['headAddOrganisationSchema'][0] = 'Organisation Schema hinzufügen';
-$lang['headAddOrganisationSchema'][1] = 'Fügen Sie das Organisation Schema hinzu.';
+$lang['headAddOrganisationSchema'][0] = '@Organization ausgeben';
+$lang['headAddOrganisationSchema'][1] = 'Das @Organization Schema ausgeben.';
 $lang['headOrganisationSchemaName'][0] = 'Name';
 $lang['headOrganisationSchemaName'][1] = 'Geben Sie den Namen der Organisation ein.';
 $lang['headOrganisationLogo'][0] = 'Logo';
 $lang['headOrganisationLogo'][1] = 'Wählen Sie ein Logo aus.';
 $lang['headOrganisationWebsite'][0] = 'URL';
 $lang['headOrganisationWebsite'][1] = 'Geben Sie die URL der Organisation ein.';
+$lang['headAddWebSiteSchema'][0] = '@WebSite ausgeben';
+$lang['headAddWebSiteSchema'][1] = 'Das @WebSite Schema ausgeben.';
+$lang['headAddWebPageSchema'][0] = '@WebPage ausgeben';
+$lang['headAddWebPageSchema'][1] = 'Das @WebPage Schema ausgeben.';
 
 /*
  * Legends
