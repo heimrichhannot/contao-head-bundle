@@ -60,6 +60,10 @@ class ParseTemplateListener
             return;
         }
 
+        if (!($rootPageModel = $this->utils->request()->getCurrentRootPageModel()) || !$rootPageModel->headAddBreadcrumbSchema) {
+            return;
+        }
+
         if ($this->utils->request()->isIndexPage()) {
             return;
         }

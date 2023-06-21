@@ -28,6 +28,7 @@ PaletteManipulator::create()
     ->addField('headAddOrganisationSchema', 'schema_legend', PaletteManipulator::POSITION_APPEND)
     ->addField('headAddWebSiteSchema', 'schema_legend', PaletteManipulator::POSITION_APPEND)
     ->addField('headAddWebPageSchema', 'schema_legend', PaletteManipulator::POSITION_APPEND)
+    ->addField('headAddBreadcrumbSchema', 'schema_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('root', 'tl_page')
     ->applyToPalette('rootfallback', 'tl_page');
 
@@ -107,6 +108,14 @@ $fields = [
         'sql' => "char(1) NOT NULL default ''",
     ],
     'headAddWebPageSchema' => [
+        'exclude' => true,
+        'inputType' => 'checkbox',
+        'eval' => [
+            'tl_class' => 'w50 clr',
+        ],
+        'sql' => "char(1) NOT NULL default ''",
+    ],
+    'headAddBreadcrumbSchema' => [
         'exclude' => true,
         'inputType' => 'checkbox',
         'eval' => [

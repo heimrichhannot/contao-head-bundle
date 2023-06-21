@@ -26,6 +26,8 @@ $lang['headAddWebSiteSchema'][0] = '@WebSite ausgeben';
 $lang['headAddWebSiteSchema'][1] = 'Das @WebSite Schema ausgeben.';
 $lang['headAddWebPageSchema'][0] = '@WebPage ausgeben';
 $lang['headAddWebPageSchema'][1] = 'Das @WebPage Schema ausgeben.';
+$lang['headAddBreadcrumbSchema'][0] = '@BreadcrumbList ausgeben';
+$lang['headAddBreadcrumbSchema'][1] = 'Das @BreadcrumbList Schema ausgeben.';
 
 /*
  * Legends
