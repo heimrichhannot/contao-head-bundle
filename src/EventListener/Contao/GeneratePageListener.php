@@ -22,7 +22,6 @@ use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
-use HeimrichHannot\HeadBundle\Manager\TagManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerInterface;
 use Spatie\SchemaOrg\BaseType;
@@ -35,7 +34,6 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class GeneratePageListener implements ServiceSubscriberInterface
 {
-    private TagManager         $legacyTagManager;
     private array              $config;
     private ContainerInterface $container;
     private HtmlHeadTagManager $headTagManager;
@@ -46,7 +44,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
     public function __construct(
         ContainerInterface $container,
-        TagManager $manager,
         array $bundleConfig,
         HtmlHeadTagManager $headTagManager,
         RequestStack $requestStack,
@@ -54,7 +51,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
         TagHelper $tagHelper,
         JsonLdManager $jsonLdManager
     ) {
-        $this->legacyTagManager = $manager;
         $this->config = $bundleConfig;
         $this->container = $container;
         $this->headTagManager = $headTagManager;
@@ -260,7 +256,11 @@ class GeneratePageListener implements ServiceSubscriberInterface
     {
         $rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel);
 
-        if ($rootPageModel && $rootPageModel->headAddOrganisationSchema) {
+        if (!$rootPageModel) {
+            return;
+        }
+
+        if ($rootPageModel->headAddOrganisationSchema) {
             $organisation = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->organization();
 
             if ($rootPageModel->headOrganisationName) {
@@ -280,11 +280,13 @@ class GeneratePageListener implements ServiceSubscriberInterface
             }
         }
 
-        $website = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->website();
-        $this->setPropertyIfNotSet($website, 'name', Controller::replaceInsertTags('{{page::mainPageTitle}}'));
-        $this->setPropertyIfNotSet($website, 'url', $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]));
+        if ($rootPageModel->headAddWebSiteSchema) {
+            $website = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->website();
+            $this->setPropertyIfNotSet($website, 'name', Controller::replaceInsertTags('{{page::mainPageTitle}}'));
+            $this->setPropertyIfNotSet($website, 'url', $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]));
+        }
 
-        if (!$this->utils->request()->isIndexPage($pageModel)) {
+        if ($rootPageModel->headAddWebPageSchema && !$this->utils->request()->isIndexPage($pageModel)) {
             $webpage = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webpage();
             $this->setPropertyIfNotSet($webpage, 'name', $title);
 
