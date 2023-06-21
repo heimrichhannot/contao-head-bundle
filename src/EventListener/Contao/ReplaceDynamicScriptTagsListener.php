@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -29,13 +29,19 @@ class ReplaceDynamicScriptTagsListener
         $this->jsonLdManager = $jsonLdManager;
     }
 
+    /** @noinspection PhpUnnecessaryLocalVariableInspection */
     public function __invoke(string $buffer): string
     {
+        $buffer = $this->addHeadTags($buffer);
         $buffer = $this->addJsonLs($buffer);
 
+        return $buffer;
+    }
+
+    private function addHeadTags(string $buffer): string
+    {
         if ($this->bundleConfig['use_contao_variables'] ?? false) {
-            $meta = $this->headTagManager->renderTags();
-            $buffer = $this->replace($buffer, 'TL_HEAD', $meta);
+            return $this->replace($buffer, 'TL_HEAD', $this->headTagManager->renderTags());
         }
 
         return $buffer;

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -35,7 +35,7 @@ PaletteManipulator::create()
 $dca['palettes']['__selector__'][] = 'addHeadDefaultImage';
 $dca['palettes']['__selector__'][] = 'headAddOrganisationSchema';
 $dca['subpalettes']['addHeadDefaultImage'] = 'headDefaultImage';
-$dca['subpalettes']['headAddOrganisationSchema'] = 'headOrganisationName,headOrganisationLogo';
+$dca['subpalettes']['headAddOrganisationSchema'] = 'headOrganisationName,headOrganisationWebsite,headOrganisationLogo';
 
 /**
  * fields.
@@ -75,8 +75,18 @@ $fields = [
         'inputType' => 'text',
         'exclude' => true,
         'eval' => [
-            'tl_class' => 'w50 clr',
+            'tl_class' => 'w50',
             'maxlength' => 128,
+        ],
+        'sql' => "varchar(128) NOT NULL DEFAULT ''",
+    ],
+    'headOrganisationWebsite' => [
+        'inputType' => 'text',
+        'exclude' => true,
+        'eval' => [
+            'tl_class' => 'w50',
+            'maxlength' => 128,
+            'rgxp' => 'url',
         ],
         'sql' => "varchar(128) NOT NULL DEFAULT ''",
     ],
