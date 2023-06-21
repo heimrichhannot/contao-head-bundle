@@ -9,6 +9,7 @@
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager as ContaoJsonLdManager;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
@@ -49,6 +50,10 @@ class ReplaceDynamicScriptTagsListener
 
     private function addJsonLs(string $buffer): string
     {
+        if (class_exists(ContaoJsonLdManager::class)) {
+            return $buffer;
+        }
+
         return $this->replace($buffer, 'TL_BODY', $this->jsonLdManager->collectFinalScriptFromGraphs());
     }
 

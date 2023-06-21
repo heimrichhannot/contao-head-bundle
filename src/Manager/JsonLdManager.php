@@ -1,13 +1,18 @@
 <?php
 
+/*
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace HeimrichHannot\HeadBundle\Manager;
 
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema as CoreContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager as ContaoJsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use HeimrichHannot\HeadBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Psr\Container\ContainerInterface;
 use Spatie\SchemaOrg\Graph;
+use Spatie\SchemaOrg\Type;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class JsonLdManager implements ServiceSubscriberInterface
@@ -64,18 +69,59 @@ class JsonLdManager implements ServiceSubscriberInterface
             return '';
         }
 
-
         $this->recursiveKeySort($data);
 
-        return '<script type="application/ld+json">'."\n".json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."\n".'</script>';
+        return '<script type="application/ld+json">'."\n".json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE)."\n".'</script>';
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     */
+    public function createSchemaOrgTypeFromArray(array $jsonLd): Type
+    {
+        if ($this->getContaoJsLdManager()) {
+            return $this->getContaoJsLdManager()->createSchemaOrgTypeFromArray($jsonLd);
+        }
+
+        if (!isset($jsonLd['@type'])) {
+            throw new \InvalidArgumentException('Must provide the @type property!');
+        }
+
+        $schemaClass = '\Spatie\SchemaOrg\\'.$jsonLd['@type'];
+
+        if (!class_exists($schemaClass)) {
+            throw new \InvalidArgumentException(sprintf('Unknown schema.org type "%s" provided!', $jsonLd['@type']));
+        }
+
+        $schema = new $schemaClass();
+        unset($jsonLd['@type']);
+
+        foreach ($jsonLd as $k => $v) {
+            if (\is_array($v) && isset($v['@type'])) {
+                $v = $this->createSchemaOrgTypeFromArray($v);
+            }
+
+            $schema->setProperty($k, $v);
+        }
+
+        return $schema;
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        $services = [];
+
+        if (class_exists(ResponseContextAccessor::class)) {
+            $services[] = '?'.ResponseContextAccessor::class;
+        }
+
+        return $services;
     }
 
     private function recursiveKeySort(array &$array): void
     {
-        foreach ($array as &$value)
-        {
-            if (\is_array($value))
-            {
+        foreach ($array as &$value) {
+            if (\is_array($value)) {
                 self::recursiveKeySort($value);
             }
         }
@@ -90,19 +136,10 @@ class JsonLdManager implements ServiceSubscriberInterface
         }
 
         if (!$this->container->has(ResponseContextAccessor::class) ||
-            !$this->container->get(ResponseContextAccessor::class)->has(ContaoJsonLdManager::class)) {
+            !$this->container->get(ResponseContextAccessor::class)->getResponseContext()->has(ContaoJsonLdManager::class)) {
             return null;
         }
 
-        return $this->container->get(ResponseContextAccessor::class)->get(ContaoJsonLdManager::class);
-    }
-
-    public static function getSubscribedServices(): array
-    {
-        $services = [];
-        if (class_exists(ResponseContextAccessor::class)) {
-            $services[] = '?'.ResponseContextAccessor::class;
-        }
-        return $services;
+        return $this->container->get(ResponseContextAccessor::class)->getResponseContext()->get(ContaoJsonLdManager::class);
     }
 }

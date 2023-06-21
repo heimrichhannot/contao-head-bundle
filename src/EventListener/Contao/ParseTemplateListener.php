@@ -13,6 +13,7 @@ use Contao\Template;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
+use Spatie\SchemaOrg\Graph;
 use Spatie\SchemaOrg\Schema;
 
 /**
@@ -35,11 +36,12 @@ class ParseTemplateListener
 
     public function __invoke(Template $template): void
     {
-        $this->preparePageTemplate($template);
-        $this->breadcrump($template);
+        $this->addlegacyMetaMethod($template);
+        $this->createBreadcrumbSchema($template);
+        $this->addSchemaFromArrayMethodPolyfill($template);
     }
 
-    protected function preparePageTemplate(Template $template): void
+    protected function addlegacyMetaMethod(Template $template): void
     {
         if (!str_starts_with($template->getName(), 'fe_page')) {
             return;
@@ -52,7 +54,7 @@ class ParseTemplateListener
         }
     }
 
-    private function breadcrump(Template $template)
+    private function createBreadcrumbSchema(Template $template): void
     {
         if (!str_starts_with($template->getName(), 'mod_breadcrumb')) {
             return;
@@ -81,5 +83,26 @@ class ParseTemplateListener
             }
             $breadcrumb->itemListElement($listItems);
         }
+    }
+
+    /**
+     * @todo Remove this method when contao 4.12+ is required
+     */
+    private function addSchemaFromArrayMethodPolyfill(Template $template): void
+    {
+        if (method_exists($template, 'addSchemaOrg')) {
+            return;
+        }
+
+        $jsonLdManager = $this->jsonLdManager;
+
+        $template->addSchemaOrg = function (array $jsonLd) use ($jsonLdManager): void {
+            $type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
+
+            $jsonLdManager
+                ->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
+                ->set($type, $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT)
+            ;
+        };
     }
 }
