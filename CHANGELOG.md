@@ -2,12 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2023-06-19
+- Added: backport of contao 4.12+ json-ld support ([#11])
+- Added: option to output  @Organization, @WebSite, @WebPage and @BreadcrumbList schema in your json-ld data ([#11])
+
 ## [1.12.1] - 2023-06-19
 - Fixed: exception in contao backend
 
 ## [1.12.0] - 2023-06-19
 - Added: link tag support to HeadTagManager ([#9])
-- Added: option to add canonical to every page (backports of contao 4.13 functioniality) ([#10])
+- Added: option to add canonical to every page (backports of contao 4.13 functionality) ([#10])
 - Deprecated: TagInterface and all its implementations ([#9])
 
 ## [1.11.1] - 2023-02-28

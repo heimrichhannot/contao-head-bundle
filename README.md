@@ -36,6 +36,7 @@ Following schema.org types are available:
 * @Organization
 * @WebSite
 * @WebPage
+* @BreadcrumbList
 
 
 ![Screenshot Structured Data Settings](docs%2Fimg%2Fscreenshot_backend_structured_data.png)
