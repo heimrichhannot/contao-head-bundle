@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2023-06-19
+## [1.13.0] - 2023-06-22
 - Added: backport of contao 4.12+ json-ld support ([#11])
 - Added: option to output  @Organization, @WebSite, @WebPage and @BreadcrumbList schema in your json-ld data ([#11])
 - Changed: update bundle structure
