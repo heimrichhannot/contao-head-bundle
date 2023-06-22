@@ -29,6 +29,12 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
     ```
 4. Optional: Set fallback image and twitter author in root page(s)
 
+### Add additional meta tags
+
+In your root page, you can activate to add fallback image (og:image and twitter:image) and twitter username (twitter:site) meta tags to you web page.
+
+![Screenshot Meta Data Settings](docs%2Fimg%2Fscreenshot_backend_meta_data.png)
+
 ### Add additional schema.org data
 
 In your root page, you can activate to add additional structured data to you web page.
