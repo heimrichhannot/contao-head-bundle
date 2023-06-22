@@ -7,10 +7,12 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
 
 ## Features
 - Provide a nice api to set head tags like meta, title, base, link
+- Provide additional json-ld schema data
 - Sets important meta tags like og:title, og:description, og:url and twitter:card out of the box
 - Allow setting open graph and twitter fallback image on root page
 - Allow setting twitter author per root page
 - Backport canonical url option from contao 4.13 for contao 4.9+
+- Backport json-ld support for contao 4.9+
 
 ## Usage
 
@@ -26,6 +28,45 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
       use_contao_variables: true
     ```
 4. Optional: Set fallback image and twitter author in root page(s)
+
+### Add additional schema.org data
+
+In your root page, you can activate to add additional structured data to you web page.
+Following schema.org types are available:
+* @Organization
+* @WebSite
+* @WebPage
+
+
+![Screenshot Structured Data Settings](docs%2Fimg%2Fscreenshot_backend_structured_data.png)
+
+### Set json-ld in your templates
+
+This bundle backports the methods of contao 4.12+ to contao 4.9+. So usage is the same as in the contao core.
+
+#### Twig templates
+
+```twig
+{% do add_schema_org({
+    '@type': 'NewsArticle',
+    'headline': newsHeadline|striptags,
+    'datePublished': datetime|date('Y-m-d\TH:i:sP'),
+}) %}
+```
+
+#### PHP templates
+
+```php
+<?php $this->addSchemaOrg([
+    '@type' => 'NewsArticle',
+    'headline' => $newsHeadline,
+    'datePublished' => $datetime->date('Y-m-d\TH:i:sP'),
+]); ?>
+```
+
+
+## Integration
+Use head bundle api set in your code.
 
 ### Set head content
 
@@ -108,6 +149,28 @@ class SomeEventListener
         // Shorthand for canonical tag
         $this->headTagManager->setCanonical('https://example.org');
     }
+}
+```
+
+### Set json-ld schema data
+
+> From contao 4.12 you can use the JsonLdManager service [from the core](https://docs.contao.org/dev/framework/response-context/#the-jsonldmanager).
+
+To set json-ld schema data, use the `JsonLdManager` service:
+
+```php
+<?php
+use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
+
+class ExampleController 
+{
+   private JsonLdManager      $jsonLdManager;
+
+   public function __invoke() {
+      $organisation = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->organization();
+      $organisation->name('Example and Sons Ltd.');
+      $organisation->url('https://example.org');
+   }
 }
 ```
 
