@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.1] - 2023-06-22
+- Fixed: exception due unsupported json-ld graph syntax in contao search indexer
+
 ## [1.13.0] - 2023-06-22
 - Added: backport of contao 4.12+ json-ld support ([#11])
 - Added: option to output  @Organization, @WebSite, @WebPage and @BreadcrumbList schema in your json-ld data ([#11])

@@ -11,6 +11,7 @@ namespace HeimrichHannot\HeadBundle\Manager;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager as ContaoJsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Psr\Container\ContainerInterface;
+use Spatie\SchemaOrg\BaseType;
 use Spatie\SchemaOrg\Graph;
 use Spatie\SchemaOrg\Type;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -56,22 +57,18 @@ class JsonLdManager implements ServiceSubscriberInterface
             return $this->getContaoJsLdManager()->collectFinalScriptFromGraphs();
         }
 
-        $data = [];
+        $buffer = '';
 
         foreach ($this->getGraphs() as $graph) {
-            $data[] = $graph->toArray();
+            foreach ($graph->getNodes() as $node) {
+                /** @var BaseType $schema */
+                foreach ($node as $schema) {
+                    $buffer .= $schema->toScript();
+                }
+            }
         }
 
-        // Reset graphs
-        $this->graphs = [];
-
-        if (0 === \count($data)) {
-            return '';
-        }
-
-        $this->recursiveKeySort($data);
-
-        return '<script type="application/ld+json">'."\n".json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE)."\n".'</script>';
+        return $buffer;
     }
 
     /**
