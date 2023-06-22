@@ -34,4 +34,9 @@ class HeimrichHannotContaoHeadBundle extends Bundle
     {
         return new HeimrichHannotHeadBundleExtension();
     }
+
+    public function getPath()
+    {
+        return \dirname(__DIR__);
+    }
 }

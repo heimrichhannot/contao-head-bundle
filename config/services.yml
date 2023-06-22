@@ -4,13 +4,13 @@ services:
     autoconfigure: true
 
   HeimrichHannot\HeadBundle\:
-    resource: '../../{EventListener,Helper,Twig}/*'
-    exclude: '../../Helper/LegacyHelper.php'
+    resource: '../src/{EventListener,Helper,Twig}/*'
+    exclude: '../src/Helper/LegacyHelper.php'
     bind:
       $bundleConfig: '%huh_head%'
 
   HeimrichHannot\HeadBundle\Manager\:
-    resource: '../../Manager/*'
+    resource: '../src/Manager/*'
     public: true
     autoconfigure: false
 
