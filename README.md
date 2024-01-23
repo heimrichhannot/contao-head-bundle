@@ -180,6 +180,9 @@ class ExampleController
    }
 }
 ```
+### Reader Config Contao sample
+![image](https://github.com/heimrichhannot/contao-head-bundle/assets/51906753/ea8ac137-a46a-42b3-81e5-4084b16b925c)
+
 
 ## Legacy integration
 
