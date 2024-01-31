@@ -108,8 +108,9 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $this->headTagManager->setBaseTag(null);
         }
 
-        if (($tag = $this->headTagManager->getTitleTag()) && $tag->getTitle()) {
+        if (($tag = $this->headTagManager->getTitleTag()) && !empty($tag->getTitle())) {
             $pageModel->pageTitle = $tag->getTitle();
+            $layout->titleTag = $tag->generateTitle();
 
             if ($htmlHeadBag) {
                 $htmlHeadBag->setTitle($tag->getTitle());

@@ -64,6 +64,6 @@ class TagHelper
             $titleTag = '{{page::rootPageTitle}}';
         }
 
-        return Controller::replaceInsertTags($titleTag);
+        return $titleTag;
     }
 }
