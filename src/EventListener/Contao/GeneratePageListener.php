@@ -16,6 +16,7 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
+use HeimrichHannot\HeadBundle\HeadTag\Link\CanonicalLink;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\CharsetMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
@@ -139,7 +140,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         // Canonical Link
         if ($htmlHeadBag && ($tag = $this->headTagManager->getCanonical())) {
             $pageModel->enableCanonical = true;
-            $htmlHeadBag->setCanonicalUri($tag->getContent());
+            $htmlHeadBag->setCanonicalUri($tag->getAttributes()['href']);
             $this->headTagManager->setCanonical(null);
         }
     }
