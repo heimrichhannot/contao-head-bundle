@@ -18,7 +18,10 @@
   "autoload": {
     "psr-4": {
       "HeimrichHannot\\HeadBundle\\": "src/"
-    }
+    },
+    "classmap": [
+      "src/"
+    ]
   },
   "extra": {
     "contao-manager-plugin": "HeimrichHannot\\HeadBundle\\ContaoManager\\Plugin"
