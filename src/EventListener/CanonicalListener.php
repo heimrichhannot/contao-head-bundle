@@ -10,6 +10,7 @@ namespace HeimrichHannot\HeadBundle\EventListener;
 
 use Contao\Controller;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
@@ -29,12 +30,18 @@ class CanonicalListener
     private Utils $utils;
     private HtmlHeadTagManager $headTagManager;
     private RequestStack $requestStack;
+    private InsertTagParser $insertTagParser;
 
-    public function __construct(Utils $utils, HtmlHeadTagManager $headTagManager, RequestStack $requestStack)
-    {
+    public function __construct(
+        Utils              $utils,
+        HtmlHeadTagManager $headTagManager,
+        RequestStack       $requestStack,
+        InsertTagParser    $insertTagParser
+    ) {
         $this->utils = $utils;
         $this->headTagManager = $headTagManager;
         $this->requestStack = $requestStack;
+        $this->insertTagParser = $insertTagParser;
     }
 
     /**
@@ -115,13 +122,14 @@ class CanonicalListener
         }
 
         if ($pageModel->canonicalLink) {
-            $url = Controller::replaceInsertTags($pageModel->canonicalLink);
+            $url = $this->insertTagParser->replace($pageModel->canonicalLink);
 
             $mainRequest = null;
 
             if (method_exists($this->requestStack, 'getMainRequest')) {
                 $mainRequest = $this->requestStack->getMainRequest();
             } else {
+                /** @noinspection RedundantSuppression, PhpDeprecationInspection, PhpUndefinedMethodInspection */
                 $mainRequest = $this->requestStack->getMasterRequest();
             }
 

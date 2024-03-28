@@ -8,10 +8,10 @@
 
 namespace HeimrichHannot\HeadBundle\Manager;
 
-use Contao\Controller;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Head\TagInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * @deprecated Use HeadTagManager instead. Will be removed in next major version.
@@ -26,25 +26,28 @@ class TagManager
      * @var ContainerInterface
      */
     private $container;
+    private InsertTagParser $insertTagParser;
+    private array $services;
 
     /**
      * TagManager constructor.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, InsertTagParser $insertTagParser, array $huhHeadTags)
     {
         $this->container = $container;
+        $this->insertTagParser = $insertTagParser;
+        $this->services = $huhHeadTags;
     }
 
-    public function registerTag(TagInterface $tag)
+    public function registerTag(TagInterface $tag): void
     {
-        $services = $this->container->getParameter('huh.head.tags');
-        $className = \get_class($tag);
+        $className = get_class($tag);
 
-        if (!isset($services[$className])) {
+        if (!isset($this->services[$className])) {
             return;
         }
 
-        $this->tags[$services[$className]] = $tag;
+        $this->tags[$this->services[$className]] = $tag;
     }
 
     public function hasTag(string $name): bool
@@ -66,9 +69,7 @@ class TagManager
 
     public function loadTagFromService(string $name): ?TagInterface
     {
-        $services = $this->container->getParameter('huh.head.tags');
-
-        if (!\in_array($name, $services)) {
+        if (!in_array($name, $this->services)) {
             return null;
         }
 
@@ -97,11 +98,11 @@ class TagManager
                 continue;
             }
 
-            if (!empty($skip) && \in_array($service, $skip)) {
+            if (!empty($skip) && in_array($service, $skip)) {
                 continue;
             }
 
-            $tags[] = StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->generate()));
+            $tags[] = StringUtil::stripInsertTags($this->insertTagParser->replace($tag->generate()));
         }
 
         return $tags;

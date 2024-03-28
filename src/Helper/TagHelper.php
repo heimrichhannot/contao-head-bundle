@@ -8,7 +8,7 @@
 
 namespace HeimrichHannot\HeadBundle\Helper;
 
-use Contao\Controller;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -17,15 +17,17 @@ use HeimrichHannot\UtilsBundle\Util\Utils;
 class TagHelper
 {
     private Utils $utils;
+    private InsertTagParser $insertTagParser;
 
-    public function __construct(Utils $utils)
+    public function __construct(Utils $utils, InsertTagParser $insertTagParser)
     {
         $this->utils = $utils;
+        $this->insertTagParser = $insertTagParser;
     }
 
     public function prepareDescription(string $description): string
     {
-        $description = Controller::replaceInsertTags($description);
+        $description = $this->insertTagParser->replace($description);
         $description = strip_tags($description);
         $description = str_replace(["\n", "\r", '"'], [' ', '', ''], $description);
         $description = StringUtil::substr($description, 320);
@@ -64,6 +66,6 @@ class TagHelper
             $titleTag = '{{page::rootPageTitle}}';
         }
 
-        return Controller::replaceInsertTags($titleTag);
+        return $this->insertTagParser->replace($titleTag);
     }
 }

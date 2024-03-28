@@ -10,6 +10,7 @@ namespace HeimrichHannot\HeadBundle\Tag\Meta\Twitter;
 
 use Contao\Controller;
 use Contao\StringUtil;
+use Contao\System;
 use HeimrichHannot\HeadBundle\Head\AbstractMetaTag;
 
 /**
@@ -29,14 +30,22 @@ class TwitterDescription extends AbstractMetaTag
      */
     public function generate()
     {
+        $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
+
         $content = parent::getContent();
 
         $content = StringUtil::decodeEntities($content);
-        $content = Controller::replaceInsertTags($content, false);
+        $content = $insertTagParser->replace($content);
         $content = strip_tags($content);
         $content = str_replace("\n", ' ', $content);
-        $content = \StringUtil::substr($content, 320);
+        $content = StringUtil::substr($content, 320);
 
-        return sprintf('<%s %s="%s" content="%s">', static::$tag, static::$key, static::$name, $this->escapeForHtmlAttribute($content));
+        return sprintf(
+            '<%s %s="%s" content="%s">',
+            static::$tag,
+            static::$key,
+            static::$name,
+            $this->escapeForHtmlAttribute($content)
+        );
     }
 }
