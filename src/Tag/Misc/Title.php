@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\HeadBundle\Tag\Misc;
 
+use Contao\Config;
 use HeimrichHannot\HeadBundle\Head\AbstractTag;
 
 /**
@@ -22,6 +23,9 @@ class Title extends AbstractTag
      */
     public function generate()
     {
-        return sprintf('<title>%s</title>', htmlentities($this->getContent(), \ENT_COMPAT, \Config::get('characterSet')));
+        return sprintf(
+            '<title>%s</title>',
+            htmlentities($this->getContent(), ENT_COMPAT, Config::get('characterSet'))
+        );
     }
 }

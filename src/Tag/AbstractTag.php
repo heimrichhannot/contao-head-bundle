@@ -8,8 +8,8 @@
 
 namespace HeimrichHannot\HeadBundle\Head;
 
-use Contao\Controller;
 use Contao\StringUtil;
+use Contao\System;
 use HeimrichHannot\HeadBundle\Manager\TagManager;
 
 /**
@@ -105,6 +105,7 @@ abstract class AbstractTag implements TagInterface
      */
     public function escapeForHtmlAttribute($content)
     {
-        return str_replace('"', '&quot;', StringUtil::stripInsertTags(Controller::replaceInsertTags($content)));
+        $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
+        return str_replace('"', '&quot;', StringUtil::stripInsertTags($insertTagParser->replace($content)));
     }
 }

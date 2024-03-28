@@ -36,12 +36,12 @@ $lang['head_legend'] = 'Head-Bundle';
 $lang['head_twitter_legend'] = 'Head-Bundle - Twitter';
 $lang['schema_legend'] = 'Structured data (Schema.org)';
 
-if (version_compare(VERSION, '4.13', '<')) {
-    $lang['canonical_legend'] = 'Canonical URL';
-    $lang['enableCanonical'][0] = 'Enable rel="canonical"';
-    $lang['enableCanonical'][1] = 'Add rel=&quot;canonical&quot; tags to the website.';
-    $lang['canonicalLink'][0] = 'Custom URL';
-    $lang['canonicalLink'][1] = 'Here you can set a custom canonical URL like https://example.com/.';
-    $lang['canonicalKeepParams'][0] = 'Query parameters';
-    $lang['canonicalKeepParams'][1] = 'By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.';
-}
+// if (version_compare(VERSION, '4.13', '<')) {
+//     $lang['canonical_legend'] = 'Canonical URL';
+//     $lang['enableCanonical'][0] = 'Enable rel="canonical"';
+//     $lang['enableCanonical'][1] = 'Add rel=&quot;canonical&quot; tags to the website.';
+//     $lang['canonicalLink'][0] = 'Custom URL';
+//     $lang['canonicalLink'][1] = 'Here you can set a custom canonical URL like https://example.com/.';
+//     $lang['canonicalKeepParams'][0] = 'Query parameters';
+//     $lang['canonicalKeepParams'][1] = 'By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.';
+// }

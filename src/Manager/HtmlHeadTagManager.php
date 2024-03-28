@@ -9,6 +9,7 @@
 namespace HeimrichHannot\HeadBundle\Manager;
 
 use Contao\Controller;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Exception\UnsupportedTagException;
 use HeimrichHannot\HeadBundle\HeadTag\AbstractHeadTag;
@@ -29,11 +30,16 @@ class HtmlHeadTagManager
     private array $linkTags = [];
     private HeadTagFactory $headTagFactory;
     private ?TitleTag $titleTag = null;
+    private InsertTagParser $insertTagParser;
 
-    public function __construct(TagManager $legacyTagManager, HeadTagFactory $headTagFactory)
-    {
+    public function __construct(
+        TagManager      $legacyTagManager,
+        HeadTagFactory  $headTagFactory,
+        InsertTagParser $insertTagParser
+    ) {
         $this->legacyTagManager = $legacyTagManager;
         $this->headTagFactory = $headTagFactory;
+        $this->insertTagParser = $insertTagParser;
     }
 
     public function getTag(string $name): ?AbstractHeadTag
@@ -270,7 +276,7 @@ class HtmlHeadTagManager
         if ($removeInsertTags) {
             $val = StringUtil::stripInsertTags($val);
         } else {
-            $val = Controller::replaceInsertTags($val);
+            $val = $this->insertTagParser->replace($val);
         }
 
         $val = strip_tags($val);

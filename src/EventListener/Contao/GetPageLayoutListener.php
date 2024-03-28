@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
+use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Image;
 use Contao\LayoutModel;
@@ -16,8 +17,6 @@ use Contao\PageRegular;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
-use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
-use HeimrichHannot\HeadBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 
 /**
@@ -25,13 +24,18 @@ use HeimrichHannot\UtilsBundle\Util\Utils;
  */
 class GetPageLayoutListener
 {
-    private Utils              $utils;
+    private Utils $utils;
     private HtmlHeadTagManager $headTagManager;
+    private ImageFactoryInterface $imageFactory;
 
-    public function __construct(Utils $utils, HtmlHeadTagManager $headTagManager)
-    {
+    public function __construct(
+        Utils $utils,
+        HtmlHeadTagManager $headTagManager,
+        ImageFactoryInterface $imageFactory
+    ) {
         $this->utils = $utils;
         $this->headTagManager = $headTagManager;
+        $this->imageFactory = $imageFactory;
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
@@ -72,12 +76,12 @@ class GetPageLayoutListener
         $baseUrl = $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]);
 
         if (!$metaImageTag) {
-            $metaImagePath = Image::get($imagePath, 1200, 630, 'proportional');
+            $metaImagePath = $this->imageFactory->create($imagePath, [1200, 630, 'proportional'])->getPath();
             $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl.\DIRECTORY_SEPARATOR.$metaImagePath));
         }
 
         if (!$twitterImageTag) {
-            $twitterImagePath = Image::get($imagePath, 1024, 512, 'proportional');
+            $twitterImagePath = $this->imageFactory->create($imagePath, [1024, 512, 'proportional'])->getPath();
             $this->headTagManager->addMetaTag(new MetaTag('twitter:image', $baseUrl.\DIRECTORY_SEPARATOR.$twitterImagePath));
         }
     }

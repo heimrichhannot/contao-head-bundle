@@ -8,10 +8,10 @@
 
 namespace HeimrichHannot\HeadBundle\Manager;
 
-use Contao\Controller;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Head\TagInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * @deprecated Use HeadTagManager instead. Will be removed in next major version.
@@ -26,19 +26,22 @@ class TagManager
      * @var ContainerInterface
      */
     private $container;
+    private InsertTagParser $insertTagParser;
 
     /**
      * TagManager constructor.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, InsertTagParser $insertTagParser)
     {
         $this->container = $container;
+        $this->insertTagParser = $insertTagParser;
     }
 
-    public function registerTag(TagInterface $tag)
+    public function registerTag(TagInterface $tag): void
     {
         $services = $this->container->getParameter('huh.head.tags');
-        $className = \get_class($tag);
+
+        $className = get_class($tag);
 
         if (!isset($services[$className])) {
             return;
@@ -68,7 +71,7 @@ class TagManager
     {
         $services = $this->container->getParameter('huh.head.tags');
 
-        if (!\in_array($name, $services)) {
+        if (!in_array($name, $services)) {
             return null;
         }
 
@@ -97,11 +100,11 @@ class TagManager
                 continue;
             }
 
-            if (!empty($skip) && \in_array($service, $skip)) {
+            if (!empty($skip) && in_array($service, $skip)) {
                 continue;
             }
 
-            $tags[] = StringUtil::stripInsertTags(Controller::replaceInsertTags($tag->generate()));
+            $tags[] = StringUtil::stripInsertTags($this->insertTagParser->replace($tag->generate()));
         }
 
         return $tags;
