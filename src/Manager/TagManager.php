@@ -27,27 +27,27 @@ class TagManager
      */
     private $container;
     private InsertTagParser $insertTagParser;
-    private array $services;
 
     /**
      * TagManager constructor.
      */
-    public function __construct(ContainerInterface $container, InsertTagParser $insertTagParser, array $huhHeadTags)
+    public function __construct(ContainerInterface $container, InsertTagParser $insertTagParser)
     {
         $this->container = $container;
         $this->insertTagParser = $insertTagParser;
-        $this->services = $huhHeadTags;
     }
 
     public function registerTag(TagInterface $tag): void
     {
+        $services = $this->container->getParameter('huh.head.tags');
+
         $className = get_class($tag);
 
-        if (!isset($this->services[$className])) {
+        if (!isset($services[$className])) {
             return;
         }
 
-        $this->tags[$this->services[$className]] = $tag;
+        $this->tags[$services[$className]] = $tag;
     }
 
     public function hasTag(string $name): bool
@@ -69,7 +69,9 @@ class TagManager
 
     public function loadTagFromService(string $name): ?TagInterface
     {
-        if (!in_array($name, $this->services)) {
+        $services = $this->container->getParameter('huh.head.tags');
+
+        if (!in_array($name, $services)) {
             return null;
         }
 
