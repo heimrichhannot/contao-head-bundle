@@ -11,6 +11,7 @@ namespace HeimrichHannot\HeadBundle;
 use HeimrichHannot\HeadBundle\DependencyInjection\Compiler\AdjustContainerPass;
 use HeimrichHannot\HeadBundle\DependencyInjection\HeimrichHannotHeadBundleExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class HeimrichHannotContaoHeadBundle extends Bundle
@@ -30,13 +31,13 @@ class HeimrichHannotContaoHeadBundle extends Bundle
         $container->addCompilerPass(new AdjustContainerPass());
     }
 
-    public function getContainerExtension()
+    public function getContainerExtension(): ?ExtensionInterface
     {
         return new HeimrichHannotHeadBundleExtension();
     }
 
-    public function getPath()
+    public function getPath(): string
     {
-        return \dirname(__DIR__);
+        return dirname(__DIR__);
     }
 }
