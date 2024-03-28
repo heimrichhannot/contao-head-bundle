@@ -111,8 +111,9 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $this->headTagManager->setBaseTag(null);
         }
 
-        if (($tag = $this->headTagManager->getTitleTag()) && $tag->getTitle()) {
+        if (($tag = $this->headTagManager->getTitleTag()) && !empty($tag->getTitle())) {
             $pageModel->pageTitle = $tag->getTitle();
+            $layout->titleTag = $tag->generateTitle();
 
             if ($htmlHeadBag) {
                 $htmlHeadBag->setTitle($tag->getTitle());
@@ -141,7 +142,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         // Canonical Link
         if ($htmlHeadBag && ($tag = $this->headTagManager->getCanonical())) {
             $pageModel->enableCanonical = true;
-            $htmlHeadBag->setCanonicalUri($tag->generate());
+            $htmlHeadBag->setCanonicalUri($tag->getAttributes()['href']);
             $this->headTagManager->setCanonical(null);
         }
     }

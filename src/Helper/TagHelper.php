@@ -66,6 +66,7 @@ class TagHelper
             $titleTag = '{{page::rootPageTitle}}';
         }
 
-        return $this->insertTagParser->replace($titleTag);
+        // note: once was `$this->insertTagParser->replace($titleTag)`
+        return $titleTag;
     }
 }

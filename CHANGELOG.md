@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.4] - 2024-02-13
+- Fixed: namespace issue
+
+## [1.13.3] - 2024-02-12
+- Fixed: compatibility issue with contao 4.13
+
+## [1.13.2] - 2024-01-31
+- Changed: small code adjustments
+- Fixed: backward compatibility for legacy service names in legacy meta method
+
 ## [1.13.1] - 2023-06-22
 - Fixed: exception due unsupported json-ld graph syntax in contao search indexer
 

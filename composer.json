@@ -21,12 +21,6 @@
     },
     "classmap": [
       "src/"
-    ],
-    "exclude-from-classmap": [
-      "src/Resources/contao/config/",
-      "src/Resources/contao/dca/",
-      "src/Resources/contao/languages/",
-      "src/Resources/contao/templates/"
     ]
   },
   "extra": {

@@ -10,6 +10,7 @@ namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Template;
+use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
@@ -36,12 +37,12 @@ class ParseTemplateListener
 
     public function __invoke(Template $template): void
     {
-        $this->addlegacyMetaMethod($template);
+        $this->addLegacyMetaMethod($template);
         $this->createBreadcrumbSchema($template);
         $this->addSchemaFromArrayMethodPolyfill($template);
     }
 
-    protected function addlegacyMetaMethod(Template $template): void
+    protected function addLegacyMetaMethod(Template $template): void
     {
         if (!str_starts_with($template->getName(), 'fe_page')) {
             return;
@@ -49,6 +50,9 @@ class ParseTemplateListener
 
         if (!($this->bundleConfig['use_contao_variables'] ?? false)) {
             $template->meta = function (array $skip = []) {
+                foreach ($skip as &$tag) {
+                    $tag = LegacyHelper::mapServiceToTag($tag, $tag);
+                }
                 return $this->headTagManager->renderTags(['skip_tags' => $skip]);
             };
         }
