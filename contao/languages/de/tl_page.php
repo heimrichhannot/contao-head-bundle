@@ -36,12 +36,12 @@ $lang['head_legend'] = 'Head-Bundle';
 $lang['head_twitter_legend'] = 'Head-Bundle - Twitter';
 $lang['schema_legend'] = 'Strukturierte Daten (Schema.org)';
 
-if (version_compare(VERSION, '4.13', '<')) {
-    $lang['canonical_legend'] = 'Kanonische URL';
-    $lang['enableCanonical'][0] = 'rel=&quot;canonical&quot; aktivieren';
-    $lang['enableCanonical'][1] = 'Der Website rel=&quot;canonical&quot;-Tags hinzufügen.';
-    $lang['canonicalLink'][0] = 'Individuelle URL';
-    $lang['canonicalLink'][1] = 'Hier können Sie eine individuelle kanonische URL wie z. B. https://example.com/ setzen.';
-    $lang['canonicalKeepParams'][0] = 'Query-Parameter';
-    $lang['canonicalKeepParams'][1] = 'Standardmäßig entfernt Contao die Query-Parameter in der kanonischen URL. Hier können Sie eine kommagetrennte Liste von Query-Parametern hinzufügen, die erhalten bleiben sollen. Verwenden Sie &quot;*&quot; als Platzhalter.';
-}
+// if (version_compare(VERSION, '4.13', '<')) {
+//     $lang['canonical_legend'] = 'Kanonische URL';
+//     $lang['enableCanonical'][0] = 'rel=&quot;canonical&quot; aktivieren';
+//     $lang['enableCanonical'][1] = 'Der Website rel=&quot;canonical&quot;-Tags hinzufügen.';
+//     $lang['canonicalLink'][0] = 'Individuelle URL';
+//     $lang['canonicalLink'][1] = 'Hier können Sie eine individuelle kanonische URL wie z. B. https://example.com/ setzen.';
+//     $lang['canonicalKeepParams'][0] = 'Query-Parameter';
+//     $lang['canonicalKeepParams'][1] = 'Standardmäßig entfernt Contao die Query-Parameter in der kanonischen URL. Hier können Sie eine kommagetrennte Liste von Query-Parametern hinzufügen, die erhalten bleiben sollen. Verwenden Sie &quot;*&quot; als Platzhalter.';
+// }

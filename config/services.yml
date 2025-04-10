@@ -2,6 +2,8 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
+    bind:
+      Psr\Container\ContainerInterface: '@service_container'
 
   HeimrichHannot\HeadBundle\:
     resource: '../src/{EventListener,Helper,Twig}/*'

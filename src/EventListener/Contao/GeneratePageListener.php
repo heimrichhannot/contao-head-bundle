@@ -8,7 +8,7 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
-use Contao\Controller;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
@@ -16,7 +16,6 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
-use HeimrichHannot\HeadBundle\HeadTag\Link\CanonicalLink;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\CharsetMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
@@ -42,6 +41,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
     private Utils              $utils;
     private TagHelper          $tagHelper;
     private JsonLdManager      $jsonLdManager;
+    private InsertTagParser    $insertTagParser;
 
     public function __construct(
         ContainerInterface $container,
@@ -50,7 +50,8 @@ class GeneratePageListener implements ServiceSubscriberInterface
         RequestStack $requestStack,
         Utils $utils,
         TagHelper $tagHelper,
-        JsonLdManager $jsonLdManager
+        JsonLdManager $jsonLdManager,
+        InsertTagParser $insertTagParser
     ) {
         $this->config = $bundleConfig;
         $this->container = $container;
@@ -59,6 +60,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         $this->utils = $utils;
         $this->tagHelper = $tagHelper;
         $this->jsonLdManager = $jsonLdManager;
+        $this->insertTagParser = $insertTagParser;
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
@@ -74,7 +76,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         if (empty($title)) {
-            $title = Controller::replaceInsertTags('{{page::pageTitle}}');
+            $title = $this->insertTagParser->replace('{{page::pageTitle}}');
         }
 
         $this->prepareJsonLdContent($pageModel, $title);
@@ -82,7 +84,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         $this->setTwitterTags();
     }
 
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return [
             '?'.ResponseContextAccessor::class,
@@ -165,7 +167,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         // Title
         if (!($tag = $this->headTagManager->getTitleTag()) || !$tag->getTitle()) {
             $titleFormat = str_replace('{{page::pageTitle}}', '%s', $this->tagHelper->getContaoTitleTag($pageModel));
-            $title = Controller::replaceInsertTags('{{page::pageTitle}}');
+            $title = $this->insertTagParser->replace('{{page::pageTitle}}');
 
             $this->headTagManager->setTitleTag($this->headTagManager->inputEncodedToPlainText($title), $titleFormat);
         }
@@ -284,7 +286,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
         if ($rootPageModel->headAddWebSiteSchema) {
             $website = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->website();
-            $this->setPropertyIfNotSet($website, 'name', Controller::replaceInsertTags('{{page::mainPageTitle}}'));
+            $this->setPropertyIfNotSet($website, 'name', $this->insertTagParser->replace('{{page::mainPageTitle}}'));
             $this->setPropertyIfNotSet($website, 'url', $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]));
         }
 

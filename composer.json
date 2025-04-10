@@ -5,13 +5,13 @@
   "license": "LGPL-3.0-or-later",
   "require": {
     "php": "^7.4 || ^8.0",
-    "contao/core-bundle": "^4.9",
-    "heimrichhannot/contao-utils-bundle": "^2.219",
+    "contao/core-bundle": "^4.13 || ^5.0",
+    "heimrichhannot/contao-utils-bundle": "^2.219 || ^3.0",
     "psr/container": "^1.0 || ^2.0",
     "spatie/schema-org": "^3.4",
-    "symfony/config": "^4.4 || ^5.4",
-    "symfony/dependency-injection": "^4.4 || ^5.4",
-    "symfony/http-kernel": "^4.4 || ^5.4",
+    "symfony/config": "^4.4 || ^5.4 || ^6.0",
+    "symfony/dependency-injection": "^4.4 || ^5.4 || ^6.0",
+    "symfony/http-kernel": "^4.4 || ^5.4 || ^6.0",
     "symfony/service-contracts": "^1.0 || ^2.0 || ^3.0",
     "symfony/polyfill-php80": "^1.26"
   },
