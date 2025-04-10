@@ -121,20 +121,15 @@ class CanonicalListener
             return;
         }
 
-        if ($pageModel->canonicalLink) {
+        if ($pageModel->canonicalLink)
+        {
             $url = $this->insertTagParser->replace($pageModel->canonicalLink);
 
-            $mainRequest = null;
-
-            if (method_exists($this->requestStack, 'getMainRequest')) {
-                $mainRequest = $this->requestStack->getMainRequest();
-            } else {
-                /** @noinspection RedundantSuppression, PhpDeprecationInspection, PhpUndefinedMethodInspection */
-                $mainRequest = $this->requestStack->getMasterRequest();
-            }
+            $mainRequest = $this->requestStack->getMainRequest();
 
             // Ensure absolute links
-            if (!preg_match('#^https?://#', $url)) {
+            if (!\preg_match('@^https?://@', $url))
+            {
                 if (!$mainRequest) {
                     throw new \RuntimeException('The request stack did not contain a request');
                 }

@@ -6,7 +6,7 @@
   "require": {
     "php": "^7.4 || ^8.0",
     "contao/core-bundle": "^4.13 || ^5.0",
-    "heimrichhannot/contao-utils-bundle": "^2.219 || ^3.0@beta",
+    "heimrichhannot/contao-utils-bundle": "^2.219 || ^3.0",
     "psr/container": "^1.0 || ^2.0",
     "spatie/schema-org": "^3.4",
     "symfony/config": "^4.4 || ^5.4 || ^6.0",
