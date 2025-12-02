@@ -42,7 +42,7 @@ abstract class AbstractMetaTag extends AbstractTag
         return sprintf('<%s %s="%s" content="%s">', static::$tag, static::$key, static::$name, $this->escapeForHtmlAttribute($this->getContent()));
     }
 
-    public function setContent($content)
+    public function setContent($content): void
     {
         if (isset(static::$name)) {
             if (null !== $content) {

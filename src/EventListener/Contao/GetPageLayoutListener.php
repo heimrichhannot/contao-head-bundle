@@ -10,7 +10,6 @@ namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
-use Contao\Image;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;

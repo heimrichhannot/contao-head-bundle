@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AdjustContainerPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $this->processLegacy($container);
     }
@@ -24,7 +24,7 @@ class AdjustContainerPass implements CompilerPassInterface
      *
      * @noinspection PhpDeprecationInspection
      */
-    private function processLegacy(ContainerBuilder $container)
+    private function processLegacy(ContainerBuilder $container): void
     {
         $tags = [];
         $definitions = $container->getDefinitions();

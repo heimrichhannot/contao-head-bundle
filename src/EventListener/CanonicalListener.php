@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener;
 
-use Contao\Controller;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\ServiceAnnotation\Callback;

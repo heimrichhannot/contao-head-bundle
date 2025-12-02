@@ -8,6 +8,8 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
@@ -94,8 +96,8 @@ class GeneratePageListener implements ServiceSubscriberInterface
     /**
      * Set contao head tags from head bundle tags (use contao template variables instead of head bundle output where possible).
      *
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function setContaoHead(LayoutModel $layout, PageModel $pageModel, PageRegular $pageRegular): void
     {
@@ -169,7 +171,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $titleFormat = str_replace('{{page::pageTitle}}', '%s', $this->tagHelper->getContaoTitleTag($pageModel));
             $title = $this->insertTagParser->replace('{{page::pageTitle}}');
 
-            $this->headTagManager->setTitleTag($this->headTagManager->inputEncodedToPlainText($title), $titleFormat);
+            $this->headTagManager->setTitleTag($this->headTagManager->inputEncodedToPlainText($title));
         }
 
         // Description

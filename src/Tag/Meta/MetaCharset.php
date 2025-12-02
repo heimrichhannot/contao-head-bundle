@@ -42,7 +42,7 @@ class MetaCharset extends AbstractTag
         return sprintf('<%s %s="%s">', static::$tag, static::$key, $this->escapeForHtmlAttribute($this->getContent()));
     }
 
-    public function setContent($content)
+    public function setContent($content): void
     {
         if (null !== $content) {
             $tag = new CharsetMetaTag($content);

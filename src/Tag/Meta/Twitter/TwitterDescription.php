@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\HeadBundle\Tag\Meta\Twitter;
 
-use Contao\Controller;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\HeadBundle\Head\AbstractMetaTag;

@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\HeadBundle\Manager;
 
-use Contao\Controller;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Exception\UnsupportedTagException;
@@ -313,7 +312,7 @@ class HtmlHeadTagManager
         return $strValue;
     }
 
-    public function addLinkTag(LinkTag $tag)
+    public function addLinkTag(LinkTag $tag): void
     {
         $this->linkTags[$tag->getName()] = $tag;
     }

@@ -32,7 +32,7 @@ abstract class AbstractLinkTag extends AbstractTag
      */
     protected static $key = 'rel';
 
-    public function setContent($content)
+    public function setContent($content): void
     {
         if (isset(static::$name)) {
             if ('canonical' === static::$name) {

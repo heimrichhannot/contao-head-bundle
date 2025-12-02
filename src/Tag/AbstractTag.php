@@ -64,7 +64,7 @@ abstract class AbstractTag implements TagInterface
      *
      * @param string
      */
-    public function setContent($content)
+    public function setContent($content): void
     {
         $this->content = $content;
     }

@@ -17,7 +17,7 @@ use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
  */
 class Base extends AbstractTag
 {
-    public function setContent($content)
+    public function setContent($content): void
     {
         System::getContainer()->get(HtmlHeadTagManager::class)->setBaseTag($content);
     }
