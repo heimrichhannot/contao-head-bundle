@@ -24,8 +24,8 @@ class HeimrichHannotHeadBundleExtension extends Extension
         $container->setParameter('huh_head', $config);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
-        $loader->load('services.yml');
-        $loader->load('tags.yml');
+        $loader->load('services.yaml');
+        $loader->load('tags.yaml');
 
         if (class_exists(DisableCanonicalFieldsListener::class)) {
             $container->removeDefinition(CanonicalListener::class);

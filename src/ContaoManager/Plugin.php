@@ -23,7 +23,7 @@ class Plugin implements BundlePluginInterface
     {
         return [
             BundleConfig::create(HeimrichHannotContaoHeadBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class, 'modal']),
+                ->setLoadAfter([ContaoCoreBundle::class]),
         ];
     }
 }
