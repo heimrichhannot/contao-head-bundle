@@ -8,8 +8,6 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
@@ -25,7 +23,9 @@ use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Spatie\SchemaOrg\BaseType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -36,14 +36,14 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class GeneratePageListener implements ServiceSubscriberInterface
 {
-    private array              $config;
+    private array $config;
     private ContainerInterface $container;
     private HtmlHeadTagManager $headTagManager;
-    private RequestStack       $requestStack;
-    private Utils              $utils;
-    private TagHelper          $tagHelper;
-    private JsonLdManager      $jsonLdManager;
-    private InsertTagParser    $insertTagParser;
+    private RequestStack $requestStack;
+    private Utils $utils;
+    private TagHelper $tagHelper;
+    private JsonLdManager $jsonLdManager;
+    private InsertTagParser $insertTagParser;
 
     public function __construct(
         ContainerInterface $container,
@@ -53,7 +53,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         Utils $utils,
         TagHelper $tagHelper,
         JsonLdManager $jsonLdManager,
-        InsertTagParser $insertTagParser
+        InsertTagParser $insertTagParser,
     ) {
         $this->config = $bundleConfig;
         $this->container = $container;
@@ -89,7 +89,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
     public static function getSubscribedServices(): array
     {
         return [
-            '?'.ResponseContextAccessor::class,
+            '?' . ResponseContextAccessor::class,
         ];
     }
 
@@ -223,7 +223,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
                 $url = $headTagBag->getCanonicalUriForRequest($request);
             } else {
                 $url = Request::create(
-                    $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
+                    $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo(),
                     $request->getMethod(),
                 )->getUri();
             }
@@ -287,7 +287,9 @@ class GeneratePageListener implements ServiceSubscriberInterface
         if ($rootPageModel->headAddWebSiteSchema) {
             $website = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webSite();
             $this->setPropertyIfNotSet($website, 'name', $this->insertTagParser->replace('{{page::mainPageTitle}}'));
-            $this->setPropertyIfNotSet($website, 'url', $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]));
+            $this->setPropertyIfNotSet($website, 'url', $this->utils->request()->getBaseUrl([
+                'pageModel' => $pageModel,
+            ]));
         }
 
         if ($rootPageModel->headAddWebPageSchema && !$this->utils->request()->isIndexPage($pageModel)) {

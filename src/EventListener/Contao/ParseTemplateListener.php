@@ -23,7 +23,7 @@ use Spatie\SchemaOrg\Schema;
  */
 class ParseTemplateListener
 {
-    private array              $bundleConfig;
+    private array $bundleConfig;
     private HtmlHeadTagManager $headTagManager;
     private JsonLdManager $jsonLdManager;
     private Utils $utils;
@@ -54,7 +54,10 @@ class ParseTemplateListener
                 foreach ($skip as &$tag) {
                     $tag = LegacyHelper::mapServiceToTag($tag, $tag);
                 }
-                return $this->headTagManager->renderTags(['skip_tags' => $skip]);
+
+                return $this->headTagManager->renderTags([
+                    'skip_tags' => $skip,
+                ]);
             };
         }
     }

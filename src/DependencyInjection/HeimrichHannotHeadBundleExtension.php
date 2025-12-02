@@ -23,7 +23,7 @@ class HeimrichHannotHeadBundleExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter('huh_head', $config);
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
         $loader->load('services.yaml');
         $loader->load('tags.yaml');
 

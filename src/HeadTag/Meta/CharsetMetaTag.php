@@ -30,7 +30,7 @@ class CharsetMetaTag extends MetaTag
     }
 
     /**
-     * Alias for setAttribute(static::TYPE, $content)
+     * Alias for setAttribute(static::TYPE, $content).
      */
     public function setContent(string $content): self
     {
@@ -38,7 +38,7 @@ class CharsetMetaTag extends MetaTag
     }
 
     /**
-     * Alias for getAttributes()['charset']
+     * Alias for getAttributes()['charset'].
      */
     public function getContent(): string
     {

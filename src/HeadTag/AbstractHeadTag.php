@@ -26,7 +26,7 @@ abstract class AbstractHeadTag
             return '';
         }
 
-        $compiled = implode('="%s" ', array_keys($this->attributes)).'="%s"';
+        $compiled = implode('="%s" ', array_keys($this->attributes)) . '="%s"';
 
         return vsprintf($compiled, array_map('htmlspecialchars', array_values($this->attributes)));
     }

@@ -24,9 +24,6 @@ class TwitterDescription extends AbstractMetaTag
      */
     protected static $name = 'twitter:description';
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate()
     {
         $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');

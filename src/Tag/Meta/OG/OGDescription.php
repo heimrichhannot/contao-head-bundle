@@ -31,9 +31,6 @@ class OGDescription extends AbstractMetaTag
      */
     protected static $name = 'og:description';
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate()
     {
         $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');

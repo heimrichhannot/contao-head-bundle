@@ -30,9 +30,8 @@ class GetPageLayoutListener
     public function __construct(
         Utils $utils,
         HtmlHeadTagManager $headTagManager,
-        ImageFactoryInterface $imageFactory
-    )
-    {
+        ImageFactoryInterface $imageFactory,
+    ) {
         $this->utils = $utils;
         $this->headTagManager = $headTagManager;
         $this->imageFactory = $imageFactory;
@@ -50,6 +49,7 @@ class GetPageLayoutListener
 
     /**
      * @param \HeimrichHannot\HeadBundle\Model\PageModel $pageModel
+     *
      * @throws \Exception
      */
     private function setPageFallbackImage(PageModel $pageModel): void
@@ -68,7 +68,9 @@ class GetPageLayoutListener
             return;
         }
 
-        $baseUrl = $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]);
+        $baseUrl = $this->utils->request()->getBaseUrl([
+            'pageModel' => $pageModel,
+        ]);
 
         if (!$metaImageTag) {
             $metaImagePath = $this->imageFactory->create($imagePath, [1200, 630, 'proportional'])->getPath();
@@ -83,7 +85,6 @@ class GetPageLayoutListener
 
     /**
      * @param \HeimrichHannot\HeadBundle\Model\PageModel|null $pageModel
-     * @return string|null
      */
     protected function pageImage(?PageModel $pageModel): ?string
     {

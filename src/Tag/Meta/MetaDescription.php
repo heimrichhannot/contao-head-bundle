@@ -24,9 +24,6 @@ class MetaDescription extends AbstractMetaTag
      */
     protected static $name = 'description';
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate()
     {
         $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');

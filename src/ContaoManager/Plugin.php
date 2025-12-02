@@ -16,9 +16,6 @@ use HeimrichHannot\HeadBundle\HeimrichHannotContaoHeadBundle;
 
 class Plugin implements BundlePluginInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getBundles(ParserInterface $parser): array
     {
         return [

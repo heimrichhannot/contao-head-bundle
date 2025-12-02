@@ -23,7 +23,7 @@ class TitleTag extends AbstractHeadTag
 
     public function generate(): string
     {
-        return '<title>'.$this->generateTitle().'</title>';
+        return '<title>' . $this->generateTitle() . '</title>';
     }
 
     public function generateTitle(): string

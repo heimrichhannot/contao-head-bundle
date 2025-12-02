@@ -47,9 +47,9 @@ class LegacyHelper
         'huh.head.tag.link_canonical' => 'link_canonical',
 
         // External bundles
-//        'huh.head.tag.pwa.link_manifest' => 'link_manifest',
+        //        'huh.head.tag.pwa.link_manifest' => 'link_manifest',
         'huh.head.tag.pwa.meta_themecolor' => 'meta_theme-color',
-//        'huh.head.tag.pwa.script' => '',
+        //        'huh.head.tag.pwa.script' => '',
     ];
 
     public static function mapTagToService(string $tag): ?string

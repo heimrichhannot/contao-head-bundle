@@ -98,14 +98,11 @@ abstract class AbstractTag implements TagInterface
 
     /**
      * Escapes double quotes.
-     *
-     * @param $content
-     *
-     * @return mixed
      */
     public function escapeForHtmlAttribute($content)
     {
         $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
+
         return str_replace('"', '&quot;', StringUtil::stripInsertTags($insertTagParser->replace($content)));
     }
 }

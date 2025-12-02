@@ -32,10 +32,10 @@ class CanonicalListener
     private InsertTagParser $insertTagParser;
 
     public function __construct(
-        Utils              $utils,
+        Utils $utils,
         HtmlHeadTagManager $headTagManager,
-        RequestStack       $requestStack,
-        InsertTagParser    $insertTagParser
+        RequestStack $requestStack,
+        InsertTagParser $insertTagParser,
     ) {
         $this->utils = $utils;
         $this->headTagManager = $headTagManager;
@@ -58,20 +58,32 @@ class CanonicalListener
             'exclude' => true,
             'inputType' => 'checkbox',
             'default' => true,
-            'eval' => ['tl_class' => 'w50 m12'],
+            'eval' => [
+                'tl_class' => 'w50 m12',
+            ],
             'sql' => "char(1) NOT NULL default ''",
         ];
         $dca['fields']['canonicalLink'] = [
             'exclude' => true,
             'search' => true,
             'inputType' => 'text',
-            'eval' => ['rgxp' => 'url', 'decodeEntities' => true, 'maxlength' => 255, 'dcaPicker' => true, 'tl_class' => 'w50'],
+            'eval' => [
+                'rgxp' => 'url',
+                'decodeEntities' => true,
+                'maxlength' => 255,
+                'dcaPicker' => true,
+                'tl_class' => 'w50',
+            ],
             'sql' => "varchar(255) NOT NULL default ''",
         ];
         $dca['fields']['canonicalKeepParams'] = [
             'exclude' => true,
             'inputType' => 'text',
-            'eval' => ['decodeEntities' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'eval' => [
+                'decodeEntities' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50',
+            ],
             'sql' => "varchar(255) NOT NULL default ''",
         ];
 
@@ -120,20 +132,18 @@ class CanonicalListener
             return;
         }
 
-        if ($pageModel->canonicalLink)
-        {
+        if ($pageModel->canonicalLink) {
             $url = $this->insertTagParser->replace($pageModel->canonicalLink);
 
             $mainRequest = $this->requestStack->getMainRequest();
 
             // Ensure absolute links
-            if (!\preg_match('@^https?://@', $url))
-            {
+            if (!\preg_match('@^https?://@', $url)) {
                 if (!$mainRequest) {
                     throw new \RuntimeException('The request stack did not contain a request');
                 }
 
-                $url = $request->getSchemeAndHttpHost().$request->getBasePath().'/'.$url;
+                $url = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/' . $url;
             }
 
             $this->headTagManager->setCanonical($url);
@@ -160,7 +170,7 @@ class CanonicalListener
         }
 
         $request = Request::create(
-            $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
+            $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo(),
             $request->getMethod(),
             $params
         );

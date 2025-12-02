@@ -20,7 +20,7 @@ class JsonLdManager implements ServiceSubscriberInterface
 {
     public const SCHEMA_ORG = 'https://schema.org';
 
-    private array              $graphs = [];
+    private array $graphs = [];
     private ContainerInterface $container;
 
     public function __construct(ContainerInterface $container)
@@ -84,7 +84,7 @@ class JsonLdManager implements ServiceSubscriberInterface
             throw new \InvalidArgumentException('Must provide the @type property!');
         }
 
-        $schemaClass = '\Spatie\SchemaOrg\\'.$jsonLd['@type'];
+        $schemaClass = '\Spatie\SchemaOrg\\' . $jsonLd['@type'];
 
         if (!class_exists($schemaClass)) {
             throw new \InvalidArgumentException(sprintf('Unknown schema.org type "%s" provided!', $jsonLd['@type']));
@@ -109,7 +109,7 @@ class JsonLdManager implements ServiceSubscriberInterface
         $services = [];
 
         if (class_exists(ResponseContextAccessor::class)) {
-            $services[] = '?'.ResponseContextAccessor::class;
+            $services[] = '?' . ResponseContextAccessor::class;
         }
 
         return $services;
@@ -132,8 +132,8 @@ class JsonLdManager implements ServiceSubscriberInterface
             return null;
         }
 
-        if (!$this->container->has(ResponseContextAccessor::class) ||
-            !$this->container->get(ResponseContextAccessor::class)->getResponseContext()->has(ContaoJsonLdManager::class)) {
+        if (!$this->container->has(ResponseContextAccessor::class)
+            || !$this->container->get(ResponseContextAccessor::class)->getResponseContext()->has(ContaoJsonLdManager::class)) {
             return null;
         }
 

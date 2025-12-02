@@ -22,15 +22,9 @@ class TagManager
      * @var TagInterface[]
      */
     private array $tags = [];
-    /**
-     * @var ContainerInterface
-     */
     private ContainerInterface $container;
     private InsertTagParser $insertTagParser;
 
-    /**
-     * TagManager constructor.
-     */
     public function __construct(ContainerInterface $container, InsertTagParser $insertTagParser)
     {
         $this->container = $container;

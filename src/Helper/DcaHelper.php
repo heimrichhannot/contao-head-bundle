@@ -71,7 +71,7 @@ class DcaHelper
 
         if (!$filter || \in_array(static::FILTER_META, $filter)) {
             foreach (self::TAGS_META as $metaTag) {
-                $return['meta_'.$metaTag] = 'Meta '.$metaTag;
+                $return['meta_' . $metaTag] = 'Meta ' . $metaTag;
             }
         }
 

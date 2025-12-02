@@ -19,9 +19,9 @@ use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
  */
 class ReplaceDynamicScriptTagsListener
 {
-    private array              $bundleConfig;
+    private array $bundleConfig;
     private HtmlHeadTagManager $headTagManager;
-    private JsonLdManager      $jsonLdManager;
+    private JsonLdManager $jsonLdManager;
 
     public function __construct(array $bundleConfig, HtmlHeadTagManager $headTagManager, JsonLdManager $jsonLdManager)
     {
@@ -30,7 +30,9 @@ class ReplaceDynamicScriptTagsListener
         $this->jsonLdManager = $jsonLdManager;
     }
 
-    /** @noinspection PhpUnnecessaryLocalVariableInspection */
+    /**
+     * @noinspection PhpUnnecessaryLocalVariableInspection
+     */
     public function __invoke(string $buffer): string
     {
         $buffer = $this->addHeadTags($buffer);
@@ -62,9 +64,9 @@ class ReplaceDynamicScriptTagsListener
         $nonce = '';
 
         if (method_exists(ContaoFramework::class, 'getNonce')) {
-            $nonce = '_'.ContaoFramework::getNonce();
+            $nonce = '_' . ContaoFramework::getNonce();
         }
 
-        return str_replace("[[$tag$nonce]]", "[[$tag$nonce]]".$content, $buffer);
+        return str_replace("[[$tag$nonce]]", "[[$tag$nonce]]" . $content, $buffer);
     }
 }
