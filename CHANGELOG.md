@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.0] - 2025-12-02
+- Added: support for contao 5.0
+
 ## [1.13.4] - 2024-02-13
 - Fixed: namespace issue
 
