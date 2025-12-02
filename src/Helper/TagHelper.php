@@ -35,7 +35,7 @@ class TagHelper
         return $description;
     }
 
-    public function getContaoTitleTag(PageModel $pageModel = null): string
+    public function getContaoTitleTag(?PageModel $pageModel = null): string
     {
         if (null === $pageModel) {
             $pageModel = $this->utils->request()->getCurrentPageModel();
@@ -54,7 +54,7 @@ class TagHelper
         return $titleTag;
     }
 
-    public function getFallbackPageTitle(PageModel $pageModel = null): string
+    public function getFallbackPageTitle(?PageModel $pageModel = null): string
     {
         if (null === $pageModel) {
             $pageModel = $this->utils->request()->getCurrentPageModel();

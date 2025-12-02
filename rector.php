@@ -9,6 +9,7 @@ use Rector\Php84\Rector\Param\ExplicitNullableParamTypeRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
+use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -16,10 +17,11 @@ return RectorConfig::configure()
 //        __DIR__ . '/contao',
 
     ])
+    ->withPhpVersion(PhpVersion::PHP_84)
     ->withRules([
         AddVoidReturnTypeWhereNoReturnRector::class,
         # In Vorbereitung für PHP 8.4:
-        // ExplicitNullableParamTypeRector::class
+         ExplicitNullableParamTypeRector::class,
     ])
 
     ->withImportNames(
@@ -33,7 +35,7 @@ return RectorConfig::configure()
     )
     ->withSets([
         LevelSetList::UP_TO_PHP_74,
-        ContaoLevelSetList::UP_TO_CONTAO_49,
+        ContaoLevelSetList::UP_TO_CONTAO_413,
         ContaoSetList::FQCN,
-        ContaoSetList::ANNOTATIONS_TO_ATTRIBUTES,
+//        ContaoSetList::ANNOTATIONS_TO_ATTRIBUTES,
     ]);

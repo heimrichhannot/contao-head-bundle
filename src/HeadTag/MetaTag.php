@@ -10,7 +10,7 @@ namespace HeimrichHannot\HeadBundle\HeadTag;
 
 class MetaTag extends AbstractHeadTag
 {
-    public function __construct(string $name, string $content = null)
+    public function __construct(string $name, ?string $content = null)
     {
         $this->setName($name);
 

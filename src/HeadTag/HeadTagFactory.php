@@ -31,7 +31,7 @@ class HeadTagFactory
      * Options:
      * - skip_legacy_mapping: (bool) do not check for legacy tag service names
      */
-    public function createTagByName(string $name, string $value = null, array $options = []): ?AbstractHeadTag
+    public function createTagByName(string $name, ?string $value = null, array $options = []): ?AbstractHeadTag
     {
         $options = array_merge([
             'skip_legacy_mapping' => false,
@@ -79,7 +79,7 @@ class HeadTagFactory
         return new TitleTag($pageTitle);
     }
 
-    public function createMetaTag(string $name, string $content = null): MetaTag
+    public function createMetaTag(string $name, ?string $content = null): MetaTag
     {
         if ('charset' === $name) {
             return new CharsetMetaTag($content ?? '');
