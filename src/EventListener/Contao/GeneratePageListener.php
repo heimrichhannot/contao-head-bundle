@@ -285,13 +285,13 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         if ($rootPageModel->headAddWebSiteSchema) {
-            $website = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->website();
+            $website = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webSite();
             $this->setPropertyIfNotSet($website, 'name', $this->insertTagParser->replace('{{page::mainPageTitle}}'));
             $this->setPropertyIfNotSet($website, 'url', $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]));
         }
 
         if ($rootPageModel->headAddWebPageSchema && !$this->utils->request()->isIndexPage($pageModel)) {
-            $webpage = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webpage();
+            $webpage = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webPage();
             $this->setPropertyIfNotSet($webpage, 'name', $title);
 
             if ($pageModel->description) {

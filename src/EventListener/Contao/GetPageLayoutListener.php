@@ -57,15 +57,16 @@ class GetPageLayoutListener
         $metaImageTag = $this->headTagManager->getMetaTag('og:image');
         $twitterImageTag = $this->headTagManager->getMetaTag('twitter:image');
 
-        if (!$metaImageTag && !$twitterImageTag) {
-            $imagePath = $this->pageImage($pageModel)
-                ?: $this->pageImage($this->utils->request()->getCurrentRootPageModel($pageModel));
-
-            if (!$imagePath) {
-                return;
-            }
+        if ($metaImageTag && $twitterImageTag) {
+            return;
         }
 
+        $imagePath = $this->pageImage($pageModel)
+            ?: $this->pageImage($this->utils->request()->getCurrentRootPageModel($pageModel));
+
+        if (!$imagePath) {
+            return;
+        }
 
         $baseUrl = $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]);
 
@@ -99,12 +100,19 @@ class GetPageLayoutListener
         return $this->utils->file()->getPathFromUuid($pageModel->headDefaultImage);
     }
 
+    /**
+     * @param \HeimrichHannot\HeadBundle\Model\PageModel $pageModel
+     */
     private function setTwitterTags(PageModel $pageModel): void
     {
-        if (($rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel)) && $rootPageModel->twitterSite) {
-            $this->headTagManager->addMetaTag(
-                new MetaTag('twitter:site', (str_starts_with($pageModel->twitterSite, '@') ? '@' : '') . $rootPageModel->twitterSite)
-            );
+        /** @var \HeimrichHannot\HeadBundle\Model\PageModel $rootPageModel */
+        $rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel);
+        if (!$rootPageModel || !$rootPageModel->twitterSite) {
+            return;
         }
+
+        $this->headTagManager->addMetaTag(
+            new MetaTag('twitter:site', (str_starts_with($pageModel->twitterSite, '@') ? '@' : '') . $rootPageModel->twitterSite)
+        );
     }
 }
