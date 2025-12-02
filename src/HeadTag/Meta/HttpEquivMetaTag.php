@@ -34,22 +34,22 @@ class HttpEquivMetaTag extends MetaTag
 
     public function getName(): string
     {
-        return static::TYPE;
+        return self::TYPE;
     }
 
     public function setHttpEquiv(string $value): self
     {
-        if (!\in_array($value, static::HttpEquivValues)) {
+        if (!\in_array($value, self::HttpEquivValues)) {
             trigger_error('Invalid value for http-equiv attribute!', \E_USER_WARNING);
         }
 
-        $this->setAttribute(static::TYPE, $value);
+        $this->setAttribute(self::TYPE, $value);
 
         return $this;
     }
 
     public function getHttpEquiv(): string
     {
-        return $this->getAttributes()[static::TYPE] ?? '';
+        return $this->getAttributes()[self::TYPE] ?? '';
     }
 }

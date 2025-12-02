@@ -82,7 +82,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         $this->prepareJsonLdContent($pageModel, $title);
-        $this->setOpenGraphTags($title ?? '', $description ?? '');
+        $this->setOpenGraphTags($title, $description ?? '');
         $this->setTwitterTags();
     }
 
@@ -204,9 +204,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
     }
 
-    /**
-     * @param string|null $description
-     */
     protected function setOpenGraphTags(string $title, string $description): void
     {
         if (!$this->headTagManager->getMetaTag('og:title')) {
@@ -260,6 +257,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
     private function prepareJsonLdContent(PageModel $pageModel, string $title): void
     {
+        /** @var \HeimrichHannot\HeadBundle\Model\PageModel $rootPageModel */
         $rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel);
 
         if (!$rootPageModel) {

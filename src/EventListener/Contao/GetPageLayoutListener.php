@@ -31,7 +31,8 @@ class GetPageLayoutListener
         Utils $utils,
         HtmlHeadTagManager $headTagManager,
         ImageFactoryInterface $imageFactory
-    ) {
+    )
+    {
         $this->utils = $utils;
         $this->headTagManager = $headTagManager;
         $this->imageFactory = $imageFactory;
@@ -48,6 +49,7 @@ class GetPageLayoutListener
     }
 
     /**
+     * @param \HeimrichHannot\HeadBundle\Model\PageModel $pageModel
      * @throws \Exception
      */
     private function setPageFallbackImage(PageModel $pageModel): void
@@ -55,41 +57,53 @@ class GetPageLayoutListener
         $metaImageTag = $this->headTagManager->getMetaTag('og:image');
         $twitterImageTag = $this->headTagManager->getMetaTag('twitter:image');
 
-        if (!$metaImageTag || !$twitterImageTag) {
-            $imagePath = null;
-
-            if ($pageModel->addHeadDefaultImage && $pageModel->headDefaultImage) {
-                $imagePath = $this->utils->file()->getPathFromUuid($pageModel->headDefaultImage);
-            } elseif (($rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel))
-                && $rootPageModel->addHeadDefaultImage && $rootPageModel->headDefaultImage) {
-                $imagePath = $this->utils->file()->getPathFromUuid($rootPageModel->headDefaultImage);
-            }
+        if (!$metaImageTag && !$twitterImageTag) {
+            $imagePath = $this->pageImage($pageModel)
+                ?: $this->pageImage($this->utils->request()->getCurrentRootPageModel($pageModel));
 
             if (!$imagePath) {
                 return;
             }
-        } else {
-            return;
         }
+
 
         $baseUrl = $this->utils->request()->getBaseUrl(['pageModel' => $pageModel]);
 
         if (!$metaImageTag) {
             $metaImagePath = $this->imageFactory->create($imagePath, [1200, 630, 'proportional'])->getPath();
-            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl.\DIRECTORY_SEPARATOR.$metaImagePath));
+            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl . \DIRECTORY_SEPARATOR . $metaImagePath));
         }
 
         if (!$twitterImageTag) {
             $twitterImagePath = $this->imageFactory->create($imagePath, [1024, 512, 'proportional'])->getPath();
-            $this->headTagManager->addMetaTag(new MetaTag('twitter:image', $baseUrl.\DIRECTORY_SEPARATOR.$twitterImagePath));
+            $this->headTagManager->addMetaTag(new MetaTag('twitter:image', $baseUrl . \DIRECTORY_SEPARATOR . $twitterImagePath));
         }
+    }
+
+    /**
+     * @param \HeimrichHannot\HeadBundle\Model\PageModel|null $pageModel
+     * @return string|null
+     */
+    protected function pageImage(?PageModel $pageModel): ?string
+    {
+        if (null === $pageModel) {
+            return null;
+        }
+        if (!$pageModel->addHeadDefaultImage) {
+            return null;
+        }
+        if (!$pageModel->headDefaultImage) {
+            return null;
+        }
+
+        return $this->utils->file()->getPathFromUuid($pageModel->headDefaultImage);
     }
 
     private function setTwitterTags(PageModel $pageModel): void
     {
         if (($rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel)) && $rootPageModel->twitterSite) {
             $this->headTagManager->addMetaTag(
-                new MetaTag('twitter:site', (str_starts_with($pageModel->twitterSite, '@') ? '@' : '').$rootPageModel->twitterSite)
+                new MetaTag('twitter:site', (str_starts_with($pageModel->twitterSite, '@') ? '@' : '') . $rootPageModel->twitterSite)
             );
         }
     }

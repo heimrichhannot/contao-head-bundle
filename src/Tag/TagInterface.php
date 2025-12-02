@@ -23,7 +23,7 @@ interface TagInterface
     /**
      * Set the tag content value.
      *
-     * @param string
+     * @param string $content
      */
     public function setContent($content);
 

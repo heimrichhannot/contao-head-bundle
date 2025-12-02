@@ -21,11 +21,11 @@ class TagManager
     /**
      * @var TagInterface[]
      */
-    private $tags = [];
+    private array $tags = [];
     /**
      * @var ContainerInterface
      */
-    private $container;
+    private ContainerInterface $container;
     private InsertTagParser $insertTagParser;
 
     /**
@@ -39,6 +39,9 @@ class TagManager
 
     public function registerTag(TagInterface $tag): void
     {
+        /**
+         * @phpstan-ignore method.notFound
+         */
         $services = $this->container->getParameter('huh.head.tags');
 
         $className = get_class($tag);
@@ -69,6 +72,9 @@ class TagManager
 
     public function loadTagFromService(string $name): ?TagInterface
     {
+        /**
+         * @phpstan-ignore method.notFound
+         */
         $services = $this->container->getParameter('huh.head.tags');
 
         if (!in_array($name, $services)) {

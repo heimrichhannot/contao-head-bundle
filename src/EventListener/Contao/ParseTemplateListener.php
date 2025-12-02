@@ -13,6 +13,7 @@ use Contao\Template;
 use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
+use HeimrichHannot\HeadBundle\Model\PageModel;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Spatie\SchemaOrg\Graph;
 use Spatie\SchemaOrg\Schema;
@@ -64,7 +65,9 @@ class ParseTemplateListener
             return;
         }
 
-        if (!($rootPageModel = $this->utils->request()->getCurrentRootPageModel()) || !$rootPageModel->headAddBreadcrumbSchema) {
+        /** @var PageModel|null $rootPageModel */
+        $rootPageModel = $this->utils->request()->getCurrentRootPageModel();
+        if (!$rootPageModel || !$rootPageModel->headAddBreadcrumbSchema) {
             return;
         }
 
