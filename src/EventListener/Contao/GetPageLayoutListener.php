@@ -98,7 +98,7 @@ class GetPageLayoutListener
             return null;
         }
 
-        return $this->utils->file()->getPathFromUuid($pageModel->headDefaultImage);
+        return $this->utils->file()->getPathFromUuid($pageModel->headDefaultImage, ['absolutePath' => true]);
     }
 
     /**
