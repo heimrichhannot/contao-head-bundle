@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.2] - 2025-12-17
+- Fixed: Relative image paths had to be absolute
+
 ## [1.14.1] - 2025-12-09
 - Fixed: BC break for legacy tags
 
