@@ -21,12 +21,9 @@ use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
-use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
-use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Spatie\SchemaOrg\BaseType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -40,9 +37,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
     private ContainerInterface $container;
     private HtmlHeadTagManager $headTagManager;
     private RequestStack $requestStack;
-    private Utils $utils;
     private TagHelper $tagHelper;
-    private JsonLdManager $jsonLdManager;
     private InsertTagParser $insertTagParser;
 
     public function __construct(
@@ -50,18 +45,14 @@ class GeneratePageListener implements ServiceSubscriberInterface
         array $bundleConfig,
         HtmlHeadTagManager $headTagManager,
         RequestStack $requestStack,
-        Utils $utils,
         TagHelper $tagHelper,
-        JsonLdManager $jsonLdManager,
         InsertTagParser $insertTagParser,
     ) {
         $this->config = $bundleConfig;
         $this->container = $container;
         $this->headTagManager = $headTagManager;
         $this->requestStack = $requestStack;
-        $this->utils = $utils;
         $this->tagHelper = $tagHelper;
-        $this->jsonLdManager = $jsonLdManager;
         $this->insertTagParser = $insertTagParser;
     }
 
@@ -81,7 +72,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $title = $this->insertTagParser->replace('{{page::pageTitle}}');
         }
 
-        $this->prepareJsonLdContent($pageModel, $title);
         $this->setOpenGraphTags($title, $description ?? '');
         $this->setTwitterTags();
     }
@@ -253,59 +243,5 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         return null;
-    }
-
-    private function prepareJsonLdContent(PageModel $pageModel, string $title): void
-    {
-        /** @var \HeimrichHannot\HeadBundle\Model\PageModel $rootPageModel */
-        $rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel);
-
-        if (!$rootPageModel) {
-            return;
-        }
-
-        if ($rootPageModel->headAddOrganisationSchema) {
-            $organisation = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->organization();
-
-            if ($rootPageModel->headOrganisationName) {
-                $organisation->name($rootPageModel->headOrganisationName);
-            }
-
-            if ($rootPageModel->headOrganisationWebsite) {
-                $organisation->url($rootPageModel->headOrganisationWebsite);
-            }
-
-            if ($rootPageModel->headOrganisationLogo) {
-                $path = $this->utils->file()->getPathFromUuid($rootPageModel->headOrganisationLogo);
-
-                if (null !== $path) {
-                    $organisation->logo($path);
-                }
-            }
-        }
-
-        if ($rootPageModel->headAddWebSiteSchema) {
-            $website = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webSite();
-            $this->setPropertyIfNotSet($website, 'name', $this->insertTagParser->replace('{{page::mainPageTitle}}'));
-            $this->setPropertyIfNotSet($website, 'url', $this->utils->request()->getBaseUrl([
-                'pageModel' => $pageModel,
-            ]));
-        }
-
-        if ($rootPageModel->headAddWebPageSchema && !$this->utils->request()->isIndexPage($pageModel)) {
-            $webpage = $this->jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webPage();
-            $this->setPropertyIfNotSet($webpage, 'name', $title);
-
-            if ($pageModel->description) {
-                $this->setPropertyIfNotSet($webpage, 'description', $pageModel->description);
-            }
-        }
-    }
-
-    private function setPropertyIfNotSet(BaseType $type, string $property, string $value): void
-    {
-        if (!$type->getProperty($property)) {
-            $type->setProperty($property, $value);
-        }
     }
 }

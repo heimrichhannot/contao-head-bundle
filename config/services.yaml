@@ -6,7 +6,7 @@ services:
       Psr\Container\ContainerInterface: '@service_container'
 
   HeimrichHannot\HeadBundle\:
-    resource: '../src/{EventListener,Helper,Twig}/*'
+    resource: '../src/{EventListener,Helper}/*'
     exclude: '../src/Helper/LegacyHelper.php'
     bind:
       $bundleConfig: '%huh_head%'

@@ -9,10 +9,8 @@
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager as ContaoJsonLdManager;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
-use HeimrichHannot\HeadBundle\Manager\JsonLdManager;
 
 /**
  * @Hook("replaceDynamicScriptTags")
@@ -21,13 +19,11 @@ class ReplaceDynamicScriptTagsListener
 {
     private array $bundleConfig;
     private HtmlHeadTagManager $headTagManager;
-    private JsonLdManager $jsonLdManager;
 
-    public function __construct(array $bundleConfig, HtmlHeadTagManager $headTagManager, JsonLdManager $jsonLdManager)
+    public function __construct(array $bundleConfig, HtmlHeadTagManager $headTagManager)
     {
         $this->bundleConfig = $bundleConfig;
         $this->headTagManager = $headTagManager;
-        $this->jsonLdManager = $jsonLdManager;
     }
 
     /**
@@ -36,7 +32,6 @@ class ReplaceDynamicScriptTagsListener
     public function __invoke(string $buffer): string
     {
         $buffer = $this->addHeadTags($buffer);
-        $buffer = $this->addJsonLs($buffer);
 
         return $buffer;
     }
@@ -49,16 +44,6 @@ class ReplaceDynamicScriptTagsListener
 
         return $buffer;
     }
-
-    private function addJsonLs(string $buffer): string
-    {
-        if (class_exists(ContaoJsonLdManager::class)) {
-            return $buffer;
-        }
-
-        return $this->replace($buffer, 'TL_BODY', $this->jsonLdManager->collectFinalScriptFromGraphs());
-    }
-
     private function replace(string $buffer, string $tag, string $content): string
     {
         $nonce = '';
