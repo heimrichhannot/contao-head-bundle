@@ -43,6 +43,8 @@ Following schema.org types are available:
 * @WebPage
 * @BreadcrumbList
 
+![Screenshot Structured Data Settings](docs%2Fimg%2Fscreenshot_backend_structured_data.png)
+
 ## Integration
 Use head bundle api set in your code.
 
