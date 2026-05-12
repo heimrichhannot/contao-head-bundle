@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- Removed: json-ld backport and structured data page settings
+- Removed: json-ld backport
 
 ## [1.14.2] - 2025-12-17
 - Fixed: Relative image paths had to be absolute

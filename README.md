@@ -7,6 +7,7 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
 
 ## Features
 - Provide a nice api to set head tags like meta, title, base, link
+- Provide additional schema.org json-ld data
 - Sets important meta tags like og:title, og:description, og:url and twitter:card out of the box
 - Allow setting open graph and twitter fallback image on root page
 - Allow setting twitter author per root page
@@ -32,6 +33,15 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
 In your root page, you can activate to add fallback image (og:image and twitter:image) and twitter username (twitter:site) meta tags to you web page.
 
 ![Screenshot Meta Data Settings](docs%2Fimg%2Fscreenshot_backend_meta_data.png)
+
+### Add additional schema.org data
+
+In your root page, you can activate additional structured data for your web page.
+Following schema.org types are available:
+* @Organization
+* @WebSite
+* @WebPage
+* @BreadcrumbList
 
 ## Integration
 Use head bundle api set in your code.

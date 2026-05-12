@@ -10,6 +10,7 @@ namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\LayoutModel;
@@ -21,9 +22,11 @@ use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
+use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Spatie\SchemaOrg\BaseType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -33,10 +36,13 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class GeneratePageListener implements ServiceSubscriberInterface
 {
+    private const SCHEMA_ORG = 'https://schema.org';
+
     private array $config;
     private ContainerInterface $container;
     private HtmlHeadTagManager $headTagManager;
     private RequestStack $requestStack;
+    private Utils $utils;
     private TagHelper $tagHelper;
     private InsertTagParser $insertTagParser;
 
@@ -45,6 +51,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         array $bundleConfig,
         HtmlHeadTagManager $headTagManager,
         RequestStack $requestStack,
+        Utils $utils,
         TagHelper $tagHelper,
         InsertTagParser $insertTagParser,
     ) {
@@ -52,6 +59,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         $this->container = $container;
         $this->headTagManager = $headTagManager;
         $this->requestStack = $requestStack;
+        $this->utils = $utils;
         $this->tagHelper = $tagHelper;
         $this->insertTagParser = $insertTagParser;
     }
@@ -72,6 +80,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $title = $this->insertTagParser->replace('{{page::pageTitle}}');
         }
 
+        $this->prepareJsonLdContent($pageModel, $title);
         $this->setOpenGraphTags($title, $description ?? '');
         $this->setTwitterTags();
     }
@@ -243,5 +252,80 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         return null;
+    }
+
+    private function prepareJsonLdContent(PageModel $pageModel, string $title): void
+    {
+        $jsonLdManager = $this->getJsonLdManager();
+
+        if (!$jsonLdManager) {
+            return;
+        }
+
+        /** @var \HeimrichHannot\HeadBundle\Model\PageModel $rootPageModel */
+        $rootPageModel = $this->utils->request()->getCurrentRootPageModel($pageModel);
+
+        if (!$rootPageModel) {
+            return;
+        }
+
+        if ($rootPageModel->headAddOrganisationSchema) {
+            $organisation = $jsonLdManager->getGraphForSchema(self::SCHEMA_ORG)->organization();
+
+            if ($rootPageModel->headOrganisationName) {
+                $organisation->name($rootPageModel->headOrganisationName);
+            }
+
+            if ($rootPageModel->headOrganisationWebsite) {
+                $organisation->url($rootPageModel->headOrganisationWebsite);
+            }
+
+            if ($rootPageModel->headOrganisationLogo) {
+                $path = $this->utils->file()->getPathFromUuid($rootPageModel->headOrganisationLogo);
+
+                if (null !== $path) {
+                    $organisation->logo($path);
+                }
+            }
+        }
+
+        if ($rootPageModel->headAddWebSiteSchema) {
+            $website = $jsonLdManager->getGraphForSchema(self::SCHEMA_ORG)->webSite();
+            $this->setPropertyIfNotSet($website, 'name', $this->insertTagParser->replace('{{page::mainPageTitle}}'));
+            $this->setPropertyIfNotSet($website, 'url', $this->utils->request()->getBaseUrl([
+                'pageModel' => $pageModel,
+            ]));
+        }
+
+        if ($rootPageModel->headAddWebPageSchema && !$this->utils->request()->isIndexPage($pageModel)) {
+            $webpage = $jsonLdManager->getGraphForSchema(self::SCHEMA_ORG)->webPage();
+            $this->setPropertyIfNotSet($webpage, 'name', $title);
+
+            if ($pageModel->description) {
+                $this->setPropertyIfNotSet($webpage, 'description', $pageModel->description);
+            }
+        }
+    }
+
+    private function getJsonLdManager(): ?JsonLdManager
+    {
+        if (!$this->container->has(ResponseContextAccessor::class)) {
+            return null;
+        }
+
+        $responseContext = $this->container->get(ResponseContextAccessor::class)->getResponseContext();
+
+        if (!$responseContext->has(JsonLdManager::class)) {
+            return null;
+        }
+
+        return $responseContext->get(JsonLdManager::class);
+    }
+
+    private function setPropertyIfNotSet(BaseType $type, string $property, string $value): void
+    {
+        if (!$type->getProperty($property)) {
+            $type->setProperty($property, $value);
+        }
     }
 }
