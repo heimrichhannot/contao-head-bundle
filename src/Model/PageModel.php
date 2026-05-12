@@ -7,7 +7,7 @@ namespace HeimrichHannot\HeadBundle\Model;
  * @property bool   $addHeadDefaultImage
  * @property string $headDefaultImage
  * @property bool   $headAddOrganisationSchema
- * @property string $headOrganisationSchemaName
+ * @property string $headOrganisationName
  * @property string $headOrganisationLogo
  * @property string $headOrganisationWebsite
  * @property bool   $headAddWebSiteSchema

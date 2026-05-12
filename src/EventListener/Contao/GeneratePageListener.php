@@ -270,8 +270,8 @@ class GeneratePageListener implements ServiceSubscriberInterface
         if ($rootPageModel->headAddOrganisationSchema) {
             $organisation = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->organization();
 
-            if ($rootPageModel->headOrganisationSchemaName) {
-                $organisation->name($rootPageModel->headOrganisationSchemaName);
+            if ($rootPageModel->headOrganisationName) {
+                $organisation->name($rootPageModel->headOrganisationName);
             }
 
             if ($rootPageModel->headOrganisationWebsite) {
