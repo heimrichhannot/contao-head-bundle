@@ -38,7 +38,7 @@ PaletteManipulator::create()
 $dca['palettes']['__selector__'][] = 'addHeadDefaultImage';
 $dca['palettes']['__selector__'][] = 'headAddOrganisationSchema';
 $dca['subpalettes']['addHeadDefaultImage'] = 'headDefaultImage';
-$dca['subpalettes']['headAddOrganisationSchema'] = 'headOrganisationName,headOrganisationWebsite,headOrganisationLogo';
+$dca['subpalettes']['headAddOrganisationSchema'] = 'headOrganisationSchemaName,headOrganisationWebsite,headOrganisationLogo';
 
 /**
  * fields.
@@ -74,7 +74,7 @@ $fields = [
         ],
         'sql' => "char(1) NOT NULL default ''",
     ],
-    'headOrganisationName' => [
+    'headOrganisationSchemaName' => [
         'inputType' => 'text',
         'exclude' => true,
         'eval' => [
