@@ -36,8 +36,6 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class GeneratePageListener implements ServiceSubscriberInterface
 {
-    private const SCHEMA_ORG = 'https://schema.org';
-
     private array $config;
     private ContainerInterface $container;
     private HtmlHeadTagManager $headTagManager;
@@ -270,7 +268,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         if ($rootPageModel->headAddOrganisationSchema) {
-            $organisation = $jsonLdManager->getGraphForSchema(self::SCHEMA_ORG)->organization();
+            $organisation = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->organization();
 
             if ($rootPageModel->headOrganisationName) {
                 $organisation->name($rootPageModel->headOrganisationName);
@@ -290,7 +288,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         if ($rootPageModel->headAddWebSiteSchema) {
-            $website = $jsonLdManager->getGraphForSchema(self::SCHEMA_ORG)->webSite();
+            $website = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webSite();
             $this->setPropertyIfNotSet($website, 'name', $this->insertTagParser->replace('{{page::mainPageTitle}}'));
             $this->setPropertyIfNotSet($website, 'url', $this->utils->request()->getBaseUrl([
                 'pageModel' => $pageModel,
@@ -298,7 +296,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
 
         if ($rootPageModel->headAddWebPageSchema && !$this->utils->request()->isIndexPage($pageModel)) {
-            $webpage = $jsonLdManager->getGraphForSchema(self::SCHEMA_ORG)->webPage();
+            $webpage = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webPage();
             $this->setPropertyIfNotSet($webpage, 'name', $title);
 
             if ($pageModel->description) {

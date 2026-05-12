@@ -25,8 +25,6 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class ParseTemplateListener implements ServiceSubscriberInterface
 {
-    private const SCHEMA_ORG = 'https://schema.org';
-
     private array $bundleConfig;
     private HtmlHeadTagManager $headTagManager;
     private ContainerInterface $container;
@@ -98,7 +96,7 @@ class ParseTemplateListener implements ServiceSubscriberInterface
             return;
         }
 
-        $breadcrumb = $jsonLdManager->getGraphForSchema(self::SCHEMA_ORG)->breadcrumbList();
+        $breadcrumb = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->breadcrumbList();
 
         if (!$breadcrumb->getProperty('itemListElement')) {
             $listItems = [];
