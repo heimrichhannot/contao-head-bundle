@@ -237,6 +237,8 @@ class HtmlHeadTagManager
      */
     public function renderTags(array $options = []): string
     {
+        $htmlBag = $this->getHtmlHeadBag();
+
         $options = array_merge([
             'skip_tags' => [],
         ], $options);
@@ -247,8 +249,8 @@ class HtmlHeadTagManager
             $buffer .= $this->baseTag->generate()."\n";
         }
 
-        if (!\in_array(TitleTag::NAME, $options['skip_tags']) && $this->getTitleTag()) {
-            $buffer .= $this->titleTag->generate()."\n";
+        if (!$htmlBag && !\in_array(TitleTag::NAME, $options['skip_tags']) && $this->getTitleTag()) {
+            $buffer .= $this->getTitleTag()->generate()."\n";
         }
 
         foreach ($this->metaTags as $metaTag) {

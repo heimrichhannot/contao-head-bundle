@@ -36,7 +36,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,
-        private array $config,
         private readonly HtmlHeadTagManager $headTagManager,
         private readonly RequestStack $requestStack,
         private readonly Utils $utils,
@@ -48,14 +47,8 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
     {
-        if ($this->config['use_contao_head'] ?? false) {
-            $this->setContaoHead($layout, $pageModel, $pageRegular);
-            $description = $pageModel->description;
-        } else {
-            $this->setHeadTagsFromContao($pageRegular, $pageModel);
-            $description = ($descriptionTag = $this->headTagManager->getMetaTag('description')) ? $descriptionTag->getContent() : '';
-        }
-
+        $this->setContaoHead($layout, $pageModel, $pageRegular);
+        $description = $pageModel->description;
         $headBag = $this->getHtmlHeadBag();
         $title = $headBag?->getTitle() ?: '';
 
@@ -111,60 +104,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
                 $htmlHeadBag->setMetaRobots($tag->getAttributes()['content']);
             }
             $this->headTagManager->removeMetaTag('robots');
-        }
-
-        // Canonical Link
-        if ($htmlHeadBag && ($tag = $this->headTagManager->getCanonical())) {
-            $pageModel->enableCanonical = true;
-            $htmlHeadBag->setCanonicalUri($tag->getAttributes()['href']);
-            $this->headTagManager->setCanonical(null);
-        }
-    }
-
-    /**
-     * Set head tags from contao setting/ variables (use head bundle output instead of contao template variables).
-     */
-    protected function setHeadTagsFromContao(PageRegular $pageRegular, PageModel $pageModel): void
-    {
-        $htmlHeadBag = $this->getHtmlHeadBag();
-
-        // Charset
-        if (!$this->headTagManager->getMetaTag('charset')) {
-            $this->headTagManager->addMetaTag(new CharsetMetaTag($pageRegular->Template->charset));
-        }
-
-        // Base tag
-        if (!$this->headTagManager->getBaseTag()) {
-            $this->headTagManager->setBaseTag(new BaseTag($pageRegular->Template->base));
-        }
-
-        // Description
-        if (!$this->headTagManager->getMetaTag('description')) {
-            $description = $pageModel->description;
-
-            if ($htmlHeadBag && !empty($htmlHeadBag->getMetaDescription())) {
-                $description = $htmlHeadBag->getMetaDescription();
-            }
-            $this->headTagManager->addMetaTag(new MetaTag('description', $this->tagHelper->prepareDescription($description ?? '')));
-        }
-
-        // Robots
-        if (!$this->headTagManager->getMetaTag('robots')) {
-            $robots = $pageModel->robots ?: 'index,follow';
-
-            if ($htmlHeadBag && !empty($htmlHeadBag->getMetaRobots())) {
-                $robots = $htmlHeadBag->getMetaRobots();
-            }
-            $this->headTagManager->addMetaTag(new MetaTag('robots', $robots));
-        }
-
-        // Canonical Link
-        if (!$this->headTagManager->getCanonical()) {
-            if ($htmlHeadBag && $pageModel->enableCanonical) {
-                $this->headTagManager->setCanonical(
-                    htmlspecialchars($htmlHeadBag->getCanonicalUriForRequest($this->requestStack->getCurrentRequest()))
-                );
-            }
         }
     }
 
