@@ -29,7 +29,7 @@ class HtmlHeadTagManager
     private array $linkTags = [];
     private ?TitleTag $titleTag = null;
 
-    public function __construct(private HeadTagFactory $headTagFactory, private InsertTagParser $insertTagParser)
+    public function __construct(private readonly HeadTagFactory $headTagFactory, private readonly InsertTagParser $insertTagParser)
     {
     }
 

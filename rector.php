@@ -34,8 +34,8 @@ return RectorConfig::configure()
         symfony: true,
     )
     ->withSets([
-        LevelSetList::UP_TO_PHP_80,
-        ContaoLevelSetList::UP_TO_CONTAO_413,
+        LevelSetList::UP_TO_PHP_82,
+        ContaoLevelSetList::UP_TO_CONTAO_53,
         ContaoSetList::FQCN,
         ContaoSetList::ANNOTATIONS_TO_ATTRIBUTES,
     ]);

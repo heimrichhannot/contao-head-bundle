@@ -34,7 +34,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 #[AsHook('generatePage', priority: -10)]
 class GeneratePageListener implements ServiceSubscriberInterface
 {
-    public function __construct(private ContainerInterface $container, private array $config, private HtmlHeadTagManager $headTagManager, private RequestStack $requestStack, private Utils $utils, private TagHelper $tagHelper, private InsertTagParser $insertTagParser)
+    public function __construct(private readonly ContainerInterface $container, private array $config, private readonly HtmlHeadTagManager $headTagManager, private readonly RequestStack $requestStack, private readonly Utils $utils, private readonly TagHelper $tagHelper, private readonly InsertTagParser $insertTagParser)
     {
     }
 

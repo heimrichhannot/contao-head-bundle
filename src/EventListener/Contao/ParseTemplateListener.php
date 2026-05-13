@@ -15,7 +15,7 @@ use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 #[AsHook('parseTemplate')]
 class ParseTemplateListener
 {
-    public function __construct(private array $bundleConfig, private HtmlHeadTagManager $headTagManager)
+    public function __construct(private array $bundleConfig, private readonly HtmlHeadTagManager $headTagManager)
     {
     }
 

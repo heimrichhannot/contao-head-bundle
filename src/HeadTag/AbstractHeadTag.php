@@ -28,7 +28,7 @@ abstract class AbstractHeadTag
 
         $compiled = implode('="%s" ', array_keys($this->attributes)) . '="%s"';
 
-        return vsprintf($compiled, array_map('htmlspecialchars', array_values($this->attributes)));
+        return vsprintf($compiled, array_map(htmlspecialchars(...), array_values($this->attributes)));
     }
 
     public function setAttribute(string $attribute, string $value): self

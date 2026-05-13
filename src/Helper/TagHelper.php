@@ -16,7 +16,7 @@ use HeimrichHannot\UtilsBundle\Util\Utils;
 
 class TagHelper
 {
-    public function __construct(private Utils $utils, private InsertTagParser $insertTagParser)
+    public function __construct(private readonly Utils $utils, private readonly InsertTagParser $insertTagParser)
     {
     }
 

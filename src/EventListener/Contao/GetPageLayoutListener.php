@@ -21,7 +21,7 @@ use HeimrichHannot\UtilsBundle\Util\Utils;
 #[AsHook('getPageLayout', priority: -10)]
 class GetPageLayoutListener
 {
-    public function __construct(private Utils $utils, private HtmlHeadTagManager $headTagManager, private ImageFactoryInterface $imageFactory)
+    public function __construct(private readonly Utils $utils, private readonly HtmlHeadTagManager $headTagManager, private readonly ImageFactoryInterface $imageFactory)
     {
     }
 
