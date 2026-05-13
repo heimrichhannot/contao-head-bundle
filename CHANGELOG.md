@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Removed: json-ld backport
 - Removed: @WebPage schema integration, because it is provided by Contao core
 - Removed: @BreadcrumbList schema integration, because it is provided by Contao core
+- Removed: canonical links backport
 
 ## [1.14.2] - 2025-12-17
 - Fixed: Relative image paths had to be absolute

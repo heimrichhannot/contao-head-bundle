@@ -11,7 +11,6 @@ This bundle enhances the handling of html `<head>` section tags. It provides ser
 - Sets important meta tags like og:title, og:description, og:url and twitter:card out of the box
 - Allow setting open graph and twitter fallback image on root page
 - Allow setting twitter author per root page
-- Backport canonical url option from contao 4.13 for contao 4.9+
 
 ## Usage
 
