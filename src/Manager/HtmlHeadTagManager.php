@@ -29,8 +29,10 @@ class HtmlHeadTagManager
     private array $linkTags = [];
     private ?TitleTag $titleTag = null;
 
-    public function __construct(private readonly HeadTagFactory $headTagFactory, private readonly InsertTagParser $insertTagParser)
-    {
+    public function __construct(
+        private readonly HeadTagFactory $headTagFactory,
+        private readonly InsertTagParser $insertTagParser,
+    ) {
     }
 
     public function getTag(string $name): ?AbstractHeadTag
@@ -76,7 +78,7 @@ class HtmlHeadTagManager
             return;
         }
 
-        throw new UnsupportedTagException('Tag with attributes ' . $tag->generateAttributeString() . ' is currently not supported by HtmlHeadTagManager!');
+        throw new UnsupportedTagException('Tag with attributes '.$tag->generateAttributeString().' is currently not supported by HtmlHeadTagManager!');
     }
 
     public function getBaseTag(): ?BaseTag
@@ -193,31 +195,31 @@ class HtmlHeadTagManager
         $buffer = '';
 
         if (!\in_array(BaseTag::NAME, $options['skip_tags']) && $this->getBaseTag()) {
-            $buffer .= $this->baseTag->generate() . "\n";
+            $buffer .= $this->baseTag->generate()."\n";
         }
 
         if (!\in_array(TitleTag::NAME, $options['skip_tags']) && $this->getTitleTag()) {
-            $buffer .= $this->titleTag->generate() . "\n";
+            $buffer .= $this->titleTag->generate()."\n";
         }
 
         foreach ($this->metaTags as $metaTag) {
-            if (\in_array('meta_' . $metaTag->getName(), $options['skip_tags'])) {
-                unset($options['skip_tags']['meta_' . $metaTag->getName()]);
+            if (\in_array('meta_'.$metaTag->getName(), $options['skip_tags'])) {
+                unset($options['skip_tags']['meta_'.$metaTag->getName()]);
 
                 continue;
             }
 
-            $buffer .= $metaTag->generate() . "\n";
+            $buffer .= $metaTag->generate()."\n";
         }
 
         foreach ($this->linkTags as $linkTag) {
-            if (\in_array('link_' . $linkTag->getName(), $options['skip_tags']) || ('canonical' === $linkTag->getName() && \in_array('canonical', $options['skip_tags']))) {
-                unset($options['skip_tags']['link_' . $linkTag->getName()]);
+            if (\in_array('link_'.$linkTag->getName(), $options['skip_tags']) || ('canonical' === $linkTag->getName() && \in_array('canonical', $options['skip_tags']))) {
+                unset($options['skip_tags']['link_'.$linkTag->getName()]);
 
                 continue;
             }
 
-            $buffer .= $linkTag->generate() . "\n";
+            $buffer .= $linkTag->generate()."\n";
         }
 
         return $buffer;

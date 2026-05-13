@@ -15,8 +15,10 @@ use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 #[AsHook('replaceDynamicScriptTags')]
 class ReplaceDynamicScriptTagsListener
 {
-    public function __construct(private array $bundleConfig, private readonly HtmlHeadTagManager $headTagManager)
-    {
+    public function __construct(
+        private array $bundleConfig,
+        private readonly HtmlHeadTagManager $headTagManager,
+    ) {
     }
 
     /**
@@ -37,14 +39,15 @@ class ReplaceDynamicScriptTagsListener
 
         return $buffer;
     }
+
     private function replace(string $buffer, string $tag, string $content): string
     {
         $nonce = '';
 
         if (method_exists(ContaoFramework::class, 'getNonce')) {
-            $nonce = '_' . ContaoFramework::getNonce();
+            $nonce = '_'.ContaoFramework::getNonce();
         }
 
-        return str_replace("[[$tag$nonce]]", "[[$tag$nonce]]" . $content, $buffer);
+        return str_replace("[[$tag$nonce]]", "[[$tag$nonce]]".$content, $buffer);
     }
 }

@@ -15,8 +15,10 @@ use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 #[AsHook('parseTemplate')]
 class ParseTemplateListener
 {
-    public function __construct(private array $bundleConfig, private readonly HtmlHeadTagManager $headTagManager)
-    {
+    public function __construct(
+        private array $bundleConfig,
+        private readonly HtmlHeadTagManager $headTagManager,
+    ) {
     }
 
     public function __invoke(Template $template): void
@@ -31,7 +33,7 @@ class ParseTemplateListener
         }
 
         if (!($this->bundleConfig['use_contao_variables'] ?? false)) {
-            $template->meta = (fn(array $skip = []) => $this->headTagManager->renderTags([
+            $template->meta = (fn (array $skip = []) => $this->headTagManager->renderTags([
                 'skip_tags' => $skip,
             ]));
         }

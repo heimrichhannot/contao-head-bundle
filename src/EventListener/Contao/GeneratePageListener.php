@@ -34,8 +34,15 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 #[AsHook('generatePage', priority: -10)]
 class GeneratePageListener implements ServiceSubscriberInterface
 {
-    public function __construct(private readonly ContainerInterface $container, private array $config, private readonly HtmlHeadTagManager $headTagManager, private readonly RequestStack $requestStack, private readonly Utils $utils, private readonly TagHelper $tagHelper, private readonly InsertTagParser $insertTagParser)
-    {
+    public function __construct(
+        private readonly ContainerInterface $container,
+        private array $config,
+        private readonly HtmlHeadTagManager $headTagManager,
+        private readonly RequestStack $requestStack,
+        private readonly Utils $utils,
+        private readonly TagHelper $tagHelper,
+        private readonly InsertTagParser $insertTagParser,
+    ) {
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
@@ -62,7 +69,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
     public static function getSubscribedServices(): array
     {
         return [
-            '?' . ResponseContextAccessor::class,
+            '?'.ResponseContextAccessor::class,
         ];
     }
 
@@ -196,7 +203,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
                 $url = $headTagBag->getCanonicalUriForRequest($request);
             } else {
                 $url = Request::create(
-                    $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo(),
+                    $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
                     $request->getMethod(),
                 )->getUri();
             }
@@ -270,7 +277,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
                 'pageModel' => $pageModel,
             ]));
         }
-
     }
 
     private function getJsonLdManager(): ?JsonLdManager

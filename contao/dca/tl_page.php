@@ -46,21 +46,31 @@ $fields = [
         'label' => &$GLOBALS['TL_LANG']['tl_page']['addHeadDefaultImage'],
         'exclude' => true,
         'inputType' => 'checkbox',
-        'eval' => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
+        'eval' => [
+            'submitOnChange' => true,
+            'tl_class' => 'w50 clr',
+        ],
         'sql' => "char(1) NOT NULL default ''",
     ],
     'headDefaultImage' => [
         'label' => &$GLOBALS['TL_LANG']['tl_page']['headDefaultImage'],
         'exclude' => true,
         'inputType' => 'fileTree',
-        'eval' => ['fieldType' => 'radio', 'filesOnly' => true, 'extensions' => 'jpg,jpeg,png', 'mandatory' => true],
+        'eval' => [
+            'fieldType' => 'radio',
+            'filesOnly' => true,
+            'extensions' => 'jpg,jpeg,png',
+            'mandatory' => true,
+        ],
         'sql' => 'binary(16) NULL',
     ],
     'twitterSite' => [
         'label' => &$GLOBALS['TL_LANG']['tl_page']['twitterSite'],
         'inputType' => 'text',
         'exclude' => true,
-        'eval' => ['tl_class' => 'w50 clr'],
+        'eval' => [
+            'tl_class' => 'w50 clr',
+        ],
         'sql' => "varchar(255) NOT NULL DEFAULT ''",
     ],
     'headAddOrganisationSchema' => [
@@ -94,7 +104,12 @@ $fields = [
     'headOrganisationLogo' => [
         'inputType' => 'fileTree',
         'exclude' => true,
-        'eval' => ['tl_class' => 'w50 clr', 'fieldType' => 'radio', 'filesOnly' => true, 'extensions' => 'jpg,jpeg,png'],
+        'eval' => [
+            'tl_class' => 'w50 clr',
+            'fieldType' => 'radio',
+            'filesOnly' => true,
+            'extensions' => 'jpg,jpeg,png',
+        ],
         'sql' => 'binary(16) NULL',
     ],
     'headAddWebSiteSchema' => [

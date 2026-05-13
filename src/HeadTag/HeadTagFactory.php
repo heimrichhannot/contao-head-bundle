@@ -15,15 +15,15 @@ use HeimrichHannot\HeadBundle\Helper\TagHelper;
 
 class HeadTagFactory
 {
-    public function __construct(private readonly TagHelper $tagHelper)
-    {
+    public function __construct(
+        private readonly TagHelper $tagHelper,
+    ) {
     }
 
     /**
      * Create a tag by name.
      * For tags with multiple occurrences like meta, prefix name with tag name,
      * for example meta_ (meta_description, meta_og:title, ...) for meta tags.
-     *
      */
     public function createTagByName(string $name, ?string $value = null): ?AbstractHeadTag
     {

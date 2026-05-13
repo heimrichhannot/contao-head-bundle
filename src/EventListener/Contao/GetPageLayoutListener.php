@@ -21,8 +21,11 @@ use HeimrichHannot\UtilsBundle\Util\Utils;
 #[AsHook('getPageLayout', priority: -10)]
 class GetPageLayoutListener
 {
-    public function __construct(private readonly Utils $utils, private readonly HtmlHeadTagManager $headTagManager, private readonly ImageFactoryInterface $imageFactory)
-    {
+    public function __construct(
+        private readonly Utils $utils,
+        private readonly HtmlHeadTagManager $headTagManager,
+        private readonly ImageFactoryInterface $imageFactory,
+    ) {
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
@@ -62,12 +65,12 @@ class GetPageLayoutListener
 
         if (!$metaImageTag) {
             $metaImagePath = $this->imageFactory->create($imagePath, [1200, 630, 'proportional'])->getPath();
-            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl . \DIRECTORY_SEPARATOR . $metaImagePath));
+            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl.\DIRECTORY_SEPARATOR.$metaImagePath));
         }
 
         if (!$twitterImageTag) {
             $twitterImagePath = $this->imageFactory->create($imagePath, [1024, 512, 'proportional'])->getPath();
-            $this->headTagManager->addMetaTag(new MetaTag('twitter:image', $baseUrl . \DIRECTORY_SEPARATOR . $twitterImagePath));
+            $this->headTagManager->addMetaTag(new MetaTag('twitter:image', $baseUrl.\DIRECTORY_SEPARATOR.$twitterImagePath));
         }
     }
 
@@ -86,7 +89,9 @@ class GetPageLayoutListener
             return null;
         }
 
-        return $this->utils->file()->getPathFromUuid($pageModel->headDefaultImage, ['absolutePath' => true]);
+        return $this->utils->file()->getPathFromUuid($pageModel->headDefaultImage, [
+            'absolutePath' => true,
+        ]);
     }
 
     /**
@@ -101,7 +106,7 @@ class GetPageLayoutListener
         }
 
         $this->headTagManager->addMetaTag(
-            new MetaTag('twitter:site', (str_starts_with($pageModel->twitterSite, '@') ? '@' : '') . $rootPageModel->twitterSite)
+            new MetaTag('twitter:site', (str_starts_with($pageModel->twitterSite, '@') ? '@' : '').$rootPageModel->twitterSite)
         );
     }
 }
