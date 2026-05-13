@@ -11,7 +11,6 @@ namespace HeimrichHannot\HeadBundle\HeadTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\CharsetMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\HttpEquivMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
-use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
 use HeimrichHannot\HeadBundle\Helper\TagHelper;
 
 class HeadTagFactory
@@ -28,19 +27,9 @@ class HeadTagFactory
      * For tags with multiple occurrences like meta, prefix name with tag name,
      * for example meta_ (meta_description, meta_og:title, ...) for meta tags.
      *
-     * Options:
-     * - skip_legacy_mapping: (bool) do not check for legacy tag service names
      */
-    public function createTagByName(string $name, ?string $value = null, array $options = []): ?AbstractHeadTag
+    public function createTagByName(string $name, ?string $value = null): ?AbstractHeadTag
     {
-        $options = array_merge([
-            'skip_legacy_mapping' => false,
-        ], $options);
-
-        if (!$options['skip_legacy_mapping']) {
-            $name = LegacyHelper::mapServiceToTag($name, $name);
-        }
-
         if ('base' === $name) {
             return new BaseTag($value);
         }

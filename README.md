@@ -135,7 +135,7 @@ class SomeEventListener
 
 
 
-## Legacy integration
+## Template output
 
 Be sure, `huh_head.use_contao_head` and/or `huh_head.use_contao_variables` are not set to true.
 
@@ -157,7 +157,7 @@ Make sure, that you remove (are outputted by $this->meta() if `huh_head.use_cont
 <meta name="description" content="<?= $this->description ?>">
 ```
 
-The `meta` function accepts currently one parameter that can contain service names (array) that should be skipped.
+The `meta` function accepts currently one parameter that can contain tag names (array) that should be skipped.
 
 ## Developers
 
