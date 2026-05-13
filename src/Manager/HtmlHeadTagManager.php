@@ -9,6 +9,9 @@
 namespace HeimrichHannot\HeadBundle\Manager;
 
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Exception\UnsupportedTagException;
 use HeimrichHannot\HeadBundle\HeadTag\AbstractHeadTag;
@@ -32,6 +35,7 @@ class HtmlHeadTagManager
     public function __construct(
         private readonly HeadTagFactory $headTagFactory,
         private readonly InsertTagParser $insertTagParser,
+        private readonly ResponseContextAccessor $responseContextAccessor,
     ) {
     }
 
@@ -86,18 +90,12 @@ class HtmlHeadTagManager
         return $this->baseTag;
     }
 
-    /**
-     * @param BaseTag|string|null $baseTag
-     */
-    public function setBaseTag($baseTag): self
+    public function setBaseTag(BaseTag|string|null $baseTag): self
     {
         if (\is_string($baseTag)) {
             $baseTag = new BaseTag($baseTag);
         }
 
-        if (null !== $baseTag && !($baseTag instanceof BaseTag)) {
-            throw new \InvalidArgumentException('Method only allow properties of type BaseTag, string or null.');
-        }
         $this->baseTag = $baseTag;
 
         return $this;
@@ -105,17 +103,31 @@ class HtmlHeadTagManager
 
     public function getTitleTag(): ?TitleTag
     {
+        $headBag = $this->getHtmlHeadBag();
+        if (null !== $headBag) {
+            if ('' === $headBag->getTitle()) {
+                return null;
+            }
+            $titleTag = new TitleTag($headBag->getTitle());
+            return $titleTag;
+        }
+
         return $this->titleTag;
     }
 
-    public function setTitleTag($title): self
+    public function setTitleTag(string|TitleTag|null $title): self
     {
-        if (\is_string($title)) {
-            $title = $this->headTagFactory->createTitleTag($title);
+        $headBag = $this->getHtmlHeadBag();
+        if (null !== $headBag) {
+            if (null === $title) {
+                $title = '';
+            }
+            $headBag->setTitle(is_string($title) ? $title : $title->getTitle());
+            return $this;
         }
 
-        if (null !== $title && !($title instanceof TitleTag)) {
-            throw new \InvalidArgumentException('Method only allow properties of type TitleTag, string or null.');
+        if (\is_string($title)) {
+            $title = $this->headTagFactory->createTitleTag($title);
         }
 
         $this->titleTag = $title;
@@ -125,6 +137,17 @@ class HtmlHeadTagManager
 
     public function addMetaTag(MetaTag $metaTag): self
     {
+        $headBag = $this->getHtmlHeadBag();
+
+        if ($headBag && 'description' === $metaTag->getName()) {
+            $headBag->setMetaDescription($metaTag->getContent());
+            return $this;
+        }
+        if ($headBag && 'robots' === $metaTag->getName()) {
+            $headBag->setMetaRobots($metaTag->getContent());
+            return $this;
+        }
+
         $this->metaTags[$metaTag->getName()] = $metaTag;
 
         return $this;
@@ -132,52 +155,78 @@ class HtmlHeadTagManager
 
     public function getMetaTag(string $name): ?MetaTag
     {
+        $headBag = $this->getHtmlHeadBag();
+
+        if ($headBag && 'description' === $name) {
+            return new MetaTag('description', $headBag->getMetaDescription());
+        }
+        if ($headBag && 'robots' === $name) {
+            return new MetaTag('robots', $headBag->getMetaRobots());
+        }
+
         return $this->metaTags[$name] ?? null;
     }
 
-    public function removeMetaTag(string $name): void
+    public function removeMetaTag(string $name): self
     {
-        if (isset($this->metaTags[$name])) {
-            unset($this->metaTags[$name]);
+        $headBag = $this->getHtmlHeadBag();
+
+        if ($headBag && 'description' === $name) {
+            $headBag->setMetaDescription('');
+            return $this;
         }
-    }
-
-    public function getLinkTag(string $name): ?LinkTag
-    {
-        return $this->linkTags[$name] ?? null;
-    }
-
-    public function removeLinkTag(string $name): void
-    {
-        if (isset($this->linkTags[$name])) {
-            unset($this->linkTags[$name]);
-        }
-    }
-
-    /**
-     * Set canonical url. If null is passed, the canonical tag will be removed. If canonical tag already exists, it will be overwritten.
-     *
-     * @return $this
-     */
-    public function setCanonical(?string $url): self
-    {
-        if (null === $url) {
-            $this->removeLinkTag('canonical');
-
+        if ($headBag && 'robots' === $name) {
+            $headBag->setMetaRobots('');
             return $this;
         }
 
-        $this->addLinkTag(new CanonicalLink($url));
+        if (isset($this->metaTags[$name])) {
+            unset($this->metaTags[$name]);
+        }
 
         return $this;
     }
 
-    /**
-     * @return LinkTag|CanonicalLink|null
-     */
-    public function getCanonical(): ?LinkTag
+
+    public function addLinkTag(LinkTag $tag): self
     {
-        return $this->getLinkTag('canonical');
+        if ($tag instanceof CanonicalLink) {
+            $headBag = $this->getHtmlHeadBag();
+            if (null !== $headBag) {
+                $headBag->setCanonicalUri($tag->getHref());
+                return $this;
+            }
+        }
+
+        $this->linkTags[$tag->getName()] = $tag;
+        return $this;
+    }
+
+    public function getLinkTag(string $name): ?LinkTag
+    {
+        $headBag = $this->getHtmlHeadBag();
+
+        if ($headBag && 'canonical' === $name) {
+            return new CanonicalLink($headBag->getCanonicalUri());
+        }
+
+        return $this->linkTags[$name] ?? null;
+    }
+
+    public function removeLinkTag(string $name): self
+    {
+        $headBag = $this->getHtmlHeadBag();
+
+        if ($headBag && 'canonical' === $name) {
+            $headBag->setCanonicalUri('');
+            return $this;
+        }
+
+        if (isset($this->linkTags[$name])) {
+            unset($this->linkTags[$name]);
+        }
+
+        return $this;
     }
 
     /**
@@ -230,64 +279,12 @@ class HtmlHeadTagManager
         return $this->headTagFactory;
     }
 
-    /**
-     * Converts an input-encoded string to plain text UTF-8.
-     *
-     * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes insert tag braces.
-     *
-     * Same as HtmlDecoder::inputEncodedToPlainText() of contao 4.13 (with 4.9 adjustments).
-     * Should be replaced with contao core version when moving to 4.13+
-     *
-     * @see StringUtil::revertInputEncoding()
-     *
-     * @param bool $removeInsertTags True to remove insert tags instead of replacing them
-     *
-     * @internal May be removed in a minor version when contao 4.13 is required
-     */
-    public function inputEncodedToPlainText(string $val, bool $removeInsertTags = false): string
+    private function getHtmlHeadBag(): ?HtmlHeadBag
     {
-        if ($removeInsertTags) {
-            $val = StringUtil::stripInsertTags($val);
-        } else {
-            $val = $this->insertTagParser->replace($val);
+        if ($this->responseContextAccessor->getResponseContext()->has(HtmlHeadBag::class)) {
+            return $this->responseContextAccessor->getResponseContext()->get(HtmlHeadBag::class);
         }
 
-        $val = strip_tags($val);
-        $val = $this->revertInputEncoding($val);
-
-        return str_replace(['{{', '}}'], ['[{]', '[}]'], $val);
-    }
-
-    /**
-     * Convert an input-encoded string back to the raw UTF-8 value it originated from.
-     *
-     * It handles all Contao input encoding specifics like basic entities and encoded entities.
-     *
-     * Same as StringUtil::revertInputEncoding() of contao 4.13.
-     * Should be replaced with contao core version when moving to 4.13+
-     *
-     * @internal May be removed in a minor version when contao 4.13 is required
-     */
-    public function revertInputEncoding(string $strValue): string
-    {
-        $strValue = StringUtil::restoreBasicEntities($strValue);
-        $strValue = StringUtil::decodeEntities($strValue);
-
-        // Ensure valid UTF-8
-        if (1 !== preg_match('//u', $strValue)) {
-            $substituteCharacter = mb_substitute_character();
-            mb_substitute_character(0xFFFD);
-
-            $strValue = mb_convert_encoding($strValue, 'UTF-8', 'UTF-8');
-
-            mb_substitute_character($substituteCharacter);
-        }
-
-        return $strValue;
-    }
-
-    public function addLinkTag(LinkTag $tag): void
-    {
-        $this->linkTags[$tag->getName()] = $tag;
+        return null;
     }
 }

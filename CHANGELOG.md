@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Removed: @WebPage schema integration, because it is provided by Contao core
 - Removed: @BreadcrumbList schema integration, because it is provided by Contao core
 - Removed: canonical links backport
+- Removed: set canonical from HtmHeadTagManager, use Contao core functionality instead
 
 ## [1.14.2] - 2025-12-17
 - Fixed: Relative image paths had to be absolute

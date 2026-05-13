@@ -42,6 +42,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         private readonly Utils $utils,
         private readonly TagHelper $tagHelper,
         private readonly InsertTagParser $insertTagParser,
+        private readonly ResponseContextAccessor $responseContextAccessor,
     ) {
     }
 
@@ -49,15 +50,16 @@ class GeneratePageListener implements ServiceSubscriberInterface
     {
         if ($this->config['use_contao_head'] ?? false) {
             $this->setContaoHead($layout, $pageModel, $pageRegular);
-            $title = $pageModel->pageTitle ?: $pageModel->title;
             $description = $pageModel->description;
         } else {
             $this->setHeadTagsFromContao($pageRegular, $pageModel);
-            $title = ($titleTag = $this->headTagManager->getTitleTag()) ? $titleTag->getTitle() : '';
             $description = ($descriptionTag = $this->headTagManager->getMetaTag('description')) ? $descriptionTag->getContent() : '';
         }
 
-        if (empty($title)) {
+        $headBag = $this->getHtmlHeadBag();
+        $title = $headBag?->getTitle() ?: '';
+
+        if ('' === $title) {
             $title = $this->insertTagParser->replace('{{page::pageTitle}}');
         }
 
@@ -91,16 +93,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
         if ($tag = $this->headTagManager->getBaseTag()) {
             $pageRegular->Template->base = $tag->getAttributes()['href'];
             $this->headTagManager->setBaseTag(null);
-        }
-
-        if (($tag = $this->headTagManager->getTitleTag()) && !empty($tag->getTitle())) {
-            $pageModel->pageTitle = $tag->getTitle();
-            $layout->titleTag = $tag->generateTitle();
-
-            if ($htmlHeadBag) {
-                $htmlHeadBag->setTitle($tag->getTitle());
-            }
-            $this->headTagManager->setTitleTag(null);
         }
 
         if ($tag = $this->headTagManager->getMetaTag('description')) {
@@ -144,14 +136,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
         // Base tag
         if (!$this->headTagManager->getBaseTag()) {
             $this->headTagManager->setBaseTag(new BaseTag($pageRegular->Template->base));
-        }
-
-        // Title
-        if (!($tag = $this->headTagManager->getTitleTag()) || !$tag->getTitle()) {
-            $titleFormat = str_replace('{{page::pageTitle}}', '%s', $this->tagHelper->getContaoTitleTag($pageModel));
-            $title = $this->insertTagParser->replace('{{page::pageTitle}}');
-
-            $this->headTagManager->setTitleTag($this->headTagManager->inputEncodedToPlainText($title));
         }
 
         // Description
@@ -218,18 +202,10 @@ class GeneratePageListener implements ServiceSubscriberInterface
         }
     }
 
-    /**
-     * @return HtmlHeadBag|null
-     */
-    private function getHtmlHeadBag(): ?object
+    private function getHtmlHeadBag(): ?HtmlHeadBag
     {
-        if (class_exists(HtmlHeadBag::class) && $this->container->has(ResponseContextAccessor::class)) {
-            $contextAccessor = $this->container->get(ResponseContextAccessor::class);
-
-            if ($contextAccessor->getResponseContext()->has(HtmlHeadBag::class)) {
-                /* @var HtmlHeadBag $htmlHeadBag */
-                return $contextAccessor->getResponseContext()->get(HtmlHeadBag::class);
-            }
+        if ($this->responseContextAccessor->getResponseContext()->has(HtmlHeadBag::class)) {
+            return $this->responseContextAccessor->getResponseContext()->get(HtmlHeadBag::class);
         }
 
         return null;

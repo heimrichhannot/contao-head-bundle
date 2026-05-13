@@ -18,4 +18,9 @@ class CanonicalLink extends LinkTag
     {
         parent::__construct(self::TYPE, self::TYPE, $href);
     }
+
+    public function getHref(): string
+    {
+        return $this->getAttributes()['href'] ?? '';
+    }
 }

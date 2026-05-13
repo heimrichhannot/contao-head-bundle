@@ -24,15 +24,7 @@ abstract class AbstractHeadTag
      */
     public function generateAttributeString(): string|HtmlAttributes
     {
-//        return new HtmlAttributes($this->attributes);
-//
-        if (empty($this->attributes)) {
-            return '';
-        }
-
-        $compiled = implode('="%s" ', array_keys($this->attributes)).'="%s"';
-
-        return vsprintf($compiled, array_map(htmlspecialchars(...), array_values($this->attributes)));
+        return $this->getHtmlAttributes()->toString(false);
     }
 
     public function setAttribute(string $attribute, string $value): self
@@ -59,5 +51,10 @@ abstract class AbstractHeadTag
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    public function getHtmlAttributes(): HtmlAttributes
+    {
+        return new HtmlAttributes($this->attributes);
     }
 }
