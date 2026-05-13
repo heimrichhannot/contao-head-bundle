@@ -129,6 +129,29 @@ class SomeEventListener
 }
 ```
 
+### Set head content from Twig
+
+The bundle provides Twig functions to add head tags from Twig templates:
+
+```twig
+{# Set the title tag #}
+{% do add_head_tag('title', 'Hello World') %}
+
+{# Set the base tag #}
+{% do add_head_tag('base', 'https://example.org') %}
+
+{# Add meta tags #}
+{% do add_head_meta_tag('description', 'Lorem ipsum!') %}
+{% do add_head_meta_tag('og:title', 'Hello World') %}
+{% do add_head_meta_tag('twitter:image', figure) %}
+```
+
+Use `add_head_tag(name, value)` for generic head tags supported by the `HeadTagFactory`. Meta tag names must be prefixed with `meta_`, for example `meta_description` or `meta_og:title`.
+
+Use `add_head_meta_tag(name, value)` as shorthand for meta tags. The function adds the `meta_` prefix automatically.
+
+The `value` argument can be a string, `null` or a Contao `Figure`. If a `Figure` is passed, its image source is used as the tag content.
+
 ## Template output
 
 Be sure, `huh_head.use_contao_head` and/or `huh_head.use_contao_variables` are not set to true.

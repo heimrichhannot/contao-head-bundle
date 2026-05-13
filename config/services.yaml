@@ -4,7 +4,7 @@ services:
     autoconfigure: true
 
   HeimrichHannot\HeadBundle\:
-    resource: '../src/{EventListener,Helper}/*'
+    resource: '../src/{EventListener,Helper,Twig}/*'
     bind:
       $bundleConfig: '%huh_head%'
 
