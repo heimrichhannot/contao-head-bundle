@@ -130,11 +130,6 @@ class SomeEventListener
 }
 ```
 
-### Reader Config Contao sample
-![image](https://github.com/heimrichhannot/contao-head-bundle/assets/51906753/a5e30fdc-66f9-419a-a5a4-1805bb66b227)
-
-
-
 ## Template output
 
 Be sure, `huh_head.use_contao_head` and/or `huh_head.use_contao_variables` are not set to true.
