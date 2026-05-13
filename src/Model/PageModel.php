@@ -3,7 +3,6 @@
 namespace HeimrichHannot\HeadBundle\Model;
 
 /**
- * @property bool   $headAddBreadcrumbSchema
  * @property bool   $addHeadDefaultImage
  * @property string $headDefaultImage
  * @property bool   $headAddOrganisationSchema

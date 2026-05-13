@@ -24,8 +24,6 @@ $lang['headOrganisationWebsite'][0] = 'URL';
 $lang['headOrganisationWebsite'][1] = 'Enter the URL of the organisation.';
 $lang['headAddWebSiteSchema'][0] = 'Output @WebSite';
 $lang['headAddWebSiteSchema'][1] = 'Output the @WebSite schema.';
-$lang['headAddBreadcrumbSchema'][0] = 'Output @BreadcrumbList';
-$lang['headAddBreadcrumbSchema'][1] = 'Output the @BreadcrumbList schema.';
 
 /*
  * Legends

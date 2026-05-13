@@ -24,8 +24,6 @@ $lang['headOrganisationWebsite'][0] = 'URL';
 $lang['headOrganisationWebsite'][1] = 'Geben Sie die URL der Organisation ein.';
 $lang['headAddWebSiteSchema'][0] = '@WebSite ausgeben';
 $lang['headAddWebSiteSchema'][1] = 'Das @WebSite Schema ausgeben.';
-$lang['headAddBreadcrumbSchema'][0] = '@BreadcrumbList ausgeben';
-$lang['headAddBreadcrumbSchema'][1] = 'Das @BreadcrumbList Schema ausgeben.';
 
 /*
  * Legends

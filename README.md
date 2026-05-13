@@ -40,7 +40,6 @@ In your root page, you can activate additional structured data for your web page
 Following schema.org types are available:
 * @Organization
 * @WebSite
-* @BreadcrumbList
 
 ![Screenshot Structured Data Settings](docs%2Fimg%2Fscreenshot_backend_structured_data.png)
 
