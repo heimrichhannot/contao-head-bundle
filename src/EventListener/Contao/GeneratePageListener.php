@@ -78,7 +78,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
             $title = $this->insertTagParser->replace('{{page::pageTitle}}');
         }
 
-        $this->prepareJsonLdContent($pageModel, $title);
+        $this->prepareJsonLdContent($pageModel);
         $this->setOpenGraphTags($title, $description ?? '');
         $this->setTwitterTags();
     }
@@ -252,7 +252,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
         return null;
     }
 
-    private function prepareJsonLdContent(PageModel $pageModel, string $title): void
+    private function prepareJsonLdContent(PageModel $pageModel): void
     {
         $jsonLdManager = $this->getJsonLdManager();
 
@@ -295,14 +295,6 @@ class GeneratePageListener implements ServiceSubscriberInterface
             ]));
         }
 
-        if ($rootPageModel->headAddWebPageSchema && !$this->utils->request()->isIndexPage($pageModel)) {
-            $webpage = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->webPage();
-            $this->setPropertyIfNotSet($webpage, 'name', $title);
-
-            if ($pageModel->description) {
-                $this->setPropertyIfNotSet($webpage, 'description', $pageModel->description);
-            }
-        }
     }
 
     private function getJsonLdManager(): ?JsonLdManager

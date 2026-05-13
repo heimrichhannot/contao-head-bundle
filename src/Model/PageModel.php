@@ -11,7 +11,6 @@ namespace HeimrichHannot\HeadBundle\Model;
  * @property string $headOrganisationLogo
  * @property string $headOrganisationWebsite
  * @property bool   $headAddWebSiteSchema
- * @property bool   $headAddWebPageSchema
  * @property string $twitterSite
  */
 class PageModel extends \Contao\PageModel
