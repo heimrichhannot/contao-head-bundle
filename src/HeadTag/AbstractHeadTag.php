@@ -8,6 +8,8 @@
 
 namespace HeimrichHannot\HeadBundle\HeadTag;
 
+use Contao\CoreBundle\String\HtmlAttributes;
+
 abstract class AbstractHeadTag
 {
     private array $attributes = [];
@@ -20,8 +22,10 @@ abstract class AbstractHeadTag
     /**
      * Return attributes as html string.
      */
-    public function generateAttributeString(): string
+    public function generateAttributeString(): string|HtmlAttributes
     {
+//        return new HtmlAttributes($this->attributes);
+//
         if (empty($this->attributes)) {
             return '';
         }
