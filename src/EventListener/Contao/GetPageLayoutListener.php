@@ -8,8 +8,8 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
@@ -18,23 +18,11 @@ use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 
-/**
- * @Hook("getPageLayout", priority=-10)
- */
+#[AsHook('getPageLayout', priority: -10)]
 class GetPageLayoutListener
 {
-    private Utils $utils;
-    private HtmlHeadTagManager $headTagManager;
-    private ImageFactoryInterface $imageFactory;
-
-    public function __construct(
-        Utils $utils,
-        HtmlHeadTagManager $headTagManager,
-        ImageFactoryInterface $imageFactory,
-    ) {
-        $this->utils = $utils;
-        $this->headTagManager = $headTagManager;
-        $this->imageFactory = $imageFactory;
+    public function __construct(private Utils $utils, private HtmlHeadTagManager $headTagManager, private ImageFactoryInterface $imageFactory)
+    {
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void

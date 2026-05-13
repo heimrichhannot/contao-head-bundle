@@ -10,14 +10,11 @@ namespace HeimrichHannot\HeadBundle\HeadTag;
 
 class LinkTag extends AbstractHeadTag
 {
-    private string $name;
-
     /*
      * @param string $name An internal name of the link tag to identify it. Will not be used in the resulting code.
      */
-    public function __construct(string $name, string $rel, ?string $href = null)
+    public function __construct(private string $name, string $rel, ?string $href = null)
     {
-        $this->name = $name;
         $this->setAttribute('rel', $rel);
         $this->setAttribute('href', $href);
     }

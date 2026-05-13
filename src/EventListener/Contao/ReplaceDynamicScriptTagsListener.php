@@ -8,22 +8,15 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 
-/**
- * @Hook("replaceDynamicScriptTags")
- */
+#[AsHook('replaceDynamicScriptTags')]
 class ReplaceDynamicScriptTagsListener
 {
-    private array $bundleConfig;
-    private HtmlHeadTagManager $headTagManager;
-
-    public function __construct(array $bundleConfig, HtmlHeadTagManager $headTagManager)
+    public function __construct(private array $bundleConfig, private HtmlHeadTagManager $headTagManager)
     {
-        $this->bundleConfig = $bundleConfig;
-        $this->headTagManager = $headTagManager;
     }
 
     /**

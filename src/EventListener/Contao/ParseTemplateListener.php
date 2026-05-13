@@ -8,22 +8,15 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
-use Contao\CoreBundle\ServiceAnnotation\Hook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\Template;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 
-/**
- * @Hook("parseTemplate")
- */
+#[AsHook('parseTemplate')]
 class ParseTemplateListener
 {
-    private array $bundleConfig;
-    private HtmlHeadTagManager $headTagManager;
-
-    public function __construct(array $bundleConfig, HtmlHeadTagManager $headTagManager)
+    public function __construct(private array $bundleConfig, private HtmlHeadTagManager $headTagManager)
     {
-        $this->bundleConfig = $bundleConfig;
-        $this->headTagManager = $headTagManager;
     }
 
     public function __invoke(Template $template): void
@@ -38,11 +31,9 @@ class ParseTemplateListener
         }
 
         if (!($this->bundleConfig['use_contao_variables'] ?? false)) {
-            $template->meta = function (array $skip = []) {
-                return $this->headTagManager->renderTags([
-                    'skip_tags' => $skip,
-                ]);
-            };
+            $template->meta = (fn(array $skip = []) => $this->headTagManager->renderTags([
+                'skip_tags' => $skip,
+            ]));
         }
     }
 }

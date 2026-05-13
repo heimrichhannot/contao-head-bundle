@@ -27,16 +27,10 @@ class HtmlHeadTagManager
      */
     private array $metaTags = [];
     private array $linkTags = [];
-    private HeadTagFactory $headTagFactory;
     private ?TitleTag $titleTag = null;
-    private InsertTagParser $insertTagParser;
 
-    public function __construct(
-        HeadTagFactory $headTagFactory,
-        InsertTagParser $insertTagParser,
-    ) {
-        $this->headTagFactory = $headTagFactory;
-        $this->insertTagParser = $insertTagParser;
+    public function __construct(private HeadTagFactory $headTagFactory, private InsertTagParser $insertTagParser)
+    {
     }
 
     public function getTag(string $name): ?AbstractHeadTag

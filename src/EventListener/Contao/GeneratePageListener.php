@@ -8,11 +8,11 @@
 
 namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
@@ -31,35 +31,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-/**
- * @Hook("generatePage", priority=-10)
- */
+#[AsHook('generatePage', priority: -10)]
 class GeneratePageListener implements ServiceSubscriberInterface
 {
-    private array $config;
-    private ContainerInterface $container;
-    private HtmlHeadTagManager $headTagManager;
-    private RequestStack $requestStack;
-    private Utils $utils;
-    private TagHelper $tagHelper;
-    private InsertTagParser $insertTagParser;
-
-    public function __construct(
-        ContainerInterface $container,
-        array $bundleConfig,
-        HtmlHeadTagManager $headTagManager,
-        RequestStack $requestStack,
-        Utils $utils,
-        TagHelper $tagHelper,
-        InsertTagParser $insertTagParser,
-    ) {
-        $this->config = $bundleConfig;
-        $this->container = $container;
-        $this->headTagManager = $headTagManager;
-        $this->requestStack = $requestStack;
-        $this->utils = $utils;
-        $this->tagHelper = $tagHelper;
-        $this->insertTagParser = $insertTagParser;
+    public function __construct(private ContainerInterface $container, private array $config, private HtmlHeadTagManager $headTagManager, private RequestStack $requestStack, private Utils $utils, private TagHelper $tagHelper, private InsertTagParser $insertTagParser)
+    {
     }
 
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void

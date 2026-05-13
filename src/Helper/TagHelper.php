@@ -16,13 +16,8 @@ use HeimrichHannot\UtilsBundle\Util\Utils;
 
 class TagHelper
 {
-    private Utils $utils;
-    private InsertTagParser $insertTagParser;
-
-    public function __construct(Utils $utils, InsertTagParser $insertTagParser)
+    public function __construct(private Utils $utils, private InsertTagParser $insertTagParser)
     {
-        $this->utils = $utils;
-        $this->insertTagParser = $insertTagParser;
     }
 
     public function prepareDescription(string $description): string

@@ -15,11 +15,8 @@ use HeimrichHannot\HeadBundle\Helper\TagHelper;
 
 class HeadTagFactory
 {
-    private TagHelper $tagHelper;
-
-    public function __construct(TagHelper $tagHelper)
+    public function __construct(private TagHelper $tagHelper)
     {
-        $this->tagHelper = $tagHelper;
     }
 
     /**
