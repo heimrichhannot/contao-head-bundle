@@ -10,7 +10,6 @@ namespace HeimrichHannot\HeadBundle\EventListener\Contao;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Template;
-use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 
 /**
@@ -40,10 +39,6 @@ class ParseTemplateListener
 
         if (!($this->bundleConfig['use_contao_variables'] ?? false)) {
             $template->meta = function (array $skip = []) {
-                foreach ($skip as &$tag) {
-                    $tag = LegacyHelper::mapServiceToTag($tag, $tag);
-                }
-
                 return $this->headTagManager->renderTags([
                     'skip_tags' => $skip,
                 ]);

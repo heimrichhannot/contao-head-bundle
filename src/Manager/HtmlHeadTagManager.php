@@ -18,12 +18,10 @@ use HeimrichHannot\HeadBundle\HeadTag\Link\CanonicalLink;
 use HeimrichHannot\HeadBundle\HeadTag\LinkTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\TitleTag;
-use HeimrichHannot\HeadBundle\Helper\LegacyHelper;
 
 class HtmlHeadTagManager
 {
     private ?BaseTag $baseTag = null;
-    private TagManager $legacyTagManager;
     /**
      * @var MetaTag[]
      */
@@ -34,11 +32,9 @@ class HtmlHeadTagManager
     private InsertTagParser $insertTagParser;
 
     public function __construct(
-        TagManager $legacyTagManager,
         HeadTagFactory $headTagFactory,
         InsertTagParser $insertTagParser,
     ) {
-        $this->legacyTagManager = $legacyTagManager;
         $this->headTagFactory = $headTagFactory;
         $this->insertTagParser = $insertTagParser;
     }
@@ -217,11 +213,6 @@ class HtmlHeadTagManager
                 continue;
             }
 
-            if (\in_array(LegacyHelper::mapTagToService('meta_' . $metaTag->getName()), $options['skip_tags'])) {
-                unset($options['skip_tags'][LegacyHelper::mapTagToService('meta_' . $metaTag->getName())]);
-
-                continue;
-            }
             $buffer .= $metaTag->generate() . "\n";
         }
 
@@ -232,30 +223,15 @@ class HtmlHeadTagManager
                 continue;
             }
 
-            if (\in_array(LegacyHelper::mapTagToService('link_' . $linkTag->getName()), $options['skip_tags'])) {
-                unset($options['skip_tags'][LegacyHelper::mapTagToService('link_' . $linkTag->getName())]);
-
-                continue;
-            }
-
             $buffer .= $linkTag->generate() . "\n";
         }
 
-        /* @noinspection PhpDeprecationInspection */
-        return $buffer . implode("\n", $this->legacyTagManager->getTags(array_merge(
-            array_keys(LegacyHelper::SERVICE_MAP),
-            $options['skip_tags']
-        )));
+        return $buffer;
     }
 
     public function getHeadTagFactory(): HeadTagFactory
     {
         return $this->headTagFactory;
-    }
-
-    public function getLegacyTagManager(): TagManager
-    {
-        return $this->legacyTagManager;
     }
 
     /**

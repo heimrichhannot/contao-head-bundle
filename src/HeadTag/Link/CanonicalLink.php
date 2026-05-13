@@ -13,7 +13,6 @@ use HeimrichHannot\HeadBundle\HeadTag\LinkTag;
 class CanonicalLink extends LinkTag
 {
     public const TYPE = 'canonical';
-    public const LEGACY_NAME = 'huh.head.tag.link.canonical';
 
     public function __construct(string $href)
     {
