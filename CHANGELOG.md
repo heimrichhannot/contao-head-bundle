@@ -2,16 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-- Changed: dropped support for contao < 5.3
-- Changed: dropped support for php < 8.2
-- Changed: deeper integration with core html bag
-- Removed: json-ld backport
+## [2.0.0] - 2026-05-18
+- Added: Twig functions `add_head_tag`, `add_head_tags` and `add_head_meta_tag`
+- Added: `get_head_news_tags()` Twig helper for Contao news models
+- Changed: dropped support for Contao < 5.3
+- Changed: dropped support for PHP < 8.2
+- Changed: deeper integration with Contao core `HtmlHeadBag` and `JsonLdManager`
+- Removed: legacy tag integration and old `src/Tag/*` API
+- Removed: JSON-LD backport and `add_schema_org` Twig function
 - Removed: @WebPage schema integration, because it is provided by Contao core
 - Removed: @BreadcrumbList schema integration, because it is provided by Contao core
 - Removed: canonical links backport
-- Removed: set canonical from HtmHeadTagManager, use Contao core functionality instead
-- Removed: config options
+- Removed: `HtmlHeadTagManager::setCanonical()` and `HtmlHeadTagManager::getCanonical()`; use Contao core functionality instead
+- Removed: bundle configuration options
 
 ## [1.14.2] - 2025-12-17
 - Fixed: Relative image paths had to be absolute
