@@ -31,11 +31,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 readonly class GeneratePageListener
 {
     public function __construct(
-        private HtmlHeadTagManager      $headTagManager,
-        private RequestStack            $requestStack,
-        private Utils                   $utils,
-        private TagHelper               $tagHelper,
-        private InsertTagParser         $insertTagParser,
+        private HtmlHeadTagManager $headTagManager,
+        private RequestStack $requestStack,
+        private Utils $utils,
+        private TagHelper $tagHelper,
+        private InsertTagParser $insertTagParser,
         private ResponseContextAccessor $responseContextAccessor,
     ) {
     }
@@ -57,7 +57,7 @@ readonly class GeneratePageListener
     }
 
     /**
-     * Update the contao core response bag based on stored head values
+     * Update the contao core response bag based on stored head values.
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

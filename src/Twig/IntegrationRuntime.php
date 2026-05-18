@@ -19,10 +19,11 @@ use Twig\Extension\RuntimeExtensionInterface;
 readonly class IntegrationRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
-        private HtmlDecoder         $htmlDecoder,
+        private HtmlDecoder $htmlDecoder,
         private ContentUrlGenerator $contentUrlGenerator,
-        private VirtualFilesystemInterface $filesStorage
-    ) {}
+        private VirtualFilesystemInterface $filesStorage,
+    ) {
+    }
 
     public function getNewsTags(NewsModel|int $model, mixed $figure = null): array
     {
@@ -33,8 +34,8 @@ readonly class IntegrationRuntime implements RuntimeExtensionInterface
             }
         }
         $headTags = [
-            new PropertyMetaTag('og:title', $this->htmlDecoder->inputEncodedToPlainText((string)$model->headline)),
-            new PropertyMetaTag('og:description', $this->htmlDecoder->inputEncodedToPlainText((string)$model->teaser)),
+            new PropertyMetaTag('og:title', $this->htmlDecoder->inputEncodedToPlainText((string) $model->headline)),
+            new PropertyMetaTag('og:description', $this->htmlDecoder->inputEncodedToPlainText((string) $model->teaser)),
             new PropertyMetaTag('og:url', $this->contentUrlGenerator->generate($model, referenceType: UrlGeneratorInterface::ABSOLUTE_URL)),
         ];
 
@@ -43,8 +44,8 @@ readonly class IntegrationRuntime implements RuntimeExtensionInterface
         } elseif ($model->addImage && $model->singleSRC) {
             try {
                 $uuid = Uuid::fromBinary($model->singleSRC);
-                $headTags[] = new PropertyMetaTag('og:image', (string)$this->filesStorage->generatePublicUri($uuid));
-            } catch (\InvalidArgumentException | UnableToResolveUuidException) {
+                $headTags[] = new PropertyMetaTag('og:image', (string) $this->filesStorage->generatePublicUri($uuid));
+            } catch (\InvalidArgumentException|UnableToResolveUuidException) {
             }
         }
 

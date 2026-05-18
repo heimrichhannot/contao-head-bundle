@@ -12,13 +12,15 @@ readonly class HeadRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
         private HtmlHeadTagManager $tagManager,
-        private RequestStack       $requestStack,
-    ) {}
+        private RequestStack $requestStack,
+    ) {
+    }
 
     public function addHeadTag(string|AbstractHeadTag $name, string|Figure|null $value = null): void
     {
         if ($name instanceof AbstractHeadTag) {
             $this->tagManager->addTag($name);
+
             return;
         }
 
@@ -45,6 +47,6 @@ readonly class HeadRuntime implements RuntimeExtensionInterface
 
     public function addMetaTag(string $name, string|Figure|null $value = null): void
     {
-        $this->addHeadTag('meta_' . $name, $value);
+        $this->addHeadTag('meta_'.$name, $value);
     }
 }

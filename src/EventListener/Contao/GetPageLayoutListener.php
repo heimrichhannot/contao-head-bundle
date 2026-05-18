@@ -23,8 +23,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 readonly class GetPageLayoutListener
 {
     public function __construct(
-        private Utils                 $utils,
-        private HtmlHeadTagManager    $headTagManager,
+        private Utils $utils,
+        private HtmlHeadTagManager $headTagManager,
         private ImageFactoryInterface $imageFactory,
         private ParameterBagInterface $parameterBag,
     ) {

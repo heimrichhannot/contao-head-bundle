@@ -107,6 +107,7 @@ class HtmlHeadTagManager
                 return null;
             }
             $titleTag = new TitleTag($headBag->getTitle());
+
             return $titleTag;
         }
 
@@ -121,6 +122,7 @@ class HtmlHeadTagManager
                 $title = '';
             }
             $headBag->setTitle(is_string($title) ? $title : $title->getTitle());
+
             return $this;
         }
 
@@ -139,10 +141,12 @@ class HtmlHeadTagManager
 
         if ($headBag && 'description' === $metaTag->getName()) {
             $headBag->setMetaDescription($metaTag->getContent());
+
             return $this;
         }
         if ($headBag && 'robots' === $metaTag->getName()) {
             $headBag->setMetaRobots($metaTag->getContent());
+
             return $this;
         }
 
@@ -171,10 +175,12 @@ class HtmlHeadTagManager
 
         if ($headBag && 'description' === $name) {
             $headBag->setMetaDescription('');
+
             return $this;
         }
         if ($headBag && 'robots' === $name) {
             $headBag->setMetaRobots('');
+
             return $this;
         }
 
@@ -185,18 +191,19 @@ class HtmlHeadTagManager
         return $this;
     }
 
-
     public function addLinkTag(LinkTag $tag): self
     {
         if ($tag instanceof CanonicalLink) {
             $headBag = $this->getHtmlHeadBag();
             if (null !== $headBag) {
                 $headBag->setCanonicalUri($tag->getHref());
+
                 return $this;
             }
         }
 
         $this->linkTags[$tag->getName()] = $tag;
+
         return $this;
     }
 
@@ -217,6 +224,7 @@ class HtmlHeadTagManager
 
         if ($headBag && 'canonical' === $name) {
             $headBag->setCanonicalUri('');
+
             return $this;
         }
 
