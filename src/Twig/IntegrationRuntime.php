@@ -13,6 +13,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 use Twig\Extension\RuntimeExtensionInterface;
 
+/**
+ * @internal
+ */
 readonly class IntegrationRuntime implements RuntimeExtensionInterface
 {
     public function __construct(

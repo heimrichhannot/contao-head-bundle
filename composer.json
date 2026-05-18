@@ -27,6 +27,7 @@
   },
   "require-dev": {
     "contao/core-bundle": "5.3.*",
+    "contao/news-bundle": "^5.3",
     "rector/rector": "^2.2",
     "contao/contao-rector": "dev-main",
     "symplify/easy-coding-standard": "^13.0",

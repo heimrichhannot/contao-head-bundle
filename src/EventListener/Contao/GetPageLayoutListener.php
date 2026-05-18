@@ -17,6 +17,7 @@ use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 #[AsHook('getPageLayout', priority: -10)]
 readonly class GetPageLayoutListener
@@ -25,6 +26,7 @@ readonly class GetPageLayoutListener
         private Utils                 $utils,
         private HtmlHeadTagManager    $headTagManager,
         private ImageFactoryInterface $imageFactory,
+        private ParameterBagInterface $parameterBag,
     ) {
     }
 
@@ -47,14 +49,20 @@ readonly class GetPageLayoutListener
     {
         $metaImageTag = $this->headTagManager->getMetaTag('og:image');
 
-        if (!$metaImageTag) {
+        if ($metaImageTag) {
             return;
         }
 
-        $imagePath = $this->pageImage($pageModel)
-            ?: $this->pageImage($this->utils->request()->getCurrentRootPageModel($pageModel));
+        $path = $this->pageImage($pageModel);
+        if (!$path) {
+            $root = $this->utils->request()->getCurrentRootPageModel($pageModel);
+            if ($pageModel->id === $root->id) {
+                return;
+            }
+            $path = $this->pageImage($root);
+        }
 
-        if (!$imagePath) {
+        if (!$path) {
             return;
         }
 
@@ -62,18 +70,15 @@ readonly class GetPageLayoutListener
             'pageModel' => $pageModel,
         ]);
 
-        $metaImagePath = $this->imageFactory->create($imagePath, [1200, 630, 'proportional'])->getPath();
-        $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl.\DIRECTORY_SEPARATOR.$metaImagePath));
+        $metaImagePath = $this->imageFactory->create($path, [1200, 630, 'proportional'])->getUrl($this->parameterBag->get('kernel.project_dir'));
+        $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl.'/'.$metaImagePath));
     }
 
     /**
-     * @param \HeimrichHannot\HeadBundle\Model\PageModel|null $pageModel
+     * @param \HeimrichHannot\HeadBundle\Model\PageModel $pageModel
      */
-    protected function pageImage(?PageModel $pageModel): ?string
+    private function pageImage(PageModel $pageModel): ?string
     {
-        if (null === $pageModel) {
-            return null;
-        }
         if (!$pageModel->addHeadDefaultImage) {
             return null;
         }
@@ -82,6 +87,7 @@ readonly class GetPageLayoutListener
         }
 
         return $this->utils->file()->getPathFromUuid($pageModel->headDefaultImage, [
+            'checkIfExists' => true,
             'absolutePath' => true,
         ]);
     }
