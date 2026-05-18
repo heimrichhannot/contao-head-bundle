@@ -16,20 +16,16 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
-use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
-use HeimrichHannot\HeadBundle\HeadTag\Meta\CharsetMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
 use HeimrichHannot\HeadBundle\Helper\TagHelper;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Spatie\SchemaOrg\BaseType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 #[AsHook('generatePage', priority: -10)]
 readonly class GeneratePageListener

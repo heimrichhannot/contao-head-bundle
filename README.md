@@ -7,7 +7,6 @@ Enhance your website's SEO and social media presence with more meta- and structu
 
 ## Features
 - Set open graph tags like og:title, og:description, og:url and og:image
-- 
 - Provide a nice api to set head tags like meta, title, base, link
 - Provide additional schema.org json-ld data
 - Sets important meta tags like og:title, og:description, og:url and twitter:card out of the box
@@ -20,18 +19,11 @@ Enhance your website's SEO and social media presence with more meta- and structu
 
 1. Install with composer
 2. Update your database
-3. Set following config variables (if you don't need the legacy implementation)
-
-    ```yaml
-    huh_head:
-      use_contao_head: true
-      use_contao_variables: true
-    ```
-4. Optional: Set fallback image and twitter author in root page(s)
+3. Optional: Set fallback image and twitter author in root page(s)
 
 ### Add additional meta tags
 
-In your root page, you can activate to add fallback image (og:image and twitter:image) and twitter username (twitter:site) meta tags to you web page.
+In your root page, you can activate to add fallback image (og:image) and X/Twitter username (twitter:site) meta tags to you web page.
 
 ![Screenshot Meta Data Settings](docs%2Fimg%2Fscreenshot_backend_meta_data.png)
 
@@ -171,17 +163,13 @@ class SomeEventListener
 
 ## Template output
 
-Be sure, `huh_head.use_contao_head` and/or `huh_head.use_contao_variables` are not set to true.
-
-Output `$this->meta()` in your fe_page template ()
+Output the `TL_HEAD` dynamic script tag in your `fe_page` template:
 
 ```
-<?php $this->block('meta'); ?>
-    <?= $this->meta(); ?>
-<?php $this->endblock(); ?>
+[[TL_HEAD]]
 ```
 
-Make sure, that you remove (are outputted by $this->meta() if `huh_head.use_contao_head` is not true):
+Make sure that you remove the following tags from custom `fe_page` templates, because they are output by `TL_HEAD`:
 
 ```
 <meta charset="<?= $this->charset ?>">
@@ -190,8 +178,6 @@ Make sure, that you remove (are outputted by $this->meta() if `huh_head.use_cont
 <meta name="robots" content="<?= $this->robots ?>">
 <meta name="description" content="<?= $this->description ?>">
 ```
-
-The `meta` function accepts currently one parameter that can contain tag names (array) that should be skipped.
 
 ## Developers
 
@@ -233,17 +219,4 @@ class SomeEventListener {
         }
     }
 }
-```
-
-## Config reference
-
-```yaml
-# Default configuration for extension with alias: "huh_head"
-huh_head:
-
-    # Use the default head variables for title,base,robots and description instead of removing them from the page template.
-    use_contao_head:      false
-
-    # Use the default contao template variables for outputting head tags instead of the meta function.
-    use_contao_variables: false
 ```

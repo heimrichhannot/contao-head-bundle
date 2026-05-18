@@ -13,31 +13,16 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 
 #[AsHook('replaceDynamicScriptTags')]
-class ReplaceDynamicScriptTagsListener
+readonly class ReplaceDynamicScriptTagsListener
 {
     public function __construct(
-        private array $bundleConfig,
-        private readonly HtmlHeadTagManager $headTagManager,
+        private HtmlHeadTagManager $headTagManager,
     ) {
     }
 
-    /**
-     * @noinspection PhpUnnecessaryLocalVariableInspection
-     */
     public function __invoke(string $buffer): string
     {
-        $buffer = $this->addHeadTags($buffer);
-
-        return $buffer;
-    }
-
-    private function addHeadTags(string $buffer): string
-    {
-        if ($this->bundleConfig['use_contao_variables'] ?? false) {
-            return $this->replace($buffer, 'TL_HEAD', $this->headTagManager->renderTags());
-        }
-
-        return $buffer;
+        return $this->replace($buffer, 'TL_HEAD', $this->headTagManager->renderTags());
     }
 
     private function replace(string $buffer, string $tag, string $content): string
