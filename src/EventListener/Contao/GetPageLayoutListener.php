@@ -19,12 +19,12 @@ use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 
 #[AsHook('getPageLayout', priority: -10)]
-class GetPageLayoutListener
+readonly class GetPageLayoutListener
 {
     public function __construct(
-        private readonly Utils $utils,
-        private readonly HtmlHeadTagManager $headTagManager,
-        private readonly ImageFactoryInterface $imageFactory,
+        private Utils                 $utils,
+        private HtmlHeadTagManager    $headTagManager,
+        private ImageFactoryInterface $imageFactory,
     ) {
     }
 
@@ -46,9 +46,8 @@ class GetPageLayoutListener
     private function setPageFallbackImage(PageModel $pageModel): void
     {
         $metaImageTag = $this->headTagManager->getMetaTag('og:image');
-        $twitterImageTag = $this->headTagManager->getMetaTag('twitter:image');
 
-        if ($metaImageTag && $twitterImageTag) {
+        if (!$metaImageTag) {
             return;
         }
 
@@ -63,15 +62,8 @@ class GetPageLayoutListener
             'pageModel' => $pageModel,
         ]);
 
-        if (!$metaImageTag) {
-            $metaImagePath = $this->imageFactory->create($imagePath, [1200, 630, 'proportional'])->getPath();
-            $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl.\DIRECTORY_SEPARATOR.$metaImagePath));
-        }
-
-        if (!$twitterImageTag) {
-            $twitterImagePath = $this->imageFactory->create($imagePath, [1024, 512, 'proportional'])->getPath();
-            $this->headTagManager->addMetaTag(new MetaTag('twitter:image', $baseUrl.\DIRECTORY_SEPARATOR.$twitterImagePath));
-        }
+        $metaImagePath = $this->imageFactory->create($imagePath, [1200, 630, 'proportional'])->getPath();
+        $this->headTagManager->addMetaTag(new PropertyMetaTag('og:image', $baseUrl.\DIRECTORY_SEPARATOR.$metaImagePath));
     }
 
     /**
