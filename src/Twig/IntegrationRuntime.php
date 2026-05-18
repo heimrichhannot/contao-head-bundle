@@ -8,7 +8,7 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\NewsModel;
-use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
+use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -30,9 +30,9 @@ readonly class IntegrationRuntime implements RuntimeExtensionInterface
             }
         }
         $headTags = [
-            new MetaTag('og:title', $this->htmlDecoder->inputEncodedToPlainText((string)$model->headline)),
-            new MetaTag('og:description', $this->htmlDecoder->inputEncodedToPlainText((string)$model->teaser)),
-            new MetaTag('og:url', $this->contentUrlGenerator->generate($model, referenceType: UrlGeneratorInterface::ABSOLUTE_URL)),
+            new PropertyMetaTag('og:title', $this->htmlDecoder->inputEncodedToPlainText((string)$model->headline)),
+            new PropertyMetaTag('og:description', $this->htmlDecoder->inputEncodedToPlainText((string)$model->teaser)),
+            new PropertyMetaTag('og:url', $this->contentUrlGenerator->generate($model, referenceType: UrlGeneratorInterface::ABSOLUTE_URL)),
         ];
 
         if ($figure instanceof Figure) {
@@ -40,7 +40,7 @@ readonly class IntegrationRuntime implements RuntimeExtensionInterface
         } elseif ($model->addImage && $model->singleSRC) {
             try {
                 $uuid = Uuid::fromBinary($model->singleSRC);
-                $headTags[] = new MetaTag('og:image', (string)$this->filesStorage->generatePublicUri($uuid));
+                $headTags[] = new PropertyMetaTag('og:image', (string)$this->filesStorage->generatePublicUri($uuid));
             } catch (\InvalidArgumentException | UnableToResolveUuidException) {
             }
         }

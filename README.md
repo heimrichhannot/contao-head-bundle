@@ -3,7 +3,7 @@
 [![](https://img.shields.io/packagist/v/heimrichhannot/contao-head-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-head-bundle)
 [![](https://img.shields.io/packagist/dt/heimrichhannot/contao-head-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-head-bundle)
 
-This bundle enhances the handling of html `<head>` section tags. It provides services to update head tags dynamically from your code.
+Enhance your website's SEO and social media presence with more meta- and structured data. 
 
 ## Features
 - Provide a nice api to set head tags like meta, title, base, link
@@ -42,6 +42,46 @@ Following schema.org types are available:
 
 ![Screenshot Structured Data Settings](docs%2Fimg%2Fscreenshot_backend_structured_data.png)
 
+### Add (meta-)tags from template (twig)
+
+The bundle provides Twig functions to add head tags from Twig templates:
+
+```twig
+{# Set tags #}
+{% do add_head_tag('title', 'Hello World') %}
+{% do add_head_tag('base', 'https://example.org') %}
+{# you can also set meta tags with meta_ prefix, but it is easier with add_head_meta_tag function #}
+{% do add_head_tag('meta_description', 'Lorem ipsum!') %}
+
+{# Add meta tags #}
+{% do add_head_meta_tag('description', 'Lorem ipsum!') %}
+{% do add_head_meta_tag('og:title', 'Hello World') %}
+{% do add_head_meta_tag('twitter:image', figure) %}
+
+{# Add multiple tags at once #}
+{# Pass as key => value or a AbstractHeadTag object #}
+{# Value can be a string, null or a Contao Figure. If a Figure is passed, its image source will be used as the tag content. #}
+{% do add_head_tags({
+    'title': 'Hello World',
+    'base': 'https://example.org',
+    'meta_description': 'Lorem ipsum!',
+    'meta_og:title': 'Hello World',
+    'meta_twitter:image': figure,
+}) %}
+
+{# Shorthand for news #}
+{%- do add_head_tags(get_head_news_tags(model, figure|default)) -%} 
+```
+
+| Function                            | Description                                                                                                                                                                        |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `add_head_tag(name, value)`         | Add all kinds of head tag. Meta tag names must be prefixed with `meta_`, for example `meta_description` or `meta_og:title`.                                                        |
+| `add_head_meta_tag(name, value)`    | Shorthand for meta tags. The function adds the `meta_` prefix automatically.                                                                                                       |
+| `add_head_tags(array)`              | Add multiple tags at once. Pass as key => value or a `AbstractHeadTag` object. Meta tags must be prefixed with meta when passed as key.                                            |
+| `get_head_news_tags(model, figure)` | Create an array of tags for news models. The function automatically adds og:title, og:description, og:url and og:image tags. Pass a figure to override default news article image. |
+
+The `value` argument can be a string, `null` or a Contao `Figure`. If a `Figure` is passed, its image source is used as the tag content.
+
 ## Integration
 Use head bundle api set in your code.
 
@@ -51,11 +91,12 @@ To set base, title, meta and link tags, use the `HtmlHeadTagManager` service:
 
 ```php
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;
+use HeimrichHannot\HeadBundle\HeadTag\LinkTag;
 use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
-use HeimrichHannot\HeadBundle\HeadTag\TitleTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\CharsetMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\HttpEquivMetaTag;
 use HeimrichHannot\HeadBundle\HeadTag\Meta\PropertyMetaTag;
+use HeimrichHannot\HeadBundle\HeadTag\TitleTag;
 use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -70,7 +111,7 @@ class SomeEventListener
         
         //Set base tag from object or url
         $this->headTagManager->setBaseTag(new BaseTag($request->getSchemeAndHttpHost()));
-        $this->headTagManager->setBaseTag('https://example.org'));
+        $this->headTagManager->setBaseTag('https://example.org');
     }
     
     public function updatedTitleTag(): void
@@ -79,7 +120,7 @@ class SomeEventListener
         $this->headTagManager->setTitleTag('Hello World');
         
         // Set title tag from object and adjust output format
-        $this->headTagManager->setTitleTag(new TitleTag('Foo Bar', '%s | {{page::rootPageTitle}}'))
+        $this->headTagManager->setTitleTag(new TitleTag('Foo Bar', '%s | {{page::rootPageTitle}}'));
         // Will output: <title>Foo Bar | My Great Website Page Title</title>
     }
     
@@ -122,35 +163,9 @@ class SomeEventListener
         
         // Remove a tag
         $this->headTagManager->removeLinkTag('prev');
-        
-        // Shorthand for canonical tag
-        $this->headTagManager->setCanonical('https://example.org');
     }
 }
 ```
-
-### Set head content from Twig
-
-The bundle provides Twig functions to add head tags from Twig templates:
-
-```twig
-{# Set the title tag #}
-{% do add_head_tag('title', 'Hello World') %}
-
-{# Set the base tag #}
-{% do add_head_tag('base', 'https://example.org') %}
-
-{# Add meta tags #}
-{% do add_head_meta_tag('description', 'Lorem ipsum!') %}
-{% do add_head_meta_tag('og:title', 'Hello World') %}
-{% do add_head_meta_tag('twitter:image', figure) %}
-```
-
-Use `add_head_tag(name, value)` for generic head tags supported by the `HeadTagFactory`. Meta tag names must be prefixed with `meta_`, for example `meta_description` or `meta_og:title`.
-
-Use `add_head_meta_tag(name, value)` as shorthand for meta tags. The function adds the `meta_` prefix automatically.
-
-The `value` argument can be a string, `null` or a Contao `Figure`. If a `Figure` is passed, its image source is used as the tag content.
 
 ## Template output
 

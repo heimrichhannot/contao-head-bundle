@@ -27,7 +27,7 @@ class HeadTagFactory
      */
     public function createTagByName(string $name, ?string $value = null): ?AbstractHeadTag
     {
-        if ('base' === $name) {
+        if ('base' === $name && is_string($value)) {
             return new BaseTag($value);
         }
 

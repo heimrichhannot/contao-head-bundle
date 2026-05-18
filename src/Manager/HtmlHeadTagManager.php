@@ -11,8 +11,6 @@ namespace HeimrichHannot\HeadBundle\Manager;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\String\HtmlAttributes;
-use Contao\StringUtil;
 use HeimrichHannot\HeadBundle\Exception\UnsupportedTagException;
 use HeimrichHannot\HeadBundle\HeadTag\AbstractHeadTag;
 use HeimrichHannot\HeadBundle\HeadTag\BaseTag;

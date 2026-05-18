@@ -8,11 +8,11 @@ use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\RuntimeExtensionInterface;
 
-class HeadRuntime implements RuntimeExtensionInterface
+readonly class HeadRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
-        private readonly HtmlHeadTagManager $tagManager,
-        private readonly RequestStack $requestStack,
+        private HtmlHeadTagManager $tagManager,
+        private RequestStack       $requestStack,
     ) {}
 
     public function addHeadTag(string|AbstractHeadTag $name, string|Figure|null $value = null): void
