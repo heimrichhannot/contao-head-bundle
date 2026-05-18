@@ -6,6 +6,8 @@
 Enhance your website's SEO and social media presence with more meta- and structured data. 
 
 ## Features
+- Set open graph tags like og:title, og:description, og:url and og:image
+- 
 - Provide a nice api to set head tags like meta, title, base, link
 - Provide additional schema.org json-ld data
 - Sets important meta tags like og:title, og:description, og:url and twitter:card out of the box

@@ -13,7 +13,7 @@ $lang = &$GLOBALS['TL_LANG']['tl_page'];
  */
 $lang['addHeadDefaultImage'] = ['Fallback-Bild für die Meta-Tags hinzufügen', 'Dieses Bild wird bspw. für og:image und twitter:image verwendet.'];
 $lang['headDefaultImage'] = ['Fallback-Bild (mind. 200x200)', 'Wählen Sie hier ein Bild aus. Nur PNG- und JPG-Dateien sind erlaubt.'];
-$lang['twitterSite'] = ['Twitter @username', 'Der Twitter @username der einer Twitter-Karte zugewiesen werden soll (twitter:site Attribut).'];
+$lang['twitterSite'] = ['X/Twitter @username', 'Der X @username der einer X/Twitter-Karte zugewiesen werden soll (twitter:site Attribut).'];
 $lang['headAddOrganisationSchema'][0] = '@Organization ausgeben';
 $lang['headAddOrganisationSchema'][1] = 'Das @Organization Schema ausgeben.';
 $lang['headOrganisationName'][0] = 'Name';
