@@ -161,24 +161,6 @@ class SomeEventListener
 }
 ```
 
-## Template output
-
-Output the `TL_HEAD` dynamic script tag in your `fe_page` template:
-
-```
-[[TL_HEAD]]
-```
-
-Make sure that you remove the following tags from custom `fe_page` templates, because they are output by `TL_HEAD`:
-
-```
-<meta charset="<?= $this->charset ?>">
-<title><?= $this->title ?></title>
-<base href="<?php echo $this->base; ?>">
-<meta name="robots" content="<?= $this->robots ?>">
-<meta name="description" content="<?= $this->description ?>">
-```
-
 ## Developers
 
 ### Backend field

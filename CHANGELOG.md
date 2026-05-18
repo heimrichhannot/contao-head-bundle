@@ -3,11 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Changed: dropped support for contao < 5.3
+- Changed: dropped support for php < 8.2
+- Changed: deeper integration with core html bag
 - Removed: json-ld backport
 - Removed: @WebPage schema integration, because it is provided by Contao core
 - Removed: @BreadcrumbList schema integration, because it is provided by Contao core
 - Removed: canonical links backport
 - Removed: set canonical from HtmHeadTagManager, use Contao core functionality instead
+- Removed: config options
 
 ## [1.14.2] - 2025-12-17
 - Fixed: Relative image paths had to be absolute

@@ -289,8 +289,10 @@ class HtmlHeadTagManager
 
     private function getHtmlHeadBag(): ?HtmlHeadBag
     {
-        if ($this->responseContextAccessor->getResponseContext()->has(HtmlHeadBag::class)) {
-            return $this->responseContextAccessor->getResponseContext()->get(HtmlHeadBag::class);
+        $responseContext = $this->responseContextAccessor->getResponseContext();
+
+        if ($responseContext?->has(HtmlHeadBag::class)) {
+            return $responseContext->get(HtmlHeadBag::class);
         }
 
         return null;

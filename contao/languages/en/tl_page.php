@@ -11,7 +11,7 @@ $lang = &$GLOBALS['TL_LANG']['tl_page'];
 /*
  * Fields
  */
-$lang['addHeadDefaultImage'] = ['Add fallback image for the meta tags', 'This image is used for og:image and twitter:image.'];
+$lang['addHeadDefaultImage'] = ['Add fallback image for the meta tags', 'This image is used for og:image.'];
 $lang['headDefaultImage'] = ['Fallback image (at least 200x200)', 'Choose an image here. Only PNG and JPG files allowed.'];
 $lang['twitterSite'] = ['X/Twitter @username', 'The X @username a X/twitter card should be attributed to (twitter:site attribute).'];
 $lang['headAddOrganisationSchema'][0] = 'Output @Organization';
