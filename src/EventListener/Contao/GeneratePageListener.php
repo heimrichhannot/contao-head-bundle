@@ -32,16 +32,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 #[AsHook('generatePage', priority: -10)]
-class GeneratePageListener implements ServiceSubscriberInterface
+readonly class GeneratePageListener
 {
     public function __construct(
-        private readonly ContainerInterface $container,
-        private readonly HtmlHeadTagManager $headTagManager,
-        private readonly RequestStack $requestStack,
-        private readonly Utils $utils,
-        private readonly TagHelper $tagHelper,
-        private readonly InsertTagParser $insertTagParser,
-        private readonly ResponseContextAccessor $responseContextAccessor,
+        private HtmlHeadTagManager      $headTagManager,
+        private RequestStack            $requestStack,
+        private Utils                   $utils,
+        private TagHelper               $tagHelper,
+        private InsertTagParser         $insertTagParser,
+        private ResponseContextAccessor $responseContextAccessor,
     ) {
     }
 
@@ -61,15 +60,8 @@ class GeneratePageListener implements ServiceSubscriberInterface
         $this->setTwitterTags();
     }
 
-    public static function getSubscribedServices(): array
-    {
-        return [
-            '?'.ResponseContextAccessor::class,
-        ];
-    }
-
     /**
-     * Set contao head tags from head bundle tags (use contao template variables instead of head bundle output where possible).
+     * Update the contao core response bag based on stored head values
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -196,11 +188,7 @@ class GeneratePageListener implements ServiceSubscriberInterface
 
     private function getJsonLdManager(): ?JsonLdManager
     {
-        if (!$this->container->has(ResponseContextAccessor::class)) {
-            return null;
-        }
-
-        $responseContext = $this->container->get(ResponseContextAccessor::class)->getResponseContext();
+        $responseContext = $this->responseContextAccessor->getResponseContext();
 
         if (!$responseContext->has(JsonLdManager::class)) {
             return null;
